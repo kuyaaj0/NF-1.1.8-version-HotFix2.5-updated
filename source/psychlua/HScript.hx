@@ -29,6 +29,11 @@ typedef HScriptInfos =
 class HScript implements ISharedScript {
 	private static var instances:Map<String, HScript> = new Map<String, HScript>();
 
+	public var standard(get, never):Dynamic;
+	public function get_standard():Dynamic {
+		return this;
+	}
+
 	public var active:Bool;
 	public var loaded:Bool;
 
