@@ -17,6 +17,7 @@ import backend.diffCalc.StarRating;
 import objects.state.freeplayState.detail.*;
 import objects.state.freeplayState.down.*;
 import objects.state.freeplayState.others.*;
+import objects.state.freeplayState.select.*;
 
 import substates.GameplayChangersSubstate;
 import substates.ResetScoreSubState;
@@ -80,6 +81,12 @@ class FreeplayState extends MusicBeatState
 	var downBG:Rect;
 	var backRect:BackButton;
 	var funcGroup:Array<FuncButton> = [];
+	var playButton:PlayButton;
+
+	///////////////////////////////////////////////////////////////////////////////////////////////
+
+	var selectedBG:FlxSprite;
+	var searchButton:SearchButton;
 
 	override function create()
 	{
@@ -248,13 +255,25 @@ class FreeplayState extends MusicBeatState
 			funcGroup.push(button);
 		}
 
+		playButton = new PlayButton(1100, 560);
+		add(playButton);
+
+		//////////////////////////////////////////////////////////////////////////////////////////
+		
+		selectedBG = new FlxSprite(FlxG.width, 0).loadGraphic(Paths.image(FreeplayState.filePath + 'selectBG'));
+        selectedBG.antialiasing = ClientPrefs.data.antialiasing;
+		selectedBG.x -= selectedBG.width;
+		selectedBG.alpha = 0.6;
+        add(selectedBG);
+
+		searchButton = new SearchButton(640, 10);
+		add(searchButton);
+
 		//////////////////////////////////////////////////////////////////////////////////////////
 
 		for (i in 0...songs.length)
 		{
 			Mods.currentModDirectory = songs[i].folder;
-
-			
 		}
 
 		WeekData.setDirectoryFromWeek();
