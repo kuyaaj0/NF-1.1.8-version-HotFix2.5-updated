@@ -735,13 +735,10 @@ class PsychUIInputText extends FlxSpriteGroup
 
 		var letter:String = String.fromCharCode(charCode);
 		
-		// 使用我们的 Caps Lock 状态来处理字母大小写
 		var isShiftPressed:Bool = FlxG.keys.pressed.SHIFT;
 		
-		// 对于字母字符 (a-z, A-Z) - 只受 Caps Lock 影响，不受 Shift 影响
 		if ((charCode >= 97 && charCode <= 122) || (charCode >= 65 && charCode <= 90))
 		{
-			// 只根据 Caps Lock 状态决定大小写
 			if (capsLockEnabled)
 			{
 				letter = letter.toUpperCase();
@@ -751,7 +748,6 @@ class PsychUIInputText extends FlxSpriteGroup
 				letter = letter.toLowerCase();
 			}
 		}
-		// 对于非字母字符，只有 Shift 键影响（特殊字符功能）
 		else if (isShiftPressed)
 		{
 			switch (charCode)
