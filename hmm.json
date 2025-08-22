@@ -9,8 +9,10 @@
     },
     {
       "name": "openfl",
-      "type": "haxelib",
-      "version": "9.3.2"
+      "type": "git",
+      "dir": null,
+      "ref": "main",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/openfl"
     },
     {
       "name": "flixel",
