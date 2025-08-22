@@ -743,6 +743,7 @@ class PsychUIInputText extends FlxSpriteGroup
 			{
 				letter = letter.toUpperCase();
 			}
+		}
 		else if (isShiftPressed)
 		{
 			switch (charCode)
