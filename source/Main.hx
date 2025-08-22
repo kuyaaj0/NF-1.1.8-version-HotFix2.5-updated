@@ -29,6 +29,7 @@ import psychlua.HScript.HScriptInfos;
 #end
 #if desktop
 import backend.device.ALSoftConfig;
+import haxe.ui.Toolkit;
 #end
 #if hl
 import hl.Api;
@@ -45,7 +46,7 @@ import lime.graphics.Image;
 import sys.Http;
 import sys.thread.Thread;
 
-import haxe.ui.Toolkit;
+
 
 class Main extends Sprite
 {
@@ -133,7 +134,9 @@ class Main extends Sprite
 			game.height = Math.ceil(stageHeight / game.zoom);
 		}
 
+		#if desktop
 		Toolkit.init();
+		#end
 
 		#if LUA_ALLOWED llua.Lua.set_callbacks_function(cpp.Callable.fromStaticFunction(psychlua.CallbackHandler.call)); #end
 		Controls.instance = new Controls();
