@@ -2,8 +2,6 @@ package objects.state.freeplayState.select;
 
 class SearchButton extends FlxSpriteGroup {
     var bg:FlxSprite;
-    var searchInput:TextField;
-    var uiContainer:Box;
     
     public var onSearchChange:String->Void;
 
