@@ -5,21 +5,21 @@
       "type": "git",
       "dir": null,
       "ref": "develop",
-      "url": "https://github.com/beihu235/lime"
+      "url": "https://github.com/NovaFlare-Engine-haxelib/lime"
     },
     {
       "name": "openfl",
       "type": "git",
       "dir": null,
       "ref": "main",
-      "url": "https://github.com/beihu235/openfl"
+      "url": "https://github.com/NovaFlare-Engine-haxelib/openfl"
     },
     {
       "name": "flixel",
       "type": "git",
       "dir": null,
       "ref": "dev",
-      "url": "https://github.com/beihu235/flixel"
+      "url": "https://github.com/NovaFlare-Engine-haxelib/flixel"
     },
     {
       "name": "flixel-addons",
@@ -41,7 +41,7 @@
       "type": "git",
       "dir": null,
       "ref": "dev",
-      "url": "https://github.com/MaoPou/flixel-ui-beauty"
+      "url": "https://github.com/NovaFlare-Engine-haxelib/flixel-ui"
     },
     {
       "name": "flixel-tools",
@@ -63,14 +63,14 @@
       "type": "git",
       "dir": null,
       "ref": "main",
-      "url": "https://github.com/beihu235/modcharts"
+      "url": "https://github.com/NovaFlare-Engine-haxelib/modcharts"
     },
     {
       "name": "hxcpp",
       "type": "git",
       "dir": null,
       "ref": "master",
-      "url": "https://github.com/beihu235/hxcpp"
+      "url": "https://github.com/NovaFlare-Engine-haxelib/hxcpp"
     },
     {
       "name": "hxvlc",
@@ -84,14 +84,14 @@
       "type": "git",
       "dir": null,
       "ref": "master",
-      "url": "https://github.com/beihu235/hscript-iris-improved"
+      "url": "https://github.com/NovaFlare-Engine-Concentration/hscript-iris-improved"
     },
     {
       "name": "flxsoundfilters",
       "type": "git",
       "dir": null,
       "ref": "main",
-      "url": "https://github.com/beihu235/FlxSoundFilters"
+      "url": "https://github.com/NovaFlare-Engine-haxelib/FlxSoundFilters"
     },
     {
       "name": "hxcpp-debug-server",
@@ -118,7 +118,7 @@
       "type": "git",
       "dir": null,
       "ref": "main",
-      "url": "https://github.com/NovaFlare-Engine-Concentration/linc_luajit"
+      "url": "https://github.com/NovaFlare-Engine-haxelib/linc_luajit"
     },
     {
       "name": "flxanimate",
@@ -132,14 +132,14 @@
       "type": "git",
       "dir": null,
       "ref": "main",
-      "url": "https://github.com/NovaFlare-Engine-Concentration/extension-androidtools"
+      "url": "https://github.com/NovaFlare-Engine-haxelib/extension-androidtools"
     },
     {
       "name": "funkin.vis",
       "type": "git",
       "dir": null,
       "ref": "main",
-      "url": "https://github.com/beihu235/funkVis-FrequencyFixed"
+      "url": "https://github.com/NovaFlare-Engine-haxelib/funkVis-FrequencyFixed"
     },
     {
       "name": "grig.audio",
