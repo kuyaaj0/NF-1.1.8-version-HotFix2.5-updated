@@ -14,18 +14,5 @@ class SearchButton extends FlxSpriteGroup {
         
        
     }
-    
-    override function destroy() {
-        super.destroy();
-    }
-    
-    public function getText():String {
-        return searchInput != null ? searchInput.text : "";
-    }
-    
-    public function setText(value:String):Void {
-        if (searchInput != null) {
-            searchInput.text = value;
-        }
-    }
+
 }
