@@ -129,8 +129,8 @@
 
 	<haxelib name="flxsoundfilters" />
 
-	<haxelib name="haxeui-core" if="desktop"/>
-	<haxelib name="haxeui-flixel" if="desktop"/>
+	<haxelib name="haxeui-core"/>
+	<haxelib name="haxeui-flixel"/>
 	
 	<!-- Mobile Specific-->
 	<haxelib name="extension-androidtools" if="android" />
