@@ -29,7 +29,6 @@ import psychlua.HScript.HScriptInfos;
 #end
 #if desktop
 import backend.device.ALSoftConfig;
-import haxe.ui.Toolkit;
 #end
 #if hl
 import hl.Api;
@@ -46,7 +45,7 @@ import lime.graphics.Image;
 import sys.Http;
 import sys.thread.Thread;
 
-
+import haxe.ui.Toolkit;
 
 class Main extends Sprite
 {
