@@ -114,6 +114,13 @@
       "version": null
     },
     {
+      "name": "spine-haxe",
+      "type": "git",
+      "dir": "spine-haxe",
+      "ref": "cd726af62b8cbf12ba47c6c0f68d8e04451cf162",
+      "url": "https://github.com/EsotericSoftware/spine-runtimes/"
+    },    
+    {
       "name": "linc_luajit",
       "type": "git",
       "dir": null,
