@@ -1,6 +1,7 @@
 package flixel.addons.ui;
 
 import lime.system.Clipboard;
+import lime.ui.KeyModifier;
 import openfl.errors.Error;
 import openfl.events.KeyboardEvent;
 import openfl.geom.Rectangle;
@@ -339,7 +340,7 @@ class FlxInputText extends FlxText
 			// 检测Caps Lock键
 			if (key == 20) // Caps Lock键码
 			{
-				capsLockOn = !capsLockOn;
+				capsLockOn = KeyModifier.capsLock;
 				return;
 			}
 			
