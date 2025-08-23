@@ -113,7 +113,6 @@
 	<haxelib name="flixel-addons" />
 	<haxelib name="crypto" />
 	<haxelib name="trandom" />
-	<haxelib name="spine-haxe" />
 
 	<!--Psych stuff needed-->
 	<haxelib name="linc_luajit" if="LUA_ALLOWED"/>
