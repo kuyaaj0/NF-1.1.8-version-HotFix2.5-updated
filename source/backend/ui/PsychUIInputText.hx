@@ -5,7 +5,6 @@ import flixel.input.keyboard.FlxKey;
 import flixel.util.FlxDestroyUtil;
 import flash.events.KeyboardEvent;
 import lime.system.Clipboard;
-import lime.ui.KeyModifier;
 
 enum abstract AccentCode(Int) from Int from UInt to Int to UInt
 {
@@ -62,7 +61,7 @@ class PsychUIInputText extends FlxSpriteGroup
 	public var selectedFormat:FlxTextFormat = new FlxTextFormat(FlxColor.WHITE);
 	
 	// 添加 Caps Lock 状态变量
-	public var capsLockEnabled:Bool = KeyModifier.capsLock;
+	public var capsLockEnabled:Bool = false;
 
 	public function new(x:Float = 0, y:Float = 0, wid:Int = 100, ?text:String = '', size:Int = 8)
 	{
@@ -120,7 +119,7 @@ class PsychUIInputText extends FlxSpriteGroup
 		// 处理 Caps Lock 切换
 		if (flxKey == CAPSLOCK)
 		{
-			capsLockEnabled = KeyModifier.capsLock;
+			capsLockEnabled = !capsLockEnabled;
 			return;
 		}
 

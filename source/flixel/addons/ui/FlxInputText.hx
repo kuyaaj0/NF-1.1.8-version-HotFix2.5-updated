@@ -1,7 +1,6 @@
 package flixel.addons.ui;
 
 import lime.system.Clipboard;
-import lime.ui.KeyModifier;
 import openfl.errors.Error;
 import openfl.events.KeyboardEvent;
 import openfl.geom.Rectangle;
@@ -189,7 +188,7 @@ class FlxInputText extends FlxText
 	/**
 	 * 用于跟踪Caps Lock状态
 	 */
-	private var capsLockOn:Bool = false;
+	static public var capsLockEnabled:Bool = false;
 
 	/**
 	 * @param	X				The X position of the text.
@@ -340,7 +339,7 @@ class FlxInputText extends FlxText
 			// 检测Caps Lock键
 			if (key == 20) // Caps Lock键码
 			{
-				capsLockOn = KeyModifier.capsLock;
+				capsLockEnabled = !capsLockEnabled;
 				return;
 			}
 			
@@ -494,7 +493,7 @@ class FlxInputText extends FlxText
 					charToAdd = String.fromCharCode(e.charCode);
 					
 					// 如果Caps Lock开启，则切换大小写
-					if (capsLockOn)
+					if (capsLockEnabled)
 					{
 						// 如果是小写字母，转为大写
 						if (charToAdd >= "a" && charToAdd <= "z")
