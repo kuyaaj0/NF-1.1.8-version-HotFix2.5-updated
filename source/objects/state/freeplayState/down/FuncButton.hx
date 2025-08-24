@@ -1,6 +1,9 @@
 package objects.state.freeplayState.down;
 
 class FuncButton extends FlxSpriteGroup {
+
+    static public var filePath:String = 'function/';
+
     var rect:FlxSprite;
     var light:FlxSprite;
 
@@ -13,18 +16,18 @@ class FuncButton extends FlxSpriteGroup {
         super(x, y);
         this.event = onClick;
 
-        rect = new FlxSprite().loadGraphic(Paths.image(FreeplayState.filePath + 'funcButton'));
+        rect = new FlxSprite().loadGraphic(Paths.image(FreeplayState.filePath + filePath + 'button'));
         rect.color = 0x24232C;
         rect.antialiasing = ClientPrefs.data.antialiasing;
         add(rect);
 
-        light = new FlxSprite().loadGraphic(Paths.image(FreeplayState.filePath + 'funcLight'));
+        light = new FlxSprite().loadGraphic(Paths.image(FreeplayState.filePath + filePath + 'light'));
         light.color = color;
         light.alpha = 0.8;
         light.antialiasing = ClientPrefs.data.antialiasing;
         add(light);
 
-        icon = new FlxSprite().loadGraphic(Paths.image(FreeplayState.filePath + 'funcIcon/' + name));
+        icon = new FlxSprite().loadGraphic(Paths.image(FreeplayState.filePath + filePath + name));
         icon.antialiasing = ClientPrefs.data.antialiasing;
         icon.color = color;
         icon.setGraphicSize(25);

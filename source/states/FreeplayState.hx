@@ -87,6 +87,9 @@ class FreeplayState extends MusicBeatState
 
 	var selectedBG:FlxSprite;
 	var searchButton:SearchButton;
+	var diffSelect:DiffSelect;
+	var sortButton:SortButton;
+	var collectionButton:CollectionButton;
 
 	override function create()
 	{
@@ -240,7 +243,7 @@ class FreeplayState extends MusicBeatState
 
 		//////////////////////////////////////////////////////////////////////////////////////////
 
-		downBG = new Rect(0, FlxG.height - 50, FlxG.width, 50, 0, 0);
+		downBG = new Rect(0, FlxG.height - 49, FlxG.width, 51, 0, 0); //嗯卧槽怎么全屏会漏
 		downBG.color = 0x242A2E;
 		add(downBG);
 
@@ -266,8 +269,17 @@ class FreeplayState extends MusicBeatState
 		selectedBG.alpha = 0.6;
         add(selectedBG);
 
-		searchButton = new SearchButton(640, 10);
+		searchButton = new SearchButton(695, 5);
 		add(searchButton);
+
+		diffSelect = new DiffSelect(688, 65);
+		add(diffSelect);
+
+		sortButton = new SortButton(682, 105);
+		add(sortButton);
+
+		collectionButton = new CollectionButton(977, 105);
+		add(collectionButton);
 
 		//////////////////////////////////////////////////////////////////////////////////////////
 

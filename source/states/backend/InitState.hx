@@ -216,7 +216,7 @@ class InitState extends MusicBeatState
 	{
 		if (!ClientPrefs.data.skipTitleVideo)
 			#if VIDEOS_ALLOWED
-			startVideo('menuExtend/titleIntro');
+			changeState(); //startVideo('menuExtend/titleIntro');
 			#else
 			changeState();
 			#end
@@ -355,7 +355,7 @@ class InitState extends MusicBeatState
 		{
 			FlxTransitionableState.skipNextTransIn = true;
 			FlxTransitionableState.skipNextTransOut = true;
-			MusicBeatState.switchState(new TitleState());
+			MusicBeatState.switchState(new FreeplayState());
 		}
 	}
 }
