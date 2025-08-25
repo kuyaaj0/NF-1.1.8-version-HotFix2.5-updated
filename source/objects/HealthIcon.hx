@@ -31,19 +31,30 @@ class HealthIcon extends FlxSprite
 	{
 		if (this.char != char)
 		{
-			var name:String = 'icons/' + char;
-			if (!Paths.fileExists('images/' + name + '.png', IMAGE))
-				name = 'icons/icon-' + char; // Older versions of psych engine's support
-			if (!Paths.fileExists('images/' + name + '.png', IMAGE))
-				name = 'icons/icon-face'; // Prevents crash from missing icon
+			if (Cache.currentTrackedFrames.get('icon-' + Mods.currentModDirectory + '-' + char) == null) {
+				var spr = new FlxSprite();
+				var name:String = 'icons/' + char;
+				if (!Paths.fileExists('images/' + name + '.png', IMAGE))
+					name = 'icons/icon-' + char; // Older versions of psych engine's support
+				if (!Paths.fileExists('images/' + name + '.png', IMAGE))
+					name = 'icons/icon-face'; // Prevents crash from missing icon
 
-			var graphic = Paths.image(name, allowGPU);
-			var delimiter:Int = (Math.floor(graphic.width / 3) >= graphic.height) ? 3 : 2;
-			loadGraphic(graphic, true, Math.floor(graphic.width / delimiter), graphic.height);
+				var graphic = Paths.image(name, allowGPU);
+				var delimiter:Int = (Math.floor(graphic.width / 3) >= graphic.height) ? 3 : 2;
+				spr.loadGraphic(graphic, true, Math.floor(graphic.width / delimiter), graphic.height);
+				updateHitbox();
+
+				spr.animation.add(char, [for (i in 0...numFrames) i], 0, false, isPlayer);
+
+				Cache.currentTrackedFrames.set('icon-' + Mods.currentModDirectory + '-' + char, spr.frame);
+				Cache.currentTrackedAnims.set('icon-' + Mods.currentModDirectory + '-' + char, spr.animation);
+			}
+
+			frame = Cache.currentTrackedFrames.get('icon-' + Mods.currentModDirectory + '-' + char);
+			animation.copyFrom(Cache.currentTrackedAnims.get('icon-' + Mods.currentModDirectory + '-' + char));
 			updateHitbox();
-
-			animation.add(char, [for (i in 0...numFrames) i], 0, false, isPlayer);
 			animation.play(char);
+
 			this.char = char;
 
 			if (char.endsWith('-pixel'))

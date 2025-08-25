@@ -18,6 +18,7 @@ import objects.state.freeplayState.detail.*;
 import objects.state.freeplayState.down.*;
 import objects.state.freeplayState.others.*;
 import objects.state.freeplayState.select.*;
+import objects.state.freeplayState.song.*;
 
 import substates.GameplayChangersSubstate;
 import substates.ResetScoreSubState;
