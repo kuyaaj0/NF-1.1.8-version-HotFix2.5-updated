@@ -342,8 +342,8 @@ class SongMetadata
 		this.folder = Mods.currentModDirectory;
 		this.bg = Paths.image('menuDesat', null, false);
 		this.searchnum = 0;
-		this.musican = musican;
-		this.charter = charter;
+		this.songMusican = musican;
+		this.songCharter = charter;
 		if (this.folder == null)
 			this.folder = '';
 	}

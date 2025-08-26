@@ -141,7 +141,7 @@
 	<haxedef name="FM_ENGINE_VERSION" value="0.7"/>
 
 	<haxelib name="modcharts" />
-	<haxeflag name="--macro" value="modchart.core.macros.Macro.includeFiles()"/>
+	<haxeflag name="--macro" value="modchart.backend.macros.Macro.includeFiles()"/>
 		
 	<!--<haxelib name="hx-ios-uikit" if="ios" />-->
 	<haxedef name="SHARE_MOBILE_FILES" if="ios" />

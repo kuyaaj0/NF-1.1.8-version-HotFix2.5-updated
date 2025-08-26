@@ -89,10 +89,10 @@ class WeekData
 			originPath.push(Paths.mods(mod + '/'));
 		#end
 		
-		var originList:Array<String> = CoolUtil.coolTextFile(Paths.getSharedPath('weeks/weekList.txt'));
+		var txtList:Array<String> = CoolUtil.coolTextFile(Paths.getSharedPath('weeks/weekList.txt'));
 		for (path in 0...originPath.length)
 		{
-			for (i in 0...originList.length)
+			for (i in 0...txtList.length)
 			{
 				var weekJson:String = originPath[path] + 'weeks/' + txtList[i] + '.json';
 				if (!weeksLoaded.exists('origin-' + txtList[i]))
@@ -127,7 +127,7 @@ class WeekData
 					var path:String = directory + daWeek + '.json';
 					if (FileSystem.exists(path))
 					{
-						addWeek(daWeek, path, originPath[i], i, originalLength);
+						addWeek(daWeek, path, originPath[i], i);
 					}
 				}
 
@@ -136,7 +136,7 @@ class WeekData
 					var path = haxe.io.Path.join([directory, file]);
 					if (!FileSystem.isDirectory(path) && file.endsWith('.json'))
 					{
-						addWeek(file.substr(0, file.length - 5), path, originPath[i], i, originalLength);
+						addWeek(file.substr(0, file.length - 5), path, originPath[i], i);
 					}
 				}
 			}
@@ -144,14 +144,14 @@ class WeekData
 		#end
 
 		#if MODS_ALLOWED
-		if (j >= originalLength)
-		{
-			weekFile.folder = originPath[j].substring(Paths.mods().length, originPath[j].length - 1);
-		}
+		//if (j >= originalLength)
+		//{
+		//	weekFile.folder = originPath[j].substring(Paths.mods().length, originPath[j].length - 1);
+		//}
 		#end
 	}
 
-	private static function addWeek(weekToCheck:String, path:String, directory:String, i:Int, originalLength:Int)
+	private static function addWeek(weekToCheck:String, path:String, directory:String, i:Int)
 	{
 		if (!weeksLoaded.exists(weekToCheck))
 		{
@@ -159,12 +159,6 @@ class WeekData
 			if (week != null)
 			{
 				var weekFile:WeekData = new WeekData(week, weekToCheck);
-				if (i >= originalLength)
-				{
-					#if MODS_ALLOWED
-					weekFile.folder = directory.substring(Paths.mods().length, directory.length - 1);
-					#end
-				}
 				if ((PlayState.isStoryMode && !weekFile.hideStoryMode) || (!PlayState.isStoryMode && !weekFile.hideFreeplay))
 				{
 					weeksLoaded.set(weekToCheck, weekFile);

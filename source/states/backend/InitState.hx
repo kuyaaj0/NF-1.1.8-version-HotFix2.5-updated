@@ -355,7 +355,7 @@ class InitState extends MusicBeatState
 		{
 			FlxTransitionableState.skipNextTransIn = true;
 			FlxTransitionableState.skipNextTransOut = true;
-			MusicBeatState.switchState(new FreeplayState());
+			MusicBeatState.switchState(new TitleState());
 		}
 	}
 }

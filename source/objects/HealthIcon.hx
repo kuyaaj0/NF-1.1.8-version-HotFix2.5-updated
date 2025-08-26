@@ -43,15 +43,11 @@ class HealthIcon extends FlxSprite
 				var delimiter:Int = (Math.floor(graphic.width / 3) >= graphic.height) ? 3 : 2;
 				spr.loadGraphic(graphic, true, Math.floor(graphic.width / delimiter), graphic.height);
 				updateHitbox();
-
-				spr.animation.add(char, [for (i in 0...numFrames) i], 0, false, isPlayer);
-
 				Cache.currentTrackedFrames.set('icon-' + Mods.currentModDirectory + '-' + char, spr.frames);
-				Cache.currentTrackedAnims.set('icon-' + Mods.currentModDirectory + '-' + char, spr.animation);
 			}
 
-			frame = Cache.currentTrackedFrames.get('icon-' + Mods.currentModDirectory + '-' + char);
-			animation.copyFrom(Cache.currentTrackedAnims.get('icon-' + Mods.currentModDirectory + '-' + char));
+			frames = Cache.currentTrackedFrames.get('icon-' + Mods.currentModDirectory + '-' + char);
+			animation.add(char, [for (i in 0...numFrames) i], 0, false, isPlayer);
 			updateHitbox();
 			animation.play(char);
 

@@ -44,7 +44,7 @@ class SongRect extends FlxSpriteGroup {
             if (mask.height / spr.height > scale)
                 scale = mask.height / spr.height;
             matrix.scale(scale, scale);
-            matrix.translate(-(spr.width * data - mask.width) / 2, -(spr.height * data - mask.height) / 2);
+            matrix.translate(-(spr.width * scale - mask.width) / 2, -(spr.height * scale - mask.height) / 2);
 
             var resizedBitmapData:BitmapData = new BitmapData(Std.int(mask.width), Std.int(mask.height), true, 0x00000000);
             resizedBitmapData.draw(spr.pixels, matrix);
@@ -64,14 +64,14 @@ class SongRect extends FlxSpriteGroup {
 
             spr.loadGraphic(resizedBitmapData);
 
-            Cache.currentTrackedFrames.set('freeplay-song-' + Mods.currentModDirectory + '-' + filesLoad, spr.frame);
+            Cache.currentTrackedFrames.set('freeplay-song-' + Mods.currentModDirectory + '-' + filesLoad, spr.frames);
 
             var mainBGcache = new FlxSprite(0, 0).loadGraphic(Paths.image(filesLoad, null, false, extraLoad));
-            Cache.currentTrackedFrames.set('freeplay-bg-' + Mods.currentModDirectory + '-' + filesLoad, mainBGcache.frame);//预加载大界面的图像
+            Cache.currentTrackedFrames.set('freeplay-bg-' + Mods.currentModDirectory + '-' + filesLoad, mainBGcache.frames);//预加载大界面的图像
         }
 
         bg = new FlxSprite();
-        bg.frame = Cache.currentTrackedFrames.get('freeplay-song-' + Mods.currentModDirectory + '-' + filesLoad);
+        bg.frames = Cache.currentTrackedFrames.get('freeplay-song-' + Mods.currentModDirectory + '-' + filesLoad);
 		bg.antialiasing = ClientPrefs.data.antialiasing;
 		add(bg);
 
@@ -85,15 +85,11 @@ class SongRect extends FlxSpriteGroup {
 
     function addMaskCache() {
 		var spr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(FreeplayState.filePath + filePath + 'mask'));
-		spr.loadGraphic(newGraphic);
-
 		Cache.currentTrackedFrames.set('freeplay-song-Mask', spr.frames);
 	}
 
     function addLightCache() {
 		var spr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(FreeplayState.filePath + filePath + 'light'));
-		spr.loadGraphic(newGraphic);
-
 		Cache.currentTrackedFrames.set('freeplay-song-Light', spr.frames);
 	}
 }
