@@ -14,6 +14,7 @@ import shaders.ColorblindFilter;
 import states.StoryMenuState;
 import states.OutdatedState;
 import states.MainMenuState;
+import states.FreeplayState;
 import states.TitleState;
 #if mobile
 import mobile.states.CopyState;
@@ -215,7 +216,7 @@ class InitState extends MusicBeatState
 	{
 		if (!ClientPrefs.data.skipTitleVideo)
 			#if VIDEOS_ALLOWED
-			startVideo('menuExtend/titleIntro');
+			changeState(); //startVideo('menuExtend/titleIntro');
 			#else
 			changeState();
 			#end
@@ -354,7 +355,7 @@ class InitState extends MusicBeatState
 		{
 			FlxTransitionableState.skipNextTransIn = true;
 			FlxTransitionableState.skipNextTransOut = true;
-			MusicBeatState.switchState(new TitleState());
+			MusicBeatState.switchState(new FreeplayState());
 		}
 	}
 }

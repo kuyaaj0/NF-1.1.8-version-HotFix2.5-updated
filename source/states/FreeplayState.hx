@@ -17,6 +17,8 @@ import backend.diffCalc.StarRating;
 import objects.state.freeplayState.detail.*;
 import objects.state.freeplayState.down.*;
 import objects.state.freeplayState.others.*;
+import objects.state.freeplayState.select.*;
+import objects.state.freeplayState.song.*;
 
 import substates.GameplayChangersSubstate;
 import substates.ResetScoreSubState;
@@ -80,6 +82,15 @@ class FreeplayState extends MusicBeatState
 	var downBG:Rect;
 	var backRect:BackButton;
 	var funcGroup:Array<FuncButton> = [];
+	var playButton:PlayButton;
+
+	///////////////////////////////////////////////////////////////////////////////////////////////
+
+	var selectedBG:FlxSprite;
+	var searchButton:SearchButton;
+	var diffSelect:DiffSelect;
+	var sortButton:SortButton;
+	var collectionButton:CollectionButton;
 
 	override function create()
 	{
@@ -233,7 +244,7 @@ class FreeplayState extends MusicBeatState
 
 		//////////////////////////////////////////////////////////////////////////////////////////
 
-		downBG = new Rect(0, FlxG.height - 50, FlxG.width, 50, 0, 0);
+		downBG = new Rect(0, FlxG.height - 49, FlxG.width, 51, 0, 0); //嗯卧槽怎么全屏会漏
 		downBG.color = 0x242A2E;
 		add(downBG);
 
@@ -248,13 +259,34 @@ class FreeplayState extends MusicBeatState
 			funcGroup.push(button);
 		}
 
+		playButton = new PlayButton(1100, 560);
+		add(playButton);
+
+		//////////////////////////////////////////////////////////////////////////////////////////
+		
+		selectedBG = new FlxSprite(FlxG.width, 0).loadGraphic(Paths.image(FreeplayState.filePath + 'selectBG'));
+        selectedBG.antialiasing = ClientPrefs.data.antialiasing;
+		selectedBG.x -= selectedBG.width;
+		selectedBG.alpha = 0.6;
+        add(selectedBG);
+
+		searchButton = new SearchButton(695, 5);
+		add(searchButton);
+
+		diffSelect = new DiffSelect(688, 65);
+		add(diffSelect);
+
+		sortButton = new SortButton(682, 105);
+		add(sortButton);
+
+		collectionButton = new CollectionButton(977, 105);
+		add(collectionButton);
+
 		//////////////////////////////////////////////////////////////////////////////////////////
 
 		for (i in 0...songs.length)
 		{
 			Mods.currentModDirectory = songs[i].folder;
-
-			
 		}
 
 		WeekData.setDirectoryFromWeek();

@@ -113,6 +113,7 @@
 	<haxelib name="flixel-addons" />
 	<haxelib name="crypto" />
 	<haxelib name="trandom" />
+	<haxelib name="spine-haxe" />
 
 	<!--Psych stuff needed-->
 	<haxelib name="linc_luajit" if="LUA_ALLOWED"/>
@@ -128,6 +129,9 @@
 	<haxelib name="grig.audio" />
 
 	<haxelib name="flxsoundfilters" />
+
+	<haxelib name="haxeui-core"/>
+	<haxelib name="haxeui-flixel"/>
 	
 	<!-- Mobile Specific-->
 	<haxelib name="extension-androidtools" if="android" />
@@ -151,10 +155,6 @@
 
 	<haxedef name="HXCPP_ALIGN_ALLOC"/>
 	<haxedef name="HX_HAS_ATOMIC"/>
-
-
-	<haxedef name="haxeui-core"/>
-	<haxedef name="haxeui-openfl"/>
 
 	<!-- ______________________________ Haxedefines _____________________________ -->
 
