@@ -190,7 +190,7 @@ import states.TitleState;
 	];
 
 	//其实这个也可以扔了,我们有多k，，，，，
-	public static var arrowHSV:Array<Array<Int>> = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]];
+	public var arrowHSV:Array<Array<Float>> = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]];
 
 	public var gameplaySettings:Map<String, Dynamic> = [
 		'scrollspeed' => 1.0,

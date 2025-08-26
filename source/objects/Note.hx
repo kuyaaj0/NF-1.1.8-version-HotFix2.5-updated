@@ -150,9 +150,9 @@ class Note extends FlxSprite
 	public var hitsoundChartEditor:Bool = true;
 	public var hitsound:String = 'hitsound';
 
-	public var noteSplashBrt:Int = 0;
-	public var noteSplashSat:Int = 0;
-	public var noteSplashHue:Int = 0;
+	public var noteSplashBrt:Float = 0;
+	public var noteSplashSat:Float = 0;
+	public var noteSplashHue:Float = 0;
 
 	// fix old lua😡
 
@@ -309,7 +309,7 @@ class Note extends FlxSprite
 			rgbShader = new RGBShaderReference(this, initializeGlobalRGBShader(noteData));
 			if (PlayState.SONG != null && (PlayState.SONG.disableNoteRGB || !ClientPrefs.data.noteRGB || ClientPrefs.data.noteColorSwap))
 				rgbShader.enabled = false;
-			if (noteColorSwap){
+			if (ClientPrefs.data.noteColorSwap){
 			colorSwap = new ColorSwap();
 			shader = colorSwap.shader;
 

@@ -9,7 +9,6 @@ import mobile.states.CopyState;
 import backend.ClientPrefs;
 import language.Language;
 import backend.StageData;
-
 class OptionsState extends MusicBeatState
 {
 	public static var instance:OptionsState;
@@ -388,7 +387,8 @@ class OptionsState extends MusicBeatState
 			case 6: // CopyStates
 				LoadingState.loadAndSwitchState(new CopyState(true));
 			case 7: // NotesSubStateLegacy
-				LoadingState.loadAndSwitchState(new NotesSubStateLegacy());
+				persistentUpdate = false;
+				openSubState(new NotesSubStateLegacy());
 		}
 	}
 

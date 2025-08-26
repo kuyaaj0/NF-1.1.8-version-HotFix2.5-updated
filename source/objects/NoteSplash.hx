@@ -5,7 +5,7 @@ import backend.animation.PsychAnimationController;
 import shaders.RGBPalette;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.graphics.frames.FlxFrame;
-
+import shaders.ColorSwap;
 typedef NoteSplashConfig =
 {
 	anim:String,
@@ -111,9 +111,9 @@ class NoteSplash extends FlxSprite
 			alpha = note.noteSplashData.a;
 		rgbShader.copyValues(tempShader);
 
-		var hue:Float = ClientPrefs.data.arrowHSV[data % 4][0] / 360;
-		var sat:Float = ClientPrefs.data.arrowHSV[data % 4][1] / 100;
-		var brt:Float = ClientPrefs.data.arrowHSV[data % 4][2] / 100;
+		var hue:Float = ClientPrefs.data.arrowHSV[direction % 4][0] / 360;
+		var sat:Float = ClientPrefs.data.arrowHSV[direction % 4][1] / 100;
+		var brt:Float = ClientPrefs.data.arrowHSV[direction % 4][2] / 100;
 		
 		if(note != null) {
 			hue = note.noteSplashHue;
@@ -122,9 +122,9 @@ class NoteSplash extends FlxSprite
 		}
 
 
-		colorSwap.hue = hueColor;
-		colorSwap.saturation = satColor;
-		colorSwap.brightness = brtColor;
+		colorSwap.hue = hue;
+		colorSwap.saturation = sat;
+		colorSwap.brightness = brt;
 		if (note != null)
 			antialiasing = note.noteSplashData.antialiasing;
 		if (PlayState.isPixelStage || !ClientPrefs.data.antialiasing)
