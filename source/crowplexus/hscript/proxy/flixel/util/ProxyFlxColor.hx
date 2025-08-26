@@ -5,25 +5,77 @@ import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 import crowplexus.hscript.ISharedScript;
 
+/**
+ * 用于代理script里的FlxColor，肥肠还原（除了from）
+ */
 class ProxyFlxColor implements ISharedScript {
-	public static var TRANSPARENT:ProxyFlxColor = new ProxyFlxColor(0x00000000);
-	public static var WHITE:ProxyFlxColor = new ProxyFlxColor(0xFFFFFFFF);
-	public static var GRAY:ProxyFlxColor = new ProxyFlxColor(0xFF808080);
-	public static var BLACK:ProxyFlxColor = new ProxyFlxColor(0xFF000000);
+	// 他们没告诉我QAQ，我是傻逼
+	public static var TRANSPARENT(get, never):ProxyFlxColor;
+	static function get_TRANSPARENT():ProxyFlxColor {
+		return new ProxyFlxColor(0x00000000);
+	}
+	public static var WHITE(get, never):ProxyFlxColor;
+	static function get_WHITE():ProxyFlxColor {
+		return new ProxyFlxColor(0xFFFFFFFF);
+	}
+	public static var GRAY(get, never):ProxyFlxColor;
+	static function get_GRAY():ProxyFlxColor {
+		return new ProxyFlxColor(0xFF808080);
+	}
+	public static var BLACK(get, never):ProxyFlxColor;
+	static function get_BLACK():ProxyFlxColor {
+		return new ProxyFlxColor(0xFF000000);
+	}
 
-	public static var GREEN:ProxyFlxColor = new ProxyFlxColor(0xFF008000);
-	public static var LIME:ProxyFlxColor = new ProxyFlxColor(0xFF00FF00);
-	public static var YELLOW:ProxyFlxColor = new ProxyFlxColor(0xFFFFFF00);
-	public static var ORANGE:ProxyFlxColor = new ProxyFlxColor(0xFFFFA500);
-	public static var RED:ProxyFlxColor = new ProxyFlxColor(0xFFFF0000);
-	public static var PURPLE:ProxyFlxColor = new ProxyFlxColor(0xFF800080);
-	public static var BLUE:ProxyFlxColor = new ProxyFlxColor(0xFF0000FF);
-	public static var BROWN:ProxyFlxColor = new ProxyFlxColor(0xFF8B4513);
-	public static var PINK:ProxyFlxColor = new ProxyFlxColor(0xFFFFC0CB);
-	public static var MAGENTA:ProxyFlxColor = new ProxyFlxColor(0xFFFF00FF);
-	public static var CYAN:ProxyFlxColor = new ProxyFlxColor(0xFF00FFFF);
+	public static var GREEN(get, never):ProxyFlxColor;
+	static function get_GREEN():ProxyFlxColor {
+		return new ProxyFlxColor(0xFF008000);
+	}
+	public static var LIME(get, never):ProxyFlxColor;
+	static function get_LIME():ProxyFlxColor {
+		return new ProxyFlxColor(0xFF00FF00);
+	}
+	public static var YELLOW(get, never):ProxyFlxColor;
+	static function get_YELLOW():ProxyFlxColor {
+		return new ProxyFlxColor(0xFFFFFF00);
+	}
+	public static var ORANGE(get, never):ProxyFlxColor;
+	static function get_ORANGE():ProxyFlxColor {
+		return new ProxyFlxColor(0xFFFFA500);
+	}
+	public static var RED(get, never):ProxyFlxColor;
+	static function get_RED():ProxyFlxColor {
+		return new ProxyFlxColor(0xFFFF0000);
+	}
+	public static var PURPLE(get, never):ProxyFlxColor;
+	static function get_PURPLE():ProxyFlxColor {
+		return new ProxyFlxColor(0xFF800080);
+	}
+	public static var BLUE(get, never):ProxyFlxColor;
+	static function get_BLUE():ProxyFlxColor {
+		return new ProxyFlxColor(0xFF0000FF);
+	}
+	public static var BROWN(get, never):ProxyFlxColor;
+	static function get_BROWN():ProxyFlxColor {
+		return new ProxyFlxColor(0xFF8B4513);
+	}
+	public static var PINK(get, never):ProxyFlxColor;
+	static function get_PINK():ProxyFlxColor {
+		return new ProxyFlxColor(0xFFFFC0CB);
+	}
+	public static var MAGENTA(get, never):ProxyFlxColor;
+	static function get_MAGENTA():ProxyFlxColor {
+		return new ProxyFlxColor(0xFFFF00FF);
+	}
+	public static var CYAN(get, never):ProxyFlxColor;
+	static function get_CYAN():ProxyFlxColor {
+		return new ProxyFlxColor(0xFF00FFFF);
+	}
 
-	public static var colorLookup(default, null):Map<String, Int> = FlxMacroUtil.buildMap("flixel.util.FlxColor");
+	public static var colorLookup(get, never):Map<String, Int>;
+	static inline function get_colorLookup():Map<String, Int> {
+		return FlxColor.colorLookup;
+	}
 
 	public var red(get, set):Int;
 	public var blue(get, set):Int;
