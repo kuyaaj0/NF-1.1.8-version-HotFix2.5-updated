@@ -59,9 +59,6 @@ class PsychUIInputText extends FlxSpriteGroup
 	public var customFilterPattern(default, set):EReg;
 
 	public var selectedFormat:FlxTextFormat = new FlxTextFormat(FlxColor.WHITE);
-	
-	// 添加 Caps Lock 状态变量
-	public var capsLockEnabled:Bool = false;
 
 	public function new(x:Float = 0, y:Float = 0, wid:Int = 100, ?text:String = '', size:Int = 8)
 	{
@@ -114,13 +111,6 @@ class PsychUIInputText extends FlxSpriteGroup
 		{
 			case 231: // ç and Ç
 				charCode = e.shiftKey ? 0xC7 : 0xE7;
-		}
-
-		// 处理 Caps Lock 切换
-		if (flxKey == CAPSLOCK)
-		{
-			capsLockEnabled = !capsLockEnabled;
-			return;
 		}
 
 		// Control key actions
@@ -734,44 +724,6 @@ class PsychUIInputText extends FlxSpriteGroup
 			deleteSelection();
 
 		var letter:String = String.fromCharCode(charCode);
-		
-		var isShiftPressed:Bool = FlxG.keys.pressed.SHIFT;
-		
-		if ((charCode >= 97 && charCode <= 122) || (charCode >= 65 && charCode <= 90))
-		{
-			if (capsLockEnabled)
-			{
-				letter = letter.toUpperCase();
-			}
-		}
-		else if (isShiftPressed)
-		{
-			switch (charCode)
-			{
-				case 49: letter = "!"; // 1 -> !
-				case 50: letter = "@"; // 2 -> @
-				case 51: letter = "#"; // 3 -> #
-				case 52: letter = "$"; // 4 -> $
-				case 53: letter = "%"; // 5 -> %
-				case 54: letter = "^"; // 6 -> ^
-				case 55: letter = "&"; // 7 -> &
-				case 56: letter = "*"; // 8 -> *
-				case 57: letter = "("; // 9 -> (
-				case 48: letter = ")"; // 0 -> )
-				case 45: letter = "_"; // - -> _
-				case 61: letter = "+"; // = -> +
-				case 91: letter = "{"; // [ -> {
-				case 93: letter = "}"; // ] -> }
-				case 92: letter = "|"; // \ -> |
-				case 59: letter = ":"; // ; -> :
-				case 39: letter = "\""; // ' -> "
-				case 44: letter = "<"; // , -> <
-				case 46: letter = ">"; // . -> >
-				case 47: letter = "?"; // / -> ?
-				case 96: letter = "~"; // ` -> ~
-			}
-		}
-		
 		letter = filter(letter);
 		if (letter.length > 0 && (maxLength == 0 || (text.length + letter.length) < maxLength))
 		{

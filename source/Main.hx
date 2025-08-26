@@ -45,8 +45,6 @@ import lime.graphics.Image;
 import sys.Http;
 import sys.thread.Thread;
 
-import haxe.ui.Toolkit;
-
 class Main extends Sprite
 {
 	private static var game = {
@@ -132,8 +130,6 @@ class Main extends Sprite
 			game.width = Math.ceil(stageWidth / game.zoom);
 			game.height = Math.ceil(stageHeight / game.zoom);
 		}
-
-		Toolkit.init();
 
 		#if LUA_ALLOWED llua.Lua.set_callbacks_function(cpp.Callable.fromStaticFunction(psychlua.CallbackHandler.call)); #end
 		Controls.instance = new Controls();
