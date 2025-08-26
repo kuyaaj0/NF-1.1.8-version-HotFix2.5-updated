@@ -46,7 +46,7 @@ class HealthIcon extends FlxSprite
 
 				spr.animation.add(char, [for (i in 0...numFrames) i], 0, false, isPlayer);
 
-				Cache.currentTrackedFrames.set('icon-' + Mods.currentModDirectory + '-' + char, spr.frame);
+				Cache.currentTrackedFrames.set('icon-' + Mods.currentModDirectory + '-' + char, spr.frames);
 				Cache.currentTrackedAnims.set('icon-' + Mods.currentModDirectory + '-' + char, spr.animation);
 			}
 

@@ -49,12 +49,12 @@ class ThreadEvent {
     public function checkCompletion(blocking:Bool = false) {
         var msg = Thread.readMessage(blocking);
         if (msg != null && Reflect.hasField(msg, "type") && msg.type.toLowerCase() == "complete" && msg.data.result == id) {
-            if (updateListener != null) {
-                removeIndividualListener();
-            }
-            
             if (event != null) {
                 event('wc');
+            }
+
+            if (updateListener != null) {
+                removeIndividualListener();
             }
         }
     }

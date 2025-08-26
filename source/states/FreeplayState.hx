@@ -36,10 +36,14 @@ import sys.thread.Mutex;
 class FreeplayState extends MusicBeatState
 {
 	static public var filePath:String = 'menuExtendHide/freeplay/';
-
 	static public var instance:FreeplayState;
 
-	var songs:Array<SongMetadata> = [];
+	///////////////////////////////////////////////////////////////////////////////////////////////
+
+	var songsData:Array<SongMetadata> = [];
+
+	var songsRect:Array<SongRect> = [];
+	var songsMove:MouseMove;
 
 	public static var vocals:FlxSound = null;
 
@@ -136,7 +140,7 @@ class FreeplayState extends MusicBeatState
 				var charter:Array<String> = song[4];
 				if (song[4] == null)
 					charter = ['N/A', 'N/A', 'N/A'];
-				songs.push(new SongMetadata(song[0], i, song[1], muscan, charter, colors));
+				songsData.push(new SongMetadata(song[0], i, song[1], muscan, charter, colors));
 			}
 		}
 
@@ -228,8 +232,6 @@ class FreeplayState extends MusicBeatState
 		detailMapper.y = detailRect.bg2.y;
 		add(detailMapper);
 
-
-
 		noteData = new DataDis(10, detailRect.bg3.y + 10, 120, 5, 'Notes');
 		add(noteData);
 
@@ -241,26 +243,6 @@ class FreeplayState extends MusicBeatState
 
 		keyCountData = new DataDis(speedData.x + speedData.lineDis.width * 1.2, detailRect.bg3.y + 10, 120, 5, 'Key count');
 		add(keyCountData);
-
-		//////////////////////////////////////////////////////////////////////////////////////////
-
-		downBG = new Rect(0, FlxG.height - 49, FlxG.width, 51, 0, 0); //嗯卧槽怎么全屏会漏
-		downBG.color = 0x242A2E;
-		add(downBG);
-
-		backRect = new BackButton(0, FlxG.height - 65, 195, 65);
-		add(backRect);
-
-
-		for (data in 0...funcData.length)
-		{
-			var button = new FuncButton(backRect.x + backRect.width + 15 + 140 * data, backRect.y, funcData[data], funcColors[data]);
-			add(button);
-			funcGroup.push(button);
-		}
-
-		playButton = new PlayButton(1100, 560);
-		add(playButton);
 
 		//////////////////////////////////////////////////////////////////////////////////////////
 		
@@ -284,10 +266,37 @@ class FreeplayState extends MusicBeatState
 
 		//////////////////////////////////////////////////////////////////////////////////////////
 
-		for (i in 0...songs.length)
+		for (i in 0...songsData.length)
 		{
-			Mods.currentModDirectory = songs[i].folder;
+			Mods.currentModDirectory = songsData[i].folder;
+			var data = songsData[i];
+			var rect = new SongRect(data.songName, data.songCharacter, data.songMusican, data.songCharter, data.color);
+			add(rect);
+			songsRect.push(rect);
 		}
+
+		
+		//////////////////////////////////////////////////////////////////////////////////////////
+
+		downBG = new Rect(0, FlxG.height - 49, FlxG.width, 51, 0, 0); //嗯卧槽怎么全屏会漏
+		downBG.color = 0x242A2E;
+		add(downBG);
+
+		backRect = new BackButton(0, FlxG.height - 65, 195, 65);
+		add(backRect);
+
+
+		for (data in 0...funcData.length)
+		{
+			var button = new FuncButton(backRect.x + backRect.width + 15 + 140 * data, backRect.y, funcData[data], funcColors[data]);
+			add(button);
+			funcGroup.push(button);
+		}
+
+		playButton = new PlayButton(1100, 560);
+		add(playButton);
+
+		//////////////////////////////////////////////////////////////////////////////////////////
 
 		WeekData.setDirectoryFromWeek();
 	}
@@ -321,8 +330,8 @@ class SongMetadata
 	public var lastDifficulty:String = null;
 	public var bg:Dynamic;
 	public var searchnum:Int = 0;
-	public var musican:String = 'N/A';
-	public var charter:Array<String> = ['N/A', 'N/A', 'N/A'];
+	public var songMusican:String = 'N/A';
+	public var songCharter:Array<String> = ['N/A', 'N/A', 'N/A'];
 
 	public function new(song:String, week:Int, songCharacter:String, musican:String, charter:Array<String>, color:Array<Int>)
 	{

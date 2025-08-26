@@ -2,7 +2,7 @@ package objects.state.freeplayState.song;
 
 import objects.HealthIcon;
 
-class CollectionButton extends FlxSpriteGroup {
+class SongRect extends FlxSpriteGroup {
     static public var filePath:String = 'song/';
     var light:FlxSprite;
     var mask:FlxSprite;
@@ -14,7 +14,7 @@ class CollectionButton extends FlxSpriteGroup {
     
     public var onSelectChange:String->Void;
 
-    public function new(songNameSt:String, songChar:String, songmusican:String, songColor:Array<Int>) {
+    public function new(songNameSt:String, songChar:String, songMusican:String, songCharter:Array<String>, songColor:Array<Int>) {
         super(x, y);
 
         if (Cache.currentTrackedFrames.get('freeplay-song-Light') == null) addLightCache();
