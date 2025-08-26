@@ -204,10 +204,11 @@ class Note extends FlxSprite
 	{
 		noteSplashData.texture = PlayState.SONG != null ? PlayState.SONG.splashSkin : 'noteSplashes';
 		defaultRGB();
+		if (ClientPrefs.data.noteColorSwap){
 		colorSwap.hue = ClientPrefs.data.arrowHSV[noteData % 4][0] / 360;
 		colorSwap.saturation = ClientPrefs.data.arrowHSV[noteData % 4][1] / 100;
 		colorSwap.brightness = ClientPrefs.data.arrowHSV[noteData % 4][2] / 100;
-
+		}
 		if (noteData > -1 && noteType != value)
 		{
 			switch (value)
@@ -247,9 +248,11 @@ class Note extends FlxSprite
 				Paths.sound(hitsound); // precache new sound for being idiot-proof
 			noteType = value;
 		}
+		if (ClientPrefs.data.noteColorSwap){
 		noteSplashHue = colorSwap.hue;
 		noteSplashSat = colorSwap.saturation;
 		noteSplashBrt = colorSwap.brightness;
+		}
 		return value;
 	}
 
