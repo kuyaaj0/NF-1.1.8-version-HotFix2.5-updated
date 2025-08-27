@@ -134,9 +134,6 @@ class Main extends Sprite
 		}
 
 		Toolkit.init();
-		#if HSCRIPT_ALLOWED
-		Iris.addProxyImport("flixel.util.FlxColor", crowplexus.hscript.proxy.flixel.util.ProxyFlxColor);
-		#end
 
 		#if LUA_ALLOWED llua.Lua.set_callbacks_function(cpp.Callable.fromStaticFunction(psychlua.CallbackHandler.call)); #end
 		Controls.instance = new Controls();
