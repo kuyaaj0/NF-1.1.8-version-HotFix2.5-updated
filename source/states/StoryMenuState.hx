@@ -102,7 +102,7 @@ class StoryMenuState extends MusicBeatState
 			{
 				loadedWeeks.push(weekFile);
 				WeekData.setDirectoryFromWeek(weekFile);
-				var weekThing:MenuItem = new MenuItem(0, bgSprite.y + 396, WeekData.weeksList[i]);
+				var weekThing:MenuItem = new MenuItem(0, bgSprite.y + 396, weekFile.fileName);
 				weekThing.y += ((weekThing.height + 20) * num);
 				weekThing.targetY = num;
 				grpWeekText.add(weekThing);
@@ -292,7 +292,7 @@ class StoryMenuState extends MusicBeatState
 
 	function selectWeek()
 	{
-		if (!weekIsLocked(loadedWeeks[curWeek].fileName))
+		if (!weekIsLocked(loadedWeeks[curWeek].fullName))
 		{
 			// We can't use Dynamic Array .copy() because that crashes HTML5, here's a workaround.
 			var songArray:Array<String> = [];
@@ -403,7 +403,7 @@ class StoryMenuState extends MusicBeatState
 		lastDifficultyName = diff;
 
 		#if !switch
-		intendedScore = Highscore.getWeekScore(loadedWeeks[curWeek].fileName, curDifficulty);
+		intendedScore = Highscore.getWeekScore(loadedWeeks[curWeek].fullName, curDifficulty);
 		#end
 	}
 
@@ -428,7 +428,7 @@ class StoryMenuState extends MusicBeatState
 
 		var bullShit:Int = 0;
 
-		var unlocked:Bool = !weekIsLocked(leWeek.fileName);
+		var unlocked:Bool = !weekIsLocked(leWeek.fullName);
 		for (item in grpWeekText.members)
 		{
 			item.targetY = bullShit - curWeek;
@@ -503,7 +503,7 @@ class StoryMenuState extends MusicBeatState
 		txtTracklist.x -= FlxG.width * 0.35;
 
 		#if !switch
-		intendedScore = Highscore.getWeekScore(loadedWeeks[curWeek].fileName, curDifficulty);
+		intendedScore = Highscore.getWeekScore(loadedWeeks[curWeek].fullName, curDifficulty);
 		#end
 	}
 }

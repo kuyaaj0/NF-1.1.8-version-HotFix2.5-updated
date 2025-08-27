@@ -43,6 +43,8 @@ class WeekData
 
 	public var fileName:String;
 
+	public var fullName:String;
+
 	public static function createWeekFile():WeekFile
 	{
 		var weekFile:WeekFile = {
@@ -101,6 +103,7 @@ class WeekData
 					if (jsonFile != null)
 					{
 						var weekFile:WeekData = new WeekData(jsonFile, txtList[i]);
+						weekFile.fullName = 'origin-' + txtList[i];
 
 						if (weekFile != null
 							&& (isStoryMode == null
@@ -155,6 +158,7 @@ class WeekData
 			{
 				var weekFile:WeekData = new WeekData(week, weekName);
 				weekFile.folder = modName;
+				weekFile.fullName = modName + '-' + weekName;
 				if ((PlayState.isStoryMode && !weekFile.hideStoryMode) || (!PlayState.isStoryMode && !weekFile.hideFreeplay))
 				{
 					weeksLoaded.set(modName + '-' + weekName, weekFile);
