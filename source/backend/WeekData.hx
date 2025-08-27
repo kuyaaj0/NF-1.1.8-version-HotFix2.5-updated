@@ -107,7 +107,7 @@ class WeekData
 
 						if (weekFile != null
 							&& (isStoryMode == null
-								|| (isStoryMode && !weekFile.hideStoryMode)
+								|| (isStoryMode && !weekFile.hideStoryMode && !weekFile.hiddenUntilUnlocked)
 								|| (!isStoryMode && !weekFile.hideFreeplay)))
 						{
 							weeksLoaded.set('origin-' + txtList[i], weekFile);
@@ -159,7 +159,7 @@ class WeekData
 				var weekFile:WeekData = new WeekData(week, weekName);
 				weekFile.folder = modName;
 				weekFile.fullName = modName + '-' + weekName;
-				if ((PlayState.isStoryMode && !weekFile.hideStoryMode) || (!PlayState.isStoryMode && !weekFile.hideFreeplay))
+				if ((PlayState.isStoryMode && !weekFile.hideStoryMode && !weekFile.hiddenUntilUnlocked) || (!PlayState.isStoryMode && !weekFile.hideFreeplay))
 				{
 					weeksLoaded.set(modName + '-' + weekName, weekFile);
 					weeksList.push(modName + '-' + weekName);
