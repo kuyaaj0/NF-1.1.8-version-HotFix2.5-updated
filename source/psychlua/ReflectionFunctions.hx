@@ -34,8 +34,10 @@ class ReflectionFunctions
 		});
 		funk.set("getPropertyFromClass", function(classVar:String, variable:String, ?allowMaps:Bool = false)
 		{
-			var myClass:Dynamic = Type.resolveClass(classNameCheck(classVar));
-			variable = varCheck(classNameCheck(classVar), variable);
+			classVar = classNameCheck(classVar);
+			var myClass:Dynamic = Type.resolveClass(classVar);
+			variable = varCheck(classVar, variable);
+			
 			if (myClass == null)
 			{
 				FunkinLua.luaTrace('getPropertyFromClass: Class $classVar not found', false, false, FlxColor.RED);
@@ -63,20 +65,9 @@ class ReflectionFunctions
 		});
 		funk.set("setPropertyFromClass", function(classVar:String, variable:String, value:Dynamic, ?allowMaps:Bool = false)
 		{
-			var myClass:Dynamic = null;
-			var classType:Array<String> = ['backend', 'cutscenes', 'objects', 'options', 'psychlua', 'states', 'substates'];
-			for (i in 0...classType.length)
-			{
-				var rightClass:Dynamic = Type.resolveClass(classType[i] + '.' + classVar);
-				if (rightClass != null) {
-					classVar = classType[i] + '.' + classVar;
-					myClass = rightClass;
-					break;
-				}
-			}
-			
-			if (classVar == 'backend.ClientPrefs' && variable.indexOf('data.') == -1)
-			variable = 'data.' + variable;
+			classVar = classNameCheck(classVar);
+			var myClass:Dynamic = Type.resolveClass(classVar);
+			variable = varCheck(classVar, variable);
 
 			if (myClass == null)
 			{
