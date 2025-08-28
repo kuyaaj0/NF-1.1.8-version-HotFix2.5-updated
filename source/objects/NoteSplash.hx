@@ -25,6 +25,8 @@ class NoteSplash extends FlxSprite
 	public static var defaultNoteSplash(default, never):String = 'noteSplashes/noteSplashes';
 	public static var configs:Map<String, NoteSplashConfig> = new Map<String, NoteSplashConfig>();
 
+	private var oldVersion:Bool = false;
+
 	public function new(x:Float = 0, y:Float = 0)
 	{
 		super(x, y);
@@ -37,8 +39,10 @@ class NoteSplash extends FlxSprite
 		else
 		{
 			if (Paths.fileExists('images/noteSplashes.png', IMAGE)
-				&& ClientPrefs.data.splashSkin == ClientPrefs.defaultData.splashSkin) // fix for load old mods note assets
+				&& ClientPrefs.data.splashSkin == ClientPrefs.defaultData.splashSkin) {// fix for load old mods note assets
 				skin = 'noteSplashes';
+				oldVersion = true;
+			}
 			else
 				skin = defaultNoteSplash + getSplashSkinPostfix();
 		}
@@ -68,9 +72,10 @@ class NoteSplash extends FlxSprite
 			texture = note.noteSplashData.texture;
 		else if (PlayState.SONG.splashSkin != null && PlayState.SONG.splashSkin.length > 0)
 			texture = PlayState.SONG.splashSkin;
-		else if (Paths.fileExists('images/noteSplashes.png', IMAGE) && ClientPrefs.data.splashSkin == ClientPrefs.defaultData.splashSkin)
+		else if (Paths.fileExists('images/noteSplashes.png', IMAGE) && ClientPrefs.data.splashSkin == ClientPrefs.defaultData.splashSkin) {
 			texture = 'noteSplashes';
-		else
+			oldVersion = true;
+		} else
 			texture = defaultNoteSplash + getSplashSkinPostfix();
 
 		var config:NoteSplashConfig = null;
@@ -82,7 +87,8 @@ class NoteSplash extends FlxSprite
 		var tempShader:RGBPalette = null;
 		if ((note == null || note.noteSplashData.useRGBShader)
 			&& (PlayState.SONG == null || !PlayState.SONG.disableNoteRGB)
-			&& ClientPrefs.data.splashRGB)
+			&& ClientPrefs.data.splashRGB
+			&& !oldVersion)
 		{
 			// If Note RGB is enabled:
 			if (note != null && !note.noteSplashData.useGlobalShader)
@@ -117,20 +123,22 @@ class NoteSplash extends FlxSprite
 
 		var minFps:Int = 22;
 		var maxFps:Int = 26;
-		if (config != null)
-		{
-			var animID:Int = direction + ((animNum - 1) * Note.colArray.length);
-			// trace('anim: ${animation.curAnim.name}, $animID');
-			var offs:Array<Float> = config.offsets[FlxMath.wrap(animID, 0, config.offsets.length - 1)];
-			offset.x += offs[0] * (ExtraKeysHandler.instance.data.scales[PlayState.SONG.mania] + 0.3);
-			offset.y += offs[1] * (ExtraKeysHandler.instance.data.scales[PlayState.SONG.mania] + 0.3);
-			minFps = config.minFps;
-			maxFps = config.maxFps;
-		}
-		else
-		{
-			offset.x += -58 * (ExtraKeysHandler.instance.data.scales[PlayState.SONG.mania] + 0.3);
-			offset.y += -55 * (ExtraKeysHandler.instance.data.scales[PlayState.SONG.mania] + 0.3);
+		if (!oldVersion) {
+			if (config != null)
+			{
+				var animID:Int = direction + ((animNum - 1) * Note.colArray.length);
+				// trace('anim: ${animation.curAnim.name}, $animID');
+				var offs:Array<Float> = config.offsets[FlxMath.wrap(animID, 0, config.offsets.length - 1)];
+				offset.x += offs[0] * (ExtraKeysHandler.instance.data.scales[PlayState.SONG.mania] + 0.3);
+				offset.y += offs[1] * (ExtraKeysHandler.instance.data.scales[PlayState.SONG.mania] + 0.3);
+				minFps = config.minFps;
+				maxFps = config.maxFps;
+			}
+			else
+			{
+				offset.x += -58 * (ExtraKeysHandler.instance.data.scales[PlayState.SONG.mania] + 0.3);
+				offset.y += -55 * (ExtraKeysHandler.instance.data.scales[PlayState.SONG.mania] + 0.3);
+			}
 		}
 
 		if (animation.curAnim != null)

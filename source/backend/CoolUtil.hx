@@ -109,8 +109,11 @@ class CoolUtil
 
 	inline public static function getComboColor(sprite:flixel.FlxSprite):Int
 	{
-		var countByColor:Map<Int, Int> = [];
-		var colorCount:Int = 0;
+		var maxSaturation:Float = 0;
+		var maxSaturationColor:Int = 0xFFFFFFFF;
+		var blackPixelCount:Int = 0;
+		var totalPixelCount:Int = 0;
+		
 		for (col in 0...sprite.frameWidth)
 		{
 			for (row in 0...sprite.frameHeight)
@@ -118,31 +121,39 @@ class CoolUtil
 				var colorOfThisPixel:Int = sprite.pixels.getPixel32(col, row);
 				if (colorOfThisPixel != 0)
 				{
-					if (countByColor.exists(colorOfThisPixel))
-						countByColor[colorOfThisPixel] = countByColor[colorOfThisPixel] + 1;
-					else if (countByColor[colorOfThisPixel] != 13520687 - (2 * 13520687))
-						countByColor[colorOfThisPixel] = 1;
-
-					colorCount++;
+					totalPixelCount++;
+					
+					if (colorOfThisPixel == FlxColor.BLACK)
+					{
+						blackPixelCount++;
+						continue;
+					}
+					
+					// 计算饱和度
+					var flxColor = FlxColor.fromInt(colorOfThisPixel);
+					var r = flxColor.red / 255.0;
+					var g = flxColor.green / 255.0;
+					var b = flxColor.blue / 255.0;
+					
+					var max = Math.max(Math.max(r, g), b);
+					var min = Math.min(Math.min(r, g), b);
+					var saturation = max == 0 ? 0 : (max - min) / max;
+					
+					// 找到饱和度最高的颜色
+					if (saturation > maxSaturation)
+					{
+						maxSaturation = saturation;
+						maxSaturationColor = colorOfThisPixel;
+					}
 				}
 			}
 		}
-		var maxCount = 0;
-		var maxKey:Int = 0xFFFFFFFF; // after the loop this will store the max color
-		for (key in countByColor.keys())
-		{
-			if (countByColor[key] > maxCount && key != FlxColor.BLACK)
-			{
-				maxCount = countByColor[key];
-				maxKey = key;
-			}
-		}
-
-		if (countByColor[FlxColor.BLACK] >= sprite.frameHeight * sprite.frameWidth * 0.5)
-			maxKey = 0xFF000000; // 50%+ is black, so main color is black, it use for fix something
-
-		countByColor = [];
-		return maxKey;
+		
+		// 如果黑色像素占50%以上，返回黑色，目前不用了这个功能
+		//if (blackPixelCount >= totalPixelCount * 0.5)
+			//return 0xFF000000;
+		
+		return maxSaturationColor;
 	}
 
 	inline public static function numberArray(max:Int, ?min = 0):Array<Int>

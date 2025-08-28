@@ -590,9 +590,6 @@ class PlayState extends MusicBeatState
 		uiGroup = new FlxSpriteGroup();
 		add(uiGroup);
 
-		noteGroup = new FlxTypedGroup<FlxBasic>();
-		add(noteGroup);
-
 		Conductor.songPosition = -5000 / Conductor.songPosition;
 		var showTime:Bool = (ClientPrefs.data.timeBarType != 'Disabled');
 		timeTxt = new FlxText(STRUM_X + (FlxG.width / 2) - 248, 19, 400, "", 32);
@@ -606,12 +603,22 @@ class PlayState extends MusicBeatState
 		if (ClientPrefs.data.timeBarType == 'Song Name')
 			timeTxt.text = SONG.song;
 
+		timeBarBG = new AttachedSprite('timeBar');
+		timeBarBG.visible = false;
+		add(timeBarBG);
+
 		timeBar = new Bar(0, timeTxt.y + (timeTxt.height / 4), 'timeBar', function() return songPercent, 0, 1);
 		timeBar.scrollFactor.set();
 		timeBar.screenCenter(X);
 		timeBar.alpha = 0;
 		timeBar.visible = showTime;
-		
+		timeBarBG.sprTracker = timeBar;
+		add(timeBar);
+		add(timeTxt);
+
+		healthBarBG = new AttachedSprite('healthBar');
+		healthBarBG.visible = false;
+		add(healthBarBG);
 
 		healthBar = new Bar(0, FlxG.height * (!ClientPrefs.data.downScroll ? 0.89 : 0.11), 'healthBar', function() return health, 0, 2,
 			ClientPrefs.data.oldHealthBarVersion);
@@ -621,39 +628,27 @@ class PlayState extends MusicBeatState
 		healthBar.visible = !ClientPrefs.data.hideHud;
 		healthBar.alpha = ClientPrefs.data.healthBarAlpha;
 		reloadHealthBarColors();
-
-		timeBarBG = new AttachedSprite('timeBar');
-		timeBarBG.sprTracker = timeBar;
-		timeBarBG.visible = false;
-		uiGroup.add(timeBarBG);
-
-		uiGroup.add(timeBar);
-		uiGroup.add(timeTxt);
-
-		healthBarBG = new AttachedSprite('healthBar');
-		healthBarBG.visible = false;
+		add(healthBar);
 		healthBarBG.sprTracker = healthBar;
-		uiGroup.add(healthBarBG);
-		uiGroup.add(healthBar);
 
 		iconP1 = new HealthIcon(boyfriend.healthIcon, true);
 		iconP1.y = healthBar.y - 75;
 		iconP1.visible = !ClientPrefs.data.hideHud;
 		iconP1.alpha = ClientPrefs.data.healthBarAlpha;
-		uiGroup.add(iconP1);
+		add(iconP1);
 
 		iconP2 = new HealthIcon(dad.healthIcon, false);
 		iconP2.y = healthBar.y - 75;
 		iconP2.visible = !ClientPrefs.data.hideHud;
 		iconP2.alpha = ClientPrefs.data.healthBarAlpha;
-		uiGroup.add(iconP2);
+		add(iconP2);
 
 		scoreTxt = new FlxText(0, healthBar.y + 40, FlxG.width, "", 20);
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		scoreTxt.scrollFactor.set();
 		scoreTxt.borderSize = 1.25;
 		scoreTxt.visible = !ClientPrefs.data.hideHud;
-		uiGroup.add(scoreTxt);
+		add(scoreTxt);
 
 		judgementCounter_S = new JudgementCounter(10, 0);
 		judgementCounter_S.visible = (ClientPrefs.data.judgementCounter
@@ -663,17 +658,12 @@ class PlayState extends MusicBeatState
 		add(judgementCounter_S);
 		judgementCounter_S.y = FlxG.height / 2 - judgementCounter_S.height / 2;
 
-		strumLineNotes = new FlxTypedGroup<StrumNote>();
-		noteGroup.add(strumLineNotes);
-
 		botplayTxt = new FlxText(400, timeBar.y + 55, FlxG.width - 800, "BOTPLAY", 32);
 		botplayTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		botplayTxt.scrollFactor.set();
 		botplayTxt.borderSize = 1.25;
 		botplayTxt.visible = ClientPrefs.data.playOpponent ? cpuControlled_opponent : cpuControlled;
-		add(botplayTxt); // botplay text is special
-		botplayTxt.cameras = [camHUD];
-		uiGroup.add(botplayTxt);
+		add(botplayTxt);
 		if (ClientPrefs.data.downScroll)
 			botplayTxt.y = timeBar.y - 78;
 
@@ -682,9 +672,7 @@ class PlayState extends MusicBeatState
 		replayTxt.scrollFactor.set();
 		replayTxt.borderSize = 1.25;
 		replayTxt.visible = replayMode;
-		add(replayTxt); // botplay text is special
-		replayTxt.cameras = [camHUD];
-		uiGroup.add(replayTxt);
+		add(replayTxt);
 		if (ClientPrefs.data.downScroll)
 			replayTxt.y = timeBar.y - 78;
 
@@ -693,6 +681,17 @@ class PlayState extends MusicBeatState
 			timeTxt.size = 24;
 			timeTxt.y += 3;
 		}
+		
+		healthBar.cameras = [camHUD];
+		healthBarBG.cameras = [camHUD];
+		iconP1.cameras = [camHUD];
+		iconP2.cameras = [camHUD];
+		scoreTxt.cameras = [camHUD];
+		botplayTxt.cameras = [camHUD];
+		replayTxt.cameras = [camHUD];
+		timeBar.cameras = [camHUD];
+		timeBarBG.cameras = [camHUD];
+		timeTxt.cameras = [camHUD];
 
 		if (ClientPrefs.data.pauseButton)
 		{
@@ -705,6 +704,12 @@ class PlayState extends MusicBeatState
 			pauseButton_menu.updateHitbox();
 			pauseButton_menu.camera = camPause;
 		}
+
+		noteGroup = new FlxTypedGroup<FlxBasic>();
+		add(noteGroup);
+
+		strumLineNotes = new FlxTypedGroup<StrumNote>();
+		noteGroup.add(strumLineNotes);
 
 		var splash:NoteSplash = new NoteSplash(100, 100);
 		splash.setupNoteSplash(100, 100);
