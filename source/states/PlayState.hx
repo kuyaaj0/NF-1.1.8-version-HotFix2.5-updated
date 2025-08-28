@@ -58,7 +58,7 @@ import crowplexus.iris.Iris;
 import crowplexus.hscript.Expr.Error as IrisError;
 import crowplexus.hscript.Printer;
 #end
-import modchart.Manager;
+//import modchart.Manager;
 
 @:allow(backend.Replay)
 /**
@@ -322,7 +322,7 @@ class PlayState extends MusicBeatState
 
 	var diffBotplay:Bool;
 
-	public var modchart:Manager;
+	//public var modchart:Manager;
 
 	public function new()
 	{
@@ -1214,8 +1214,8 @@ class PlayState extends MusicBeatState
 			generateStaticArrows(0);
 			generateStaticArrows(1);
 
-			modchart = new Manager(); //目前版本的modchart有问题
-			addManager(modchart);
+			///modchart = new Manager(); //目前版本的modchart有问题
+			//addManager(modchart);
 
 			for (i in 0...playerStrums.length)
 			{
@@ -1351,7 +1351,7 @@ class PlayState extends MusicBeatState
 		insert(members.indexOf(dadGroup), obj);
 	}
 
-	
+	/*
 	public function addManager(obj:Manager)
 	{
 		if (obj.playfields == null || obj.playfields.length == 0)
@@ -1359,7 +1359,7 @@ class PlayState extends MusicBeatState
 
 		add(obj);
 	}
-	
+	*/
 
 	public function clearNotesBefore(time:Float)
 	{
