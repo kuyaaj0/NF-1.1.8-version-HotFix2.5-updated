@@ -102,6 +102,7 @@ import states.TitleState;
 	// Skin
 	public var noteSkin:String = 'Default';
 	public var noteRGB:Bool = true;
+	public var noteColorSwap:Bool = false;
 	// splash s
 	public var splashSkin:String = 'Psych';
 	public var splashRGB:Bool = true;
@@ -187,6 +188,9 @@ import states.TitleState;
 		[0xFF71E300, 0xFFF6FFE6, 0xFF003100],
 		[0xFFFF884E, 0xFFFFFAF5, 0xFF6C0000]
 	];
+
+	//其实这个也可以扔了,我们有多k，，，，，
+	public var arrowHSV:Array<Array<Float>> = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]];
 
 	public var gameplaySettings:Map<String, Dynamic> = [
 		'scrollspeed' => 1.0,

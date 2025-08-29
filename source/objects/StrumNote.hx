@@ -12,7 +12,7 @@ class StrumNote extends FlxSprite
 	public var rgbShader:RGBShaderReference;
 
 	public var resetAnim:Float = 0;
-
+	public var colorSwap:ColorSwap;
 	private var noteData:Int = 0;
 
 	public var direction:Float = 90; // plan on doing scroll directions soon -bb
@@ -20,7 +20,7 @@ class StrumNote extends FlxSprite
 	public var sustainReduce:Bool = true;
 
 	public var trackedScale:Float = 0.7;
-	private var player:Int;
+	public var player:Int;
 	private var initialWidth:Float = 0;
 
 	public var texture(default, set):String = null;
@@ -43,9 +43,12 @@ class StrumNote extends FlxSprite
 
 		rgbShader = new RGBShaderReference(this, Note.initializeGlobalRGBShader(leData));
 		rgbShader.enabled = false;
-		if (PlayState.SONG != null && (PlayState.SONG.disableNoteRGB || !ClientPrefs.data.noteRGB))
+		if (PlayState.SONG != null && (PlayState.SONG.disableNoteRGB || !ClientPrefs.data.noteRGB || ClientPrefs.data.noteColorSwap))
 			useRGBShader = false;
-
+		if (ClientPrefs.data.noteColorSwap){
+		colorSwap = new ColorSwap();
+		shader = colorSwap.shader;
+		}
 		//先不改mania，要魔改的玩意好像还不少呢，先加上再说		//算了懒了，能跑起来就不改了————卡昔233
 		var mania = 3;
 		if (PlayState.SONG != null)
@@ -244,6 +247,16 @@ class StrumNote extends FlxSprite
 		}
 		if (useRGBShader)
 			rgbShader.enabled = (animation.curAnim != null && animation.curAnim.name != 'static');
+		else if (ClientPrefs.data.noteColorSwap){
+			if(animation.curAnim == null || animation.curAnim.name == 'static') {
+			colorSwap.hue = 0;
+			colorSwap.saturation = 0;
+			colorSwap.brightness = 0;
+			} else {
+			colorSwap.hue = ClientPrefs.data.arrowHSV[noteData % 4][0] / 360;
+			colorSwap.saturation = ClientPrefs.data.arrowHSV[noteData % 4][1] / 100;
+			colorSwap.brightness = ClientPrefs.data.arrowHSV[noteData % 4][2] / 100;
+			}
 	}
 	public function getIndex(mania:Int, note:Int) {
 		return ExtraKeysHandler.instance.data.keys[mania].notes[note];
