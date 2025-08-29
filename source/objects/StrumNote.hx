@@ -259,6 +259,7 @@ class StrumNote extends FlxSprite
 			}
 		}
 	}
+	
 	public function getIndex(mania:Int, note:Int) {
 		return ExtraKeysHandler.instance.data.keys[mania].notes[note];
 	}
