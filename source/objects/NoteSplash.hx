@@ -27,6 +27,8 @@ class NoteSplash extends FlxSprite
 
 	private var oldVersion:Bool = false;
 
+	static var oldPath:Bool = false;
+
 	public function new(x:Float = 0, y:Float = 0)
 	{
 		super(x, y);
@@ -38,8 +40,7 @@ class NoteSplash extends FlxSprite
 			skin = PlayState.SONG.splashSkin;
 		else
 		{
-			if (Paths.fileExists('images/noteSplashes.png', IMAGE)
-				&& ClientPrefs.data.splashSkin == ClientPrefs.defaultData.splashSkin) {// fix for load old mods note assets
+			if (oldPath && ClientPrefs.data.splashSkin == ClientPrefs.defaultData.splashSkin) {// fix for load old mods note assets
 				skin = 'noteSplashes';
 				oldVersion = true;
 			}
@@ -156,16 +157,21 @@ class NoteSplash extends FlxSprite
 	function loadAnims(skin:String, ?animName:String = null):NoteSplashConfig
 	{
 		maxAnims = 0;
-		frames = Paths.getSparrowAtlas(skin);
+
+		if (Cache.currentTrackedFrames.get(skin) == null) addSkinCache(skin);	
+		frames = Cache.currentTrackedFrames.get(skin);
+
 		var config:NoteSplashConfig = null;
 		if (frames == null)
 		{
 			skin = defaultNoteSplash + getSplashSkinPostfix();
-			frames = Paths.getSparrowAtlas(skin);
+			if (Cache.currentTrackedFrames.get(skin) == null) addSkinCache(skin);	
+			frames = Cache.currentTrackedFrames.get(skin);
 			if (frames == null) // if you really need this, you really fucked something up
 			{
 				skin = defaultNoteSplash;
-				frames = Paths.getSparrowAtlas(skin);
+				if (Cache.currentTrackedFrames.get(skin) == null) addSkinCache(skin);	
+				frames = Cache.currentTrackedFrames.get(skin);
 			}
 		}
 
@@ -247,6 +253,19 @@ class NoteSplash extends FlxSprite
 			kill();
 
 		super.update(elapsed);
+	}
+
+	static public function init() {
+		if (Paths.fileExists('images/noteSplashes.png', IMAGE)) oldPath = true;
+		else oldPath = false;
+	}
+
+	static function addSkinCache(skin:String)
+	{
+		var spr:FlxSprite = new FlxSprite();
+		spr.frames = Paths.getSparrowAtlas(skin, null, false);
+
+		Cache.currentTrackedFrames.set(skin, spr.frames);
 	}
 }
 
