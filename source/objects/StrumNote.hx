@@ -6,6 +6,7 @@ import backend.extraKeys.ExtraKeysHandler;
 import backend.animation.PsychAnimationController;
 import shaders.RGBPalette;
 import shaders.RGBPalette.RGBShaderReference;
+import shaders.ColorSwap;
 
 class StrumNote extends FlxSprite
 {
