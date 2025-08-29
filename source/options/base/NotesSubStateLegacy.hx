@@ -65,7 +65,7 @@ class NotesSubStateLegacy extends MusicBeatSubstate
 		for (i in 0...ClientPrefs.data.arrowHSV.length) {
 			var yPos:Float = (165 * i) + 35;
 			for (j in 0...3) {
-				var optionText:Alphabet = new Alphabet(0, yPos + 160, Std.string(ClientPrefs.data.arrowHSV[i][j]), true);
+				var optionText:Alphabet = new Alphabet(0, yPos + 60, Std.string(ClientPrefs.data.arrowHSV[i][j]), true);
 				optionText.x = posX + (225 * j) + 250;
 				grpNumbers.add(optionText);
 			}
@@ -213,7 +213,7 @@ class NotesSubStateLegacy extends MusicBeatSubstate
 			if (curSelected == i) {
 				item.alpha = 1;
 				item.scale.set(1, 1);
-				hsbText.y = item.y - 70;
+				hsbText.y = item.y - 20;
 				blackBG.y = item.y - 20;
 			}
 		}
