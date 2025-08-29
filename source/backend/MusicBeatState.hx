@@ -5,6 +5,7 @@ import flixel.FlxState;
 import flixel.addons.ui.FlxUIState;
 import backend.PsychCamera;
 import shaders.ColorblindFilter;
+import openfl.Lib;
 
 class MusicBeatState extends FlxUIState
 {
