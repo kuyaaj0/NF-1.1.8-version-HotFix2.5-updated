@@ -257,6 +257,7 @@ class StrumNote extends FlxSprite
 			colorSwap.saturation = ClientPrefs.data.arrowHSV[noteData % 4][1] / 100;
 			colorSwap.brightness = ClientPrefs.data.arrowHSV[noteData % 4][2] / 100;
 			}
+		}
 	}
 	public function getIndex(mania:Int, note:Int) {
 		return ExtraKeysHandler.instance.data.keys[mania].notes[note];
