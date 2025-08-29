@@ -5,8 +5,9 @@ Note => Note
 
 noteSkin => Note Skin
 noteRGB => Note RGB
+noteColorSwap => Note HSV
 NotesSubState => Note Color Setup
-
+NotesSubStateLegacy => Legacy Color Setup
 
 Splash => Splash
 

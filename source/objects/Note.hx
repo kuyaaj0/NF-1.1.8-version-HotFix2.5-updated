@@ -4,6 +4,7 @@ import backend.extraKeys.ExtraKeysHandler;
 import backend.animation.PsychAnimationController;
 import backend.NoteTypesConfig;
 import shaders.RGBPalette;
+import shaders.ColorSwap;
 import shaders.RGBPalette.RGBShaderReference;
 import states.editors.EditorPlayState;
 import objects.StrumNote;
@@ -88,6 +89,10 @@ class Note extends FlxSprite
 
 	public static var globalRgbShaders:Array<RGBPalette> = [];
 
+	public var colorSwap:ColorSwap;
+
+	//public static var globalColorSwapShaders:Array<ColorSwap> = [];
+
 	public var inEditor:Bool = false;
 
 	public var animSuffix:String = '';
@@ -145,9 +150,9 @@ class Note extends FlxSprite
 	public var hitsoundChartEditor:Bool = true;
 	public var hitsound:String = 'hitsound';
 
-	public var noteSplashBrt:Int = 0;
-	public var noteSplashSat:Int = 0;
-	public var noteSplashHue:Int = 0;
+	public var noteSplashBrt:Float = 0;
+	public var noteSplashSat:Float = 0;
+	public var noteSplashHue:Float = 0;
 
 	// fix old lua😡
 
@@ -199,7 +204,11 @@ class Note extends FlxSprite
 	{
 		noteSplashData.texture = PlayState.SONG != null ? PlayState.SONG.splashSkin : 'noteSplashes';
 		defaultRGB();
-
+		if (ClientPrefs.data.noteColorSwap){
+		colorSwap.hue = ClientPrefs.data.arrowHSV[noteData % 4][0] / 360;
+		colorSwap.saturation = ClientPrefs.data.arrowHSV[noteData % 4][1] / 100;
+		colorSwap.brightness = ClientPrefs.data.arrowHSV[noteData % 4][2] / 100;
+		}
 		if (noteData > -1 && noteType != value)
 		{
 			switch (value)
@@ -238,6 +247,11 @@ class Note extends FlxSprite
 			if (hitsound != 'hitsound' && ClientPrefs.data.hitsoundVolume > 0)
 				Paths.sound(hitsound); // precache new sound for being idiot-proof
 			noteType = value;
+		}
+		if (ClientPrefs.data.noteColorSwap){
+		noteSplashHue = colorSwap.hue;
+		noteSplashSat = colorSwap.saturation;
+		noteSplashBrt = colorSwap.brightness;
 		}
 		return value;
 	}
@@ -296,9 +310,13 @@ class Note extends FlxSprite
 		{
 			texture = '';
 			rgbShader = new RGBShaderReference(this, initializeGlobalRGBShader(noteData));
-			if (PlayState.SONG != null && (PlayState.SONG.disableNoteRGB || !ClientPrefs.data.noteRGB))
+			if (PlayState.SONG != null && (PlayState.SONG.disableNoteRGB || !ClientPrefs.data.noteRGB || ClientPrefs.data.noteColorSwap))
 				rgbShader.enabled = false;
+			if (ClientPrefs.data.noteColorSwap){
+			colorSwap = new ColorSwap();
+			shader = colorSwap.shader;
 
+			}
 			x += swagWidth * (noteData);
 			if (!isSustainNote /* && noteData < colArray.length*/)
 			{ // Doing this 'if' check to fix the warnings on Senpai songs

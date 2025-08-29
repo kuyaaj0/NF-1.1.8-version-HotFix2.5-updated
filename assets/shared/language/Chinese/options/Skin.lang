@@ -5,7 +5,9 @@ Note => 箭头皮肤
 
 noteSkin => 类型
 noteRGB => 着色器
+noteColorSwap => 旧版着色器
 NotesSubState => 颜色设置
+NotesSubStateLegacy => 旧版颜色设置
 
 
 Splash => 溅射皮肤
