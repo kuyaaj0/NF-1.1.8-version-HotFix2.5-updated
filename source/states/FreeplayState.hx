@@ -17,6 +17,8 @@ import backend.diffCalc.StarRating;
 import objects.state.freeplayState.detail.*;
 import objects.state.freeplayState.down.*;
 import objects.state.freeplayState.others.*;
+import objects.state.freeplayState.select.*;
+import objects.state.freeplayState.song.*;
 
 import substates.GameplayChangersSubstate;
 import substates.ResetScoreSubState;
@@ -34,10 +36,14 @@ import sys.thread.Mutex;
 class FreeplayState extends MusicBeatState
 {
 	static public var filePath:String = 'menuExtendHide/freeplay/';
-
 	static public var instance:FreeplayState;
 
-	var songs:Array<SongMetadata> = [];
+	///////////////////////////////////////////////////////////////////////////////////////////////
+
+	var songsData:Array<SongMetadata> = [];
+
+	var songsRect:Array<SongRect> = [];
+	var songsMove:MouseMove;
 
 	public static var vocals:FlxSound = null;
 
@@ -80,6 +86,15 @@ class FreeplayState extends MusicBeatState
 	var downBG:Rect;
 	var backRect:BackButton;
 	var funcGroup:Array<FuncButton> = [];
+	var playButton:PlayButton;
+
+	///////////////////////////////////////////////////////////////////////////////////////////////
+
+	var selectedBG:FlxSprite;
+	var searchButton:SearchButton;
+	var diffSelect:DiffSelect;
+	var sortButton:SortButton;
+	var collectionButton:CollectionButton;
 
 	override function create()
 	{
@@ -125,7 +140,7 @@ class FreeplayState extends MusicBeatState
 				var charter:Array<String> = song[4];
 				if (song[4] == null)
 					charter = ['N/A', 'N/A', 'N/A'];
-				songs.push(new SongMetadata(song[0], i, song[1], muscan, charter, colors));
+				songsData.push(new SongMetadata(song[0], i, song[1], muscan, charter, colors));
 			}
 		}
 
@@ -217,8 +232,6 @@ class FreeplayState extends MusicBeatState
 		detailMapper.y = detailRect.bg2.y;
 		add(detailMapper);
 
-
-
 		noteData = new DataDis(10, detailRect.bg3.y + 10, 120, 5, 'Notes');
 		add(noteData);
 
@@ -232,8 +245,40 @@ class FreeplayState extends MusicBeatState
 		add(keyCountData);
 
 		//////////////////////////////////////////////////////////////////////////////////////////
+		
+		selectedBG = new FlxSprite(FlxG.width, 0).loadGraphic(Paths.image(FreeplayState.filePath + 'selectBG'));
+        selectedBG.antialiasing = ClientPrefs.data.antialiasing;
+		selectedBG.x -= selectedBG.width;
+		selectedBG.alpha = 0.6;
+        add(selectedBG);
 
-		downBG = new Rect(0, FlxG.height - 50, FlxG.width, 50, 0, 0);
+		searchButton = new SearchButton(695, 5);
+		add(searchButton);
+
+		diffSelect = new DiffSelect(688, 65);
+		add(diffSelect);
+
+		sortButton = new SortButton(682, 105);
+		add(sortButton);
+
+		collectionButton = new CollectionButton(977, 105);
+		add(collectionButton);
+
+		//////////////////////////////////////////////////////////////////////////////////////////
+
+		for (i in 0...songsData.length)
+		{
+			Mods.currentModDirectory = songsData[i].folder;
+			var data = songsData[i];
+			var rect = new SongRect(data.songName, data.songCharacter, data.songMusican, data.songCharter, data.color);
+			add(rect);
+			songsRect.push(rect);
+		}
+
+		
+		//////////////////////////////////////////////////////////////////////////////////////////
+
+		downBG = new Rect(0, FlxG.height - 49, FlxG.width, 51, 0, 0); //嗯卧槽怎么全屏会漏
 		downBG.color = 0x242A2E;
 		add(downBG);
 
@@ -248,14 +293,10 @@ class FreeplayState extends MusicBeatState
 			funcGroup.push(button);
 		}
 
+		playButton = new PlayButton(1100, 560);
+		add(playButton);
+
 		//////////////////////////////////////////////////////////////////////////////////////////
-
-		for (i in 0...songs.length)
-		{
-			Mods.currentModDirectory = songs[i].folder;
-
-			
-		}
 
 		WeekData.setDirectoryFromWeek();
 	}
@@ -289,8 +330,8 @@ class SongMetadata
 	public var lastDifficulty:String = null;
 	public var bg:Dynamic;
 	public var searchnum:Int = 0;
-	public var musican:String = 'N/A';
-	public var charter:Array<String> = ['N/A', 'N/A', 'N/A'];
+	public var songMusican:String = 'N/A';
+	public var songCharter:Array<String> = ['N/A', 'N/A', 'N/A'];
 
 	public function new(song:String, week:Int, songCharacter:String, musican:String, charter:Array<String>, color:Array<Int>)
 	{
@@ -301,8 +342,8 @@ class SongMetadata
 		this.folder = Mods.currentModDirectory;
 		this.bg = Paths.image('menuDesat', null, false);
 		this.searchnum = 0;
-		this.musican = musican;
-		this.charter = charter;
+		this.songMusican = musican;
+		this.songCharter = charter;
 		if (this.folder == null)
 			this.folder = '';
 	}

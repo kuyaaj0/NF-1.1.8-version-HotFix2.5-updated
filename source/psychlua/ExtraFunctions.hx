@@ -27,7 +27,7 @@ class ExtraFunctions
 				case 'right':
 					return PlayState.instance.controls.NOTE_RIGHT_P;
 				default:
-					if (MusicBeatState.instance.mobileControls.visible == true)
+					if (MusicBeatState.instance.mobileControls != null && MusicBeatState.instance.mobileControls.visible == true)
 					{
 						var extraControl = MusicBeatState.instance.mobileControls.current;
 						if (name == ClientPrefs.data.extraKeyReturn1.toLowerCase()
@@ -69,7 +69,7 @@ class ExtraFunctions
 				case 'right':
 					return PlayState.instance.controls.NOTE_RIGHT;
 				default:
-					if (MusicBeatState.instance.mobileControls.visible == true)
+					if (MusicBeatState.instance.mobileControls != null && MusicBeatState.instance.mobileControls.visible == true)
 					{
 						var extraControl = MusicBeatState.instance.mobileControls.current;
 						if (name == ClientPrefs.data.extraKeyReturn1.toLowerCase()
@@ -111,7 +111,7 @@ class ExtraFunctions
 				case 'right':
 					return PlayState.instance.controls.NOTE_RIGHT_R;
 				default:
-					if (MusicBeatState.instance.mobileControls.visible == true)
+					if (MusicBeatState.instance.mobileControls != null && MusicBeatState.instance.mobileControls.visible == true)
 					{
 						var extraControl = MusicBeatState.instance.mobileControls.current;
 						if (name == ClientPrefs.data.extraKeyReturn1.toLowerCase()
@@ -198,7 +198,7 @@ class ExtraFunctions
 				case 'right':
 					return PlayState.instance.controls.NOTE_RIGHT_P;
 				default:
-					if (MusicBeatState.instance.mobileControls.visible == true)
+					if (MusicBeatState.instance.mobileControls != null && MusicBeatState.instance.mobileControls.visible == true)
 					{
 						var extraControl = MusicBeatState.instance.mobileControls.current;
 						if (name == ClientPrefs.data.extraKeyReturn1.toLowerCase()
@@ -239,7 +239,7 @@ class ExtraFunctions
 				case 'right':
 					return PlayState.instance.controls.NOTE_RIGHT;
 				default:
-					if (MusicBeatState.instance.mobileControls.visible == true)
+					if (MusicBeatState.instance.mobileControls != null && MusicBeatState.instance.mobileControls.visible == true)
 					{
 						var extraControl = MusicBeatState.instance.mobileControls.current;
 						if (name == ClientPrefs.data.extraKeyReturn1.toLowerCase()
@@ -280,7 +280,7 @@ class ExtraFunctions
 				case 'right':
 					return PlayState.instance.controls.NOTE_RIGHT_R;
 				default:
-					if (MusicBeatState.instance.mobileControls.visible == true)
+					if (MusicBeatState.instance.mobileControls != null && MusicBeatState.instance.mobileControls.visible == true)
 					{
 						var extraControl = MusicBeatState.instance.mobileControls.current;
 						if (name == ClientPrefs.data.extraKeyReturn1.toLowerCase()

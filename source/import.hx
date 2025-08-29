@@ -76,6 +76,15 @@ import flxanimate.*;
 import flxanimate.PsychFlxAnimate as FlxAnimate;
 #end
 
+//Spine
+import spine.animation.AnimationStateData;
+import spine.animation.AnimationState;
+import openfl.Assets;
+import spine.atlas.TextureAtlas;
+import spine.SkeletonData;
+import spine.flixel.SkeletonSprite;
+import spine.flixel.FlixelTextureLoader;
+
 // Flixel
 import flixel.sound.FlxSound;
 import flixel.FlxG;

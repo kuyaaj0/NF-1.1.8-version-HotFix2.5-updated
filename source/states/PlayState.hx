@@ -611,8 +611,7 @@ class PlayState extends MusicBeatState
 		timeBar.screenCenter(X);
 		timeBar.alpha = 0;
 		timeBar.visible = showTime;
-		uiGroup.add(timeBar);
-		uiGroup.add(timeTxt);
+		
 
 		healthBar = new Bar(0, FlxG.height * (!ClientPrefs.data.downScroll ? 0.89 : 0.11), 'healthBar', function() return health, 0, 2,
 			ClientPrefs.data.oldHealthBarVersion);
@@ -622,18 +621,20 @@ class PlayState extends MusicBeatState
 		healthBar.visible = !ClientPrefs.data.hideHud;
 		healthBar.alpha = ClientPrefs.data.healthBarAlpha;
 		reloadHealthBarColors();
-		uiGroup.add(healthBar);
 
 		timeBarBG = new AttachedSprite('timeBar');
-		timeBarBG.visible = timeBarBG.active = false;
-		add(timeBarBG);
-		timeBarBG.camera = camHUD;
+		timeBarBG.sprTracker = timeBar;
+		timeBarBG.visible = false;
+		uiGroup.add(timeBarBG);
+
+		uiGroup.add(timeBar);
+		uiGroup.add(timeTxt);
 
 		healthBarBG = new AttachedSprite('healthBar');
-		healthBarBG.visible = healthBarBG.active = false;
-		healthBarBG.scrollFactor.set();
-		add(healthBarBG);
-		healthBarBG.camera = camHUD;
+		healthBarBG.visible = false;
+		healthBarBG.sprTracker = healthBar;
+		uiGroup.add(healthBarBG);
+		uiGroup.add(healthBar);
 
 		iconP1 = new HealthIcon(boyfriend.healthIcon, true);
 		iconP1.y = healthBar.y - 75;
@@ -1214,7 +1215,7 @@ class PlayState extends MusicBeatState
 			generateStaticArrows(0);
 			generateStaticArrows(1);
 
-			//modchart = new Manager(); //目前版本的modchart有问题
+			///modchart = new Manager(); //目前版本的modchart有问题
 			//addManager(modchart);
 
 			for (i in 0...playerStrums.length)
@@ -1351,7 +1352,7 @@ class PlayState extends MusicBeatState
 		insert(members.indexOf(dadGroup), obj);
 	}
 
-	/** 
+	/*
 	public function addManager(obj:Manager)
 	{
 		if (obj.playfields == null || obj.playfields.length == 0)
@@ -1359,7 +1360,7 @@ class PlayState extends MusicBeatState
 
 		add(obj);
 	}
-	**/
+	*/
 
 	public function clearNotesBefore(time:Float)
 	{
@@ -2504,7 +2505,6 @@ class PlayState extends MusicBeatState
 							// Kill extremely late notes and cause misses
 							if (Conductor.songPosition - daNote.strumTime > noteKillOffset * 1.5)
 							{
-								daNote.active = daNote.visible = false;
 								invalidateNote(daNote);
 							}
 							else if (Conductor.songPosition - daNote.strumTime > noteKillOffset)
@@ -4479,6 +4479,7 @@ class PlayState extends MusicBeatState
 				note.kill();
 			notes.remove(note, true);
 			note.destroy();
+			note = null;
 		}
 		killNotes = [];
 	}

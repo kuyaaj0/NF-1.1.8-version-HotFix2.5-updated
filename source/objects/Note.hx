@@ -716,6 +716,9 @@ class Note extends FlxSprite
 				swagRect.width = width / scale.x;
 				swagRect.height = (height / scale.y) - swagRect.y;
 			}
+			if (swagRect.height < 1) {
+				PlayState.instance.invalidateNote(this);
+			}
 			clipRect = swagRect;
 		}
 	}

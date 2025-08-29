@@ -34,15 +34,17 @@ class ReflectionFunctions
 		});
 		funk.set("getPropertyFromClass", function(classVar:String, variable:String, ?allowMaps:Bool = false)
 		{
-			var myClass:Dynamic = classCheck(classVar);
-			variable = varCheck(myClass, variable);
+			classVar = classNameCheck(classVar);
+			var myClass:Dynamic = Type.resolveClass(classVar);
+			variable = varCheck(classVar, variable);
+			
 			if (myClass == null)
 			{
 				FunkinLua.luaTrace('getPropertyFromClass: Class $classVar not found', false, false, FlxColor.RED);
 				return null;
 			}
 
-			if (MusicBeatState.instance.mobileControls.visible == true && myClass == 'flixel.FlxG' && variable.indexOf('key') != -1)
+			if (MusicBeatState.instance.mobileControls != null && MusicBeatState.instance.mobileControls.visible == true && myClass == 'flixel.FlxG' && variable.indexOf('key') != -1)
 			{
 				var check:Dynamic;
 				check = specialKeyCheck(variable); // fuck you old lua 🙃
@@ -63,8 +65,10 @@ class ReflectionFunctions
 		});
 		funk.set("setPropertyFromClass", function(classVar:String, variable:String, value:Dynamic, ?allowMaps:Bool = false)
 		{
-			var myClass:Dynamic = classCheck(classVar);
-			variable = varCheck(myClass, variable);
+			classVar = classNameCheck(classVar);
+			var myClass:Dynamic = Type.resolveClass(classVar);
+			variable = varCheck(classVar, variable);
+
 			if (myClass == null)
 			{
 				FunkinLua.luaTrace('getPropertyFromClass: Class $classVar not found', false, false, FlxColor.RED);
@@ -216,7 +220,7 @@ class ReflectionFunctions
 		});
 	}
 
-	public static function varCheck(className:Dynamic, variable:String):String
+	static function varCheck(className:String, variable:String):String
 	{
 		if (className == 'backend.ClientPrefs' && variable.indexOf('data.') == -1)
 			return 'data.' + variable;
@@ -224,24 +228,21 @@ class ReflectionFunctions
 		return variable;
 	}
 
-	public static function classCheck(className:String):Dynamic
+	static function classNameCheck(className:String):String
 	{
 		var classType:Array<String> = ['backend', 'cutscenes', 'objects', 'options', 'psychlua', 'states', 'substates'];
 
-		for (i in 0...classType.length - 1)
+		for (i in 0...classType.length)
 		{
-			var newClass:Dynamic = Type.resolveClass(classType[i] + '.' + className);
-
-			if (newClass != null)
-			{
-				return newClass;
-			}
+			var rightClass:Dynamic = Type.resolveClass(classType[i] + '.' + className);
+			if (rightClass != null)
+				return classType[i] + '.' + className;
 		}
 
-		return Type.resolveClass(className);
+		return className;
 	}
 
-	public static function specialKeyCheck(keyName:String):Dynamic
+	static function specialKeyCheck(keyName:String):Dynamic
 	{
 		var textfix:Array<String> = keyName.trim().split('.');
 		var type:String = textfix[1].trim();
