@@ -66,10 +66,9 @@ jobs:
         if: github.event.inputs.dependencies_to_update != 'all' || github.event.inputs.dependencies_to_update != 'android'
         uses: actions/cache/restore@v4
         with:
-          key: cache-build-Android-${{ github.ref_name }}-${{ hashFiles('hmm.json') }}
+          key: cache-build-Android
           restore-keys: |
-            cache-build-Android-${{ github.ref_name }}-
-            cache-build-Android-
+            cache-build-Android
           path: |
             .haxelib/
             export/release/android/
@@ -106,12 +105,32 @@ jobs:
           name: androidBuild
           path: export/release/android/bin/app/build/outputs/apk/release/*.apk
           if-no-files-found: error
+
+      - name: Clearing already existing cache
+        uses: actions/github-script@v4
+        with:
+          script: |
+            const caches = await github.rest.actions.getActionsCacheList({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            })
+            for (const cache of caches.data.actions_caches) {
+              if (cache.key == "cache-build-Android") {
+                console.log('Clearing ' + cache.key + '...')
+                await github.rest.actions.deleteActionsCacheById({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  cache_id: cache.id,
+                })
+                console.log("Cache cleared.")
+              }
+            }
           
       - name: Uploading new cache
         if: github.event.inputs.dependencies_to_update == 'all' || github.event.inputs.dependencies_to_update == 'android' || steps.cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
         with:
-          key: cache-build-Android-${{ github.ref_name }}-${{ hashFiles('hmm.json') }}
+          key: cache-build-Android
           path: |
             .haxelib/
             export/release/android/
@@ -142,10 +161,9 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           enableCrossOsArchive: true
-          key: cache-build-iOS-${{ github.ref_name }}-${{ hashFiles('hmm.json') }}
+          key: cache-build-iOS
           restore-keys: |
-            cache-build-iOS-${{ github.ref_name }}-
-            cache-build-iOS-
+            cache-build-iOS
           path: |
             .haxelib/
             export/release/ios/
@@ -183,12 +201,32 @@ jobs:
           name: iOSBuild
           path: export/release/ios/build/Release-iphoneos/*.ipa
           if-no-files-found: error
+
+      - name: Clearing already existing cache
+        uses: actions/github-script@v4
+        with:
+          script: |
+            const caches = await github.rest.actions.getActionsCacheList({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            })
+            for (const cache of caches.data.actions_caches) {
+              if (cache.key == "cache-build-iOS") {
+                console.log('Clearing ' + cache.key + '...')
+                await github.rest.actions.deleteActionsCacheById({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  cache_id: cache.id,
+                })
+                console.log("Cache cleared.")
+              }
+            }
           
       - name: Save build cache
         if: github.event.inputs.dependencies_to_update == 'all' || github.event.inputs.dependencies_to_update == 'ios' || steps.cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
         with:
-          key: cache-build-iOS-${{ github.ref_name }}-${{ hashFiles('hmm.json') }}
+          key: cache-build-iOS
           path: |
             .haxelib/
             export/release/ios/
