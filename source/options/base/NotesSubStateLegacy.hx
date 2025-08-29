@@ -22,7 +22,7 @@ import flixel.input.keyboard.FlxKey;
 import flixel.graphics.FlxGraphic;
 import shaders.ColorSwap;
 using StringTools;
-
+import objects.Note;
 class NotesSubStateLegacy extends MusicBeatSubstate
 {
 	private static var curSelected:Int = 0;
@@ -47,6 +47,7 @@ class NotesSubStateLegacy extends MusicBeatSubstate
         #if DISCORD_ALLOWED
 		DiscordClient.changePresence("Note Colors Menu", null);
 		#end
+
 		Note.init();
 
 		var bg:FlxSprite = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, FlxColor.WHITE);
