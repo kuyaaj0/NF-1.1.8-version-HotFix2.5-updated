@@ -50,7 +50,7 @@ class ExtraFunctions
 							&& extraControl.buttonExtra4.justPressed)
 							return true;
 					}
-					return PlayState.instance.controls.justPressed(name);
+					return Reflect.getProperty(FlxG.keys.justPressed, name.toUpperCase());
 			}
 			return false;
 		});
@@ -92,7 +92,7 @@ class ExtraFunctions
 							&& extraControl.buttonExtra4.pressed)
 							return true;
 					}
-					return PlayState.instance.controls.pressed(name);
+					return Reflect.getProperty(FlxG.keys.pressed, name.toUpperCase());
 			}
 			return false;
 		});
@@ -134,7 +134,7 @@ class ExtraFunctions
 							&& extraControl.buttonExtra4.justReleased)
 							return true;
 					}
-					return PlayState.instance.controls.justReleased(name);
+					return Reflect.getProperty(FlxG.keys.justReleased, name.toUpperCase());
 			}
 			return false;
 		});
@@ -221,7 +221,8 @@ class ExtraFunctions
 							&& extraControl.buttonExtra4.justPressed)
 							return true;
 					}
-					return PlayState.instance.controls.justPressed(name);
+					if (PlayState.instance.controls.justPressed(name)) return true;
+					return Reflect.getProperty(FlxG.keys.justPressed, name.toUpperCase());
 			}
 			return false;
 		});
@@ -262,7 +263,8 @@ class ExtraFunctions
 							&& extraControl.buttonExtra4.pressed)
 							return true;
 					}
-					return PlayState.instance.controls.pressed(name);
+					if (PlayState.instance.controls.pressed(name)) return true;
+					return Reflect.getProperty(FlxG.keys.pressed, name.toUpperCase());
 			}
 			return false;
 		});
@@ -303,7 +305,8 @@ class ExtraFunctions
 							&& extraControl.buttonExtra4.justReleased)
 							return true;
 					}
-					return PlayState.instance.controls.justReleased(name);
+					if (PlayState.instance.controls.justReleased(name)) return true;
+					return Reflect.getProperty(FlxG.keys.justReleased, name.toUpperCase());
 			}
 			return false;
 		});
