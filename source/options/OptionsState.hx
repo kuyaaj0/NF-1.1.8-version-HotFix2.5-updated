@@ -101,7 +101,7 @@ class OptionsState extends MusicBeatState
 			add(naviSprite);
 			naviGroup.push(naviSprite);
 		}
-		naviMoveEvent(true);
+		naviMoveEvent();
 
 		naviMove = new MouseMove(OptionsState, 'naviPosiData', 
 								[-1 * Math.max(0, (naviGroup.length - 9)) * UIScale.adjust(FlxG.height * 0.1), UIScale.adjust(FlxG.height * 0.005)],
@@ -139,7 +139,7 @@ class OptionsState extends MusicBeatState
 								],
 								cataMoveEvent);
 		add(cataMove);
-		cataMoveEvent(true);
+		cataMoveEvent();
 			
 		/////////////////////////////////////////////////////////////
 
@@ -282,7 +282,7 @@ class OptionsState extends MusicBeatState
 	}
 
 	static public var cataPosiData:Float = 100;
-	public function cataMoveEvent(init:Bool = false){
+	public function cataMoveEvent(){
 		for (i in 0...cataGroup.length) {
 			if (i == 0) cataGroup[i].y = cataPosiData;
 			else cataGroup[i].y = cataGroup[i - 1].y + cataGroup[i - 1].bg.realHeight + UIScale.adjust(FlxG.width * (0.8 / 40));
@@ -305,7 +305,7 @@ class OptionsState extends MusicBeatState
 	}
 
 	static public var naviPosiData:Float = 0;
-	public function naviMoveEvent(init:Bool = false){
+	public function naviMoveEvent(){
 		for (i in 0...naviGroup.length) {
 			naviGroup[i].y = naviPosiData + i * UIScale.adjust(FlxG.height * 0.1) + naviGroup[i].offsetY;
 		}

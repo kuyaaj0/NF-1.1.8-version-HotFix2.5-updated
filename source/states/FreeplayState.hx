@@ -42,8 +42,9 @@ class FreeplayState extends MusicBeatState
 
 	var songsData:Array<SongMetadata> = [];
 
-	var songsRect:Array<SongRect> = [];
+	var songGroup:Array<SongRect> = [];
 	var songsMove:MouseMove;
+	var songsScroll:ScrollManager;
 
 	public static var vocals:FlxSound = null;
 
@@ -245,6 +246,33 @@ class FreeplayState extends MusicBeatState
 		add(keyCountData);
 
 		//////////////////////////////////////////////////////////////////////////////////////////
+
+		for (time in 0...Math.ceil(13 / songsData.length)){
+			for (i in 0...songsData.length)
+			{
+				Mods.currentModDirectory = songsData[i].folder;
+				var data = songsData[i];
+				var rect = new SongRect(data.songName, data.songCharacter, data.songMusican, data.songCharter, data.color);
+				add(rect);
+				songGroup.push(rect);
+			}
+		}
+
+		songsMove = new MouseMove(FreeplayState, 'songPosiData', 
+								[],
+								[	
+									[FlxG.width * 0.5, FlxG.width], 
+									[0, FlxG.height]
+								],
+								songMoveEvent);
+		add(songsMove);
+
+		songsScroll = new ScrollManager(songGroup);
+		songMoveEvent();
+		songsScroll.init();
+		songMoveEvent();
+
+		//////////////////////////////////////////////////////////////////////////////////////////
 		
 		selectedBG = new FlxSprite(FlxG.width, 0).loadGraphic(Paths.image(FreeplayState.filePath + 'selectBG'));
         selectedBG.antialiasing = ClientPrefs.data.antialiasing;
@@ -263,18 +291,6 @@ class FreeplayState extends MusicBeatState
 
 		collectionButton = new CollectionButton(977, 105);
 		add(collectionButton);
-
-		//////////////////////////////////////////////////////////////////////////////////////////
-
-		for (i in 0...songsData.length)
-		{
-			Mods.currentModDirectory = songsData[i].folder;
-			var data = songsData[i];
-			var rect = new SongRect(data.songName, data.songCharacter, data.songMusican, data.songCharter, data.color);
-			add(rect);
-			songsRect.push(rect);
-		}
-
 		
 		//////////////////////////////////////////////////////////////////////////////////////////
 
@@ -307,6 +323,14 @@ class FreeplayState extends MusicBeatState
 		return (!leWeek.startUnlocked
 			&& leWeek.weekBefore.length > 0
 			&& (!StoryMenuState.weekCompleted.exists(leWeek.weekBefore) || !StoryMenuState.weekCompleted.get(leWeek.weekBefore)));
+	}
+
+	static public var songPosiData:Float = 0;
+	public function songMoveEvent(){
+		songsScroll.check(songsMove.state);
+		for (i in 0...songGroup.length) {
+			songGroup[i].y = songPosiData + (i + songsScroll.index) * songGroup[0].light.height * 0.95;
+		}
 	}
 
 	public static function destroyFreeplayVocals() {
