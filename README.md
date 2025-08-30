@@ -38,7 +38,7 @@
 | ![](https://raw.githubusercontent.com/ShadowMario/FNF-PsychEngine/refs/heads/main/assets/shared/images/credits/shadowmario.png) | [Shadow Mario](https://ko-fi.com/shadowmario) | Main programmer and Head of Psych Engine
 | ![](https://raw.githubusercontent.com/ShadowMario/FNF-PsychEngine/refs/heads/main/assets/shared/images/credits/riveren.png) | [Riveren](https://x.com/riverennn) | Main Artist/Animator of Psych Engine
 | ![](https://raw.githubusercontent.com/ShadowMario/FNF-PsychEngine/refs/heads/main/assets/shared/images/credits/bb.png) | [Bb-Panzu](https://x.com/bbsub3) | Ex-programmer of Psych Engine
-| ![](https://raw.githubusercontent.com/ShadowMario/FNF-PsychEngine/refs/heads/main/assets/shared/images/credits/crowplexus.png) | [Bb-Panzu](https://twitter.com/IamMorwen)) | Linux Support, HScript Iris, Input System v3, and Other PRs
+| ![](https://raw.githubusercontent.com/ShadowMario/FNF-PsychEngine/refs/heads/main/assets/shared/images/credits/crowplexus.png) | [Crowplexus](https://twitter.com/IamMorwen) | Linux Support, HScript Iris, Input System v3, and Other PRs
 | ![](https://raw.githubusercontent.com/ShadowMario/FNF-PsychEngine/refs/heads/main/assets/shared/images/credits/kamizeta.png) | [Kamizeta](https://www.instagram.com/cewweey/) | Creator of Pessy, Psych Engine's mascot
 | ![](https://raw.githubusercontent.com/ShadowMario/FNF-PsychEngine/refs/heads/main/assets/shared/images/credits/maxneton.png) | [MaxNeton](https://bsky.app/profile/maxneton.bsky.social) | Loading Screen Easter Egg Artist/Animator
 | ![](https://raw.githubusercontent.com/ShadowMario/FNF-PsychEngine/refs/heads/main/assets/shared/images/credits/keoiki.png) | [Keoiki](https://x.com/Keoiki_) | Note Splash Animations and Latin Alphabet
