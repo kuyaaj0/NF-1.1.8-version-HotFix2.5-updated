@@ -56,7 +56,9 @@ class MusicBeatState extends FlxUIState
 	{
 		mobileControls = new MobileControls();
 
-		camControls = new FlxCamera();
+		camControls = new FlxCamera(Lib.current.stage.stageWidth, Lib.current.stage.stageHeight);
+		camControls.x = (FlxG.width - Lib.current.stage.stageWidth) / 2;
+		camControls.y = (FlxG.height - Lib.current.stage.stageHeight) / 2;
 		camControls.bgColor.alpha = 0;
 		FlxG.cameras.add(camControls, DefaultDrawTarget);
 

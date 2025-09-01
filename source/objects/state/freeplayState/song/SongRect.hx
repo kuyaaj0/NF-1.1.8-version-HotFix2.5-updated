@@ -3,18 +3,21 @@ package objects.state.freeplayState.song;
 import objects.HealthIcon;
 
 class SongRect extends FlxSpriteGroup {
-    static public var filePath:String = 'song/';
+    
     public var light:Rect;
-    var bg:FlxSprite;
+    private var bg:FlxSprite;
+    public var diffRectArray:Array<DiffRect> = [];
+    private var icon:HealthIcon;
+	private var songName:FlxText;
+	private var musican:FlxText;
 
-    var icon:HealthIcon;
-	var songName:FlxText;
-	var musican:FlxText;
+    /////////////////////////////////////////////////////////////////////
+
+    static public var fixHeight:Int = 60;
+    private var filePath:String = 'song/';
 
     public var id:Int = 0;
     public var currect:Int = 0;
-
-    static public var fixHeight:Int = 60;
     
     public var onSelectChange:String->Void;
     public function new(songNameSt:String, songChar:String, songMusican:String, songCharter:Array<String>, songColor:Array<Int>) {

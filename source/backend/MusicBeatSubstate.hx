@@ -2,6 +2,7 @@ package backend;
 
 import flixel.FlxSubState;
 import shaders.ColorblindFilter;
+import openfl.Lib;
 
 class MusicBeatSubstate extends FlxSubState
 {
@@ -38,7 +39,9 @@ class MusicBeatSubstate extends FlxSubState
 	{
 		mobileControls = new MobileControls();
 
-		var camControls = new flixel.FlxCamera();
+		var camControls = new flixel.FlxCamera(Lib.current.stage.stageWidth, Lib.current.stage.stageHeight);
+		camControls.x = (FlxG.width - Lib.current.stage.stageWidth) / 2;
+		camControls.y = (FlxG.height - Lib.current.stage.stageHeight) / 2;
 		camControls.bgColor.alpha = 0;
 		FlxG.cameras.add(camControls, DefaultDrawTarget);
 
