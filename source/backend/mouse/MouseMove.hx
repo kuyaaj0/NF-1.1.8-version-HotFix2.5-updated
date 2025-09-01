@@ -104,10 +104,11 @@ class MouseMove extends FlxBasic
 
         if (lerpData != 0) {
             if (Math.abs(target - lerpData) < 0.01) {
-                lerpData = target;
+                target = lerpData;
                 lerpData = 0;
+            } else {
+                target = FlxMath.lerp(lerpData, target, Math.exp(-elapsed * 20));
             }
-            target = FlxMath.lerp(lerpData, target, Math.exp(-elapsed * 20));
         }
         
         if(!infScroll) {
