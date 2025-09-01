@@ -44,6 +44,10 @@ class FlxHitbox extends FlxMobileInputManager
 
 		var stage = Lib.current.stage;
 
+		var scale:Float = Math.min(stage.stageWidth / 1280, stage.stageHeight / 720);
+		var newWidth:Int = Std.int(stage.stageWidth / scale);
+		var newHeight:Int = Std.int(stage.stageHeight / scale);
+
 		for (button in Reflect.fields(this))
 		{
 			if (Std.isOfType(Reflect.field(this, button), FlxButton))
@@ -57,7 +61,7 @@ class FlxHitbox extends FlxMobileInputManager
 			// Full screen keys
 			for (i in 0...keys)
 			{
-				var button = createHint(stage.stageWidth * i / keys, 0, Std.int(stage.stageWidth / keys), Std.int(stage.stageHeight), getColor(i, mania));
+				var button = createHint(newWidth * i / keys, 0, Std.int(newWidth / keys), Std.int(newHeight), getColor(i, mania));
 				buttonNotes.push(button);
 				add(button);
 			}
@@ -69,7 +73,7 @@ class FlxHitbox extends FlxMobileInputManager
 
 				for (i in 0...keys)
 				{
-					var button = createHint(stage.stageWidth * i / keys, 0, Std.int(stage.stageWidth / keys), Std.int(stage.stageHeight * 0.8), getColor(i, mania));
+					var button = createHint(newWidth * i / keys, 0, Std.int(newWidth / keys), Std.int(newHeight * 0.8), getColor(i, mania));
 					buttonNotes.push(button);
 					add(button);
 				}
@@ -77,20 +81,20 @@ class FlxHitbox extends FlxMobileInputManager
 				switch (ClientPrefs.data.extraKey)
 				{
 					case 1:
-						add(buttonExtra1 = createHint(0, (stage.stageHeight / 5) * 4, stage.stageWidth, Std.int(stage.stageHeight / 5), 0xFFFF00));
+						add(buttonExtra1 = createHint(0, (newHeight / 5) * 4, newWidth, Std.int(newHeight / 5), 0xFFFF00));
 					case 2:
-						add(buttonExtra1 = createHint(0, (stage.stageHeight / 5) * 4, Std.int(stage.stageWidth / 2), Std.int(stage.stageHeight / 5), 0xFFFF00));
-						add(buttonExtra2 = createHint(stage.stageWidth / 2, (stage.stageHeight / 5) * 4, Std.int(stage.stageWidth / 2), Std.int(stage.stageHeight / 5), 0xFFFF00));
+						add(buttonExtra1 = createHint(0, (newHeight / 5) * 4, Std.int(newWidth / 2), Std.int(newHeight / 5), 0xFFFF00));
+						add(buttonExtra2 = createHint(newWidth / 2, (newHeight / 5) * 4, Std.int(newWidth / 2), Std.int(newHeight / 5), 0xFFFF00));
 					case 3:
-						add(buttonExtra1 = createHint(0, (stage.stageHeight / 5) * 4, Std.int(stage.stageWidth / 3), Std.int(stage.stageHeight / 5), 0xFFFF00));
-						add(buttonExtra2 = createHint(stage.stageWidth / 3 - 1, (stage.stageHeight / 5) * 4, Std.int(stage.stageWidth / 3 + 2), Std.int(stage.stageHeight / 5),
+						add(buttonExtra1 = createHint(0, (newHeight / 5) * 4, Std.int(newWidth / 3), Std.int(newHeight / 5), 0xFFFF00));
+						add(buttonExtra2 = createHint(newWidth / 3 - 1, (newHeight / 5) * 4, Std.int(newWidth / 3 + 2), Std.int(newHeight / 5),
 							0xFFFF00));
-						add(buttonExtra3 = createHint(stage.stageWidth / 3 * 2, (stage.stageHeight / 5) * 4, Std.int(stage.stageWidth / 3), Std.int(stage.stageHeight / 5), 0xFFFF00));
+						add(buttonExtra3 = createHint(newWidth / 3 * 2, (newHeight / 5) * 4, Std.int(newWidth / 3), Std.int(newHeight / 5), 0xFFFF00));
 					case 4:
-						add(buttonExtra1 = createHint(0, (stage.stageHeight / 5) * 4, Std.int(stage.stageWidth / 4), Std.int(stage.stageHeight / 5), 0xFFFF00));
-						add(buttonExtra2 = createHint(stage.stageWidth / 4, (stage.stageHeight / 5) * 4, Std.int(stage.stageWidth / 4), Std.int(stage.stageHeight / 5), 0xFFFF00));
-						add(buttonExtra3 = createHint(stage.stageWidth / 4 * 2, (stage.stageHeight / 5) * 4, Std.int(stage.stageWidth / 4), Std.int(stage.stageHeight / 5), 0xFFFF00));
-						add(buttonExtra4 = createHint(stage.stageWidth / 4 * 3, (stage.stageHeight / 5) * 4, Std.int(stage.stageWidth / 4), Std.int(stage.stageHeight / 5), 0xFFFF00));
+						add(buttonExtra1 = createHint(0, (newHeight / 5) * 4, Std.int(newWidth / 4), Std.int(newHeight / 5), 0xFFFF00));
+						add(buttonExtra2 = createHint(newWidth / 4, (newHeight / 5) * 4, Std.int(newWidth / 4), Std.int(newHeight / 5), 0xFFFF00));
+						add(buttonExtra3 = createHint(newWidth / 4 * 2, (newHeight / 5) * 4, Std.int(newWidth / 4), Std.int(newHeight / 5), 0xFFFF00));
+						add(buttonExtra4 = createHint(newWidth / 4 * 3, (newHeight / 5) * 4, Std.int(newWidth / 4), Std.int(newHeight / 5), 0xFFFF00));
 				}
 			}
 			else if (ClientPrefs.data.hitboxLocation == 'Top')
@@ -99,25 +103,25 @@ class FlxHitbox extends FlxMobileInputManager
 				switch (ClientPrefs.data.extraKey)
 				{
 					case 1:
-						add(buttonExtra1 = createHint(0, 0, stage.stageWidth, Std.int(stage.stageHeight / 5), 0xFFFF00));
+						add(buttonExtra1 = createHint(0, 0, newWidth, Std.int(newHeight / 5), 0xFFFF00));
 					case 2:
-						add(buttonExtra1 = createHint(0, 0, Std.int(stage.stageWidth / 2), Std.int(stage.stageHeight / 5), 0xFFFF00));
-						add(buttonExtra2 = createHint(stage.stageWidth / 2, 0, Std.int(stage.stageWidth / 2), Std.int(stage.stageHeight / 5), 0xFF0000));
+						add(buttonExtra1 = createHint(0, 0, Std.int(newWidth / 2), Std.int(newHeight / 5), 0xFFFF00));
+						add(buttonExtra2 = createHint(newWidth / 2, 0, Std.int(newWidth / 2), Std.int(newHeight / 5), 0xFF0000));
 					case 3:
-						add(buttonExtra1 = createHint(0, 0, Std.int(stage.stageWidth / 3), Std.int(stage.stageHeight / 5), 0xFFFF00));
-						add(buttonExtra2 = createHint(stage.stageWidth / 3, 0, Std.int(stage.stageWidth / 3), Std.int(stage.stageHeight / 5), 0xFF0000));
-						add(buttonExtra3 = createHint(stage.stageWidth / 3 * 2, 0, Std.int(stage.stageWidth / 3), Std.int(stage.stageHeight / 5), 0x0000FF));
+						add(buttonExtra1 = createHint(0, 0, Std.int(newWidth / 3), Std.int(newHeight / 5), 0xFFFF00));
+						add(buttonExtra2 = createHint(newWidth / 3, 0, Std.int(newWidth / 3), Std.int(newHeight / 5), 0xFF0000));
+						add(buttonExtra3 = createHint(newWidth / 3 * 2, 0, Std.int(newWidth / 3), Std.int(newHeight / 5), 0x0000FF));
 					case 4:
-						add(buttonExtra1 = createHint(0, 0, Std.int(stage.stageWidth / 4), Std.int(stage.stageHeight / 5), 0xFFFF00));
-						add(buttonExtra2 = createHint(stage.stageWidth / 4, 0, Std.int(stage.stageWidth / 4), Std.int(stage.stageHeight / 5), 0xFF0000));
-						add(buttonExtra3 = createHint(stage.stageWidth / 4 * 2, 0, Std.int(stage.stageWidth / 4), Std.int(stage.stageHeight / 5), 0x0000FF));
-						add(buttonExtra4 = createHint(stage.stageWidth / 4 * 3, 0, Std.int(stage.stageWidth / 4), Std.int(stage.stageHeight / 5), 0x00FF00));
+						add(buttonExtra1 = createHint(0, 0, Std.int(newWidth / 4), Std.int(newHeight / 5), 0xFFFF00));
+						add(buttonExtra2 = createHint(newWidth / 4, 0, Std.int(newWidth / 4), Std.int(newHeight / 5), 0xFF0000));
+						add(buttonExtra3 = createHint(newWidth / 4 * 2, 0, Std.int(newWidth / 4), Std.int(newHeight / 5), 0x0000FF));
+						add(buttonExtra4 = createHint(newWidth / 4 * 3, 0, Std.int(newWidth / 4), Std.int(newHeight / 5), 0x00FF00));
 				}
 
 				// Bottom 80% for main keys
 				for (i in 0...keys)
 				{
-					var button = createHint(stage.stageWidth * i / keys, stage.stageHeight * 0.2, Std.int(stage.stageWidth / keys), Std.int(stage.stageHeight * 0.8),
+					var button = createHint(newWidth * i / keys, newHeight * 0.2, Std.int(newWidth / keys), Std.int(newHeight * 0.8),
 						getColor(i, mania));
 					buttonNotes.push(button);
 					add(button);
@@ -126,38 +130,38 @@ class FlxHitbox extends FlxMobileInputManager
 			else
 			{ // Middle layout (keep as 4K for now)
 				// Middle layout remains as 4K for compatibility
-				add(createHint(0, 0, Std.int(stage.stageWidth / 4), Std.int(stage.stageHeight * 0.8), 0xFFC24B99));
-				add(createHint(stage.stageWidth / 4, 0, Std.int(stage.stageWidth / 4), Std.int(stage.stageHeight * 0.8), 0xFF00FFFF));
-				add(createHint(stage.stageWidth / 2, 0, Std.int(stage.stageWidth / 4), Std.int(stage.stageHeight * 0.8), 0xFF12FA05));
-				add(createHint((stage.stageWidth / 2) + (stage.stageWidth / 4), 0, Std.int(stage.stageWidth / 4), Std.int(stage.stageHeight * 0.8), 0xFFF9393F));
+				add(createHint(0, 0, Std.int(newWidth / 4), Std.int(newHeight * 0.8), 0xFFC24B99));
+				add(createHint(newWidth / 4, 0, Std.int(newWidth / 4), Std.int(newHeight * 0.8), 0xFF00FFFF));
+				add(createHint(newWidth / 2, 0, Std.int(newWidth / 4), Std.int(newHeight * 0.8), 0xFF12FA05));
+				add(createHint((newWidth / 2) + (newWidth / 4), 0, Std.int(newWidth / 4), Std.int(newHeight * 0.8), 0xFFF9393F));
 
 				// Extra keys for middle layout
 				switch (ClientPrefs.data.extraKey)
 				{
 					case 1:
-						add(buttonExtra1 = createHint(Std.int(stage.stageWidth / 5) * 2, 0, Std.int(stage.stageWidth / 5), stage.stageHeight, 0xFFFF00));
+						add(buttonExtra1 = createHint(Std.int(newWidth / 5) * 2, 0, Std.int(newWidth / 5), newHeight, 0xFFFF00));
 					case 2:
-						add(buttonExtra1 = createHint(Std.int(stage.stageWidth / 5) * 2, 0, Std.int(stage.stageWidth / 5), Std.int(stage.stageHeight / 2), 0xFFFF00));
-						add(buttonExtra2 = createHint(Std.int(stage.stageWidth / 5) * 2, Std.int(stage.stageHeight / 2), Std.int(stage.stageWidth / 5),
-							Std.int(stage.stageHeight / 2), 0xFFFF00));
+						add(buttonExtra1 = createHint(Std.int(newWidth / 5) * 2, 0, Std.int(newWidth / 5), Std.int(newHeight / 2), 0xFFFF00));
+						add(buttonExtra2 = createHint(Std.int(newWidth / 5) * 2, Std.int(newHeight / 2), Std.int(newWidth / 5),
+							Std.int(newHeight / 2), 0xFFFF00));
 					case 3:
-						add(buttonExtra1 = createHint(Std.int(stage.stageWidth / 5) * 2, 0, Std.int(stage.stageWidth / 5), Std.int(stage.stageHeight / 3), 0xFFFF00));
-						add(buttonExtra2 = createHint(Std.int(stage.stageWidth / 5) * 2, Std.int(stage.stageHeight / 3), Std.int(stage.stageWidth / 5),
-							Std.int(stage.stageHeight / 3), 0xFFFF00));
-						add(buttonExtra3 = createHint(Std.int(stage.stageWidth / 5) * 2, Std.int(stage.stageHeight / 3) * 2, Std.int(stage.stageWidth / 5),
-							Std.int(stage.stageHeight / 3), 0xFFFF00));
+						add(buttonExtra1 = createHint(Std.int(newWidth / 5) * 2, 0, Std.int(newWidth / 5), Std.int(newHeight / 3), 0xFFFF00));
+						add(buttonExtra2 = createHint(Std.int(newWidth / 5) * 2, Std.int(newHeight / 3), Std.int(newWidth / 5),
+							Std.int(newHeight / 3), 0xFFFF00));
+						add(buttonExtra3 = createHint(Std.int(newWidth / 5) * 2, Std.int(newHeight / 3) * 2, Std.int(newWidth / 5),
+							Std.int(newHeight / 3), 0xFFFF00));
 					case 4:
-						add(buttonExtra1 = createHint(Std.int(stage.stageWidth / 5) * 2, 0, Std.int(stage.stageWidth / 5), Std.int(stage.stageHeight / 4), 0xFFFF00));
-						add(buttonExtra2 = createHint(Std.int(stage.stageWidth / 5) * 2, Std.int(stage.stageHeight / 4), Std.int(stage.stageWidth / 5),
-							Std.int(stage.stageHeight / 4), 0xFFFF00));
-						add(buttonExtra3 = createHint(Std.int(stage.stageWidth / 5) * 2, Std.int(stage.stageHeight / 4) * 2, Std.int(stage.stageWidth / 5),
-							Std.int(stage.stageHeight / 4), 0xFFFF00));
-						add(buttonExtra4 = createHint(Std.int(stage.stageWidth / 5) * 2, Std.int(stage.stageHeight / 4) * 3, Std.int(stage.stageWidth / 5),
-							Std.int(stage.stageHeight / 4), 0xFFFF00));
+						add(buttonExtra1 = createHint(Std.int(newWidth / 5) * 2, 0, Std.int(newWidth / 5), Std.int(newHeight / 4), 0xFFFF00));
+						add(buttonExtra2 = createHint(Std.int(newWidth / 5) * 2, Std.int(newHeight / 4), Std.int(newWidth / 5),
+							Std.int(newHeight / 4), 0xFFFF00));
+						add(buttonExtra3 = createHint(Std.int(newWidth / 5) * 2, Std.int(newHeight / 4) * 2, Std.int(newWidth / 5),
+							Std.int(newHeight / 4), 0xFFFF00));
+						add(buttonExtra4 = createHint(Std.int(newWidth / 5) * 2, Std.int(newHeight / 4) * 3, Std.int(newWidth / 5),
+							Std.int(newHeight / 4), 0xFFFF00));
 				}
 
-				add(createHint(Std.int(stage.stageWidth / 5) * 3, 0, Std.int(stage.stageWidth / 5), stage.stageHeight, 0xFF12FA05));
-				add(createHint(Std.int(stage.stageWidth / 5) * 4, 0, Std.int(stage.stageWidth / 5), stage.stageHeight, 0xFFF9393F));
+				add(createHint(Std.int(newWidth / 5) * 3, 0, Std.int(newWidth / 5), newHeight, 0xFF12FA05));
+				add(createHint(Std.int(newWidth / 5) * 4, 0, Std.int(newWidth / 5), newHeight, 0xFFF9393F));
 			}
 		}
 

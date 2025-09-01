@@ -152,9 +152,9 @@ class MouseMove extends FlxBasic
         velocityChange();
     }
 
-    var dataCheck:Bool = true; //正数检测
+    var isPositive:Bool = true; //正数检测
     private function velocUpdate(data:Float) {
-        if (dataCheck) { //之前是正数
+        if (isPositive) { //之前是正数
             if (data > 0) { //正数
                 velocityArray.remove(0); //一旦发现有移动，删除帧更新时候插入的0
                 velocityArray.push(velocity);
@@ -162,20 +162,20 @@ class MouseMove extends FlxBasic
             } else if (data < 0) { //负数
                 velocityArray = [];
                 velocityArray.push(velocity);
-                dataCheck = false;
+                isPositive = false;
             } else {
                 velocityArray.push(velocity); //如果确实没动就加上0进入计算
                 if (velocityArray.length > 11) velocityArray.shift();
             }
         } else { //之前是负数
             if (data < 0) { //负数
-                velocityArray = [];
-                velocityArray.push(velocity);
-                dataCheck = false;
-                if (velocityArray.length > 11) velocityArray.shift();
-            } else if (data > 0)  { //正数
                 velocityArray.remove(0); //一旦发现有移动，删除帧更新时候插入的0
                 velocityArray.push(velocity);
+                if (velocityArray.length > 11) velocityArray.shift();
+            } else if (data > 0)  { //正数
+                velocityArray = [];
+                velocityArray.push(velocity);
+                isPositive = true;
             } else {
                 velocityArray.push(velocity); //如果确实没动就加上0进入计算
                 if (velocityArray.length > 11) velocityArray.shift();
