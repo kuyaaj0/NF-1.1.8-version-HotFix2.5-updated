@@ -115,9 +115,10 @@ class MouseMove extends FlxBasic
             if (target > moveLimit[1]) target = FlxMath.lerp(moveLimit[1], target, Math.exp(-elapsed * 20));
         }
 
-        if (__target == target) state = 'stop';
-        else if (__target > target) state = 'up';
-        else state = 'down';
+        
+        if (__target > target) state = 'up';
+        else if (__target < target)state = 'down';
+        else if (__target == target) state = 'stop';
 
         __target = target;
 

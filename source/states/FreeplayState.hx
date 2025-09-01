@@ -43,7 +43,7 @@ class FreeplayState extends MusicBeatState
 	var songsData:Array<SongMetadata> = [];
 
 	var songGroup:Array<SongRect> = [];
-	var songsMove:MouseMove;
+	public var songsMove:MouseMove;
 	var songsScroll:ScrollManager;
 
 	public static var vocals:FlxSound = null;
@@ -247,12 +247,13 @@ class FreeplayState extends MusicBeatState
 
 		//////////////////////////////////////////////////////////////////////////////////////////
 
-		for (time in 0...Math.ceil(13 / songsData.length)){
+		for (time in 0...Math.ceil((Math.ceil(FlxG.height / SongRect.fixHeight * 0.95) + 2) / songsData.length)){
 			for (i in 0...songsData.length)
 			{
 				Mods.currentModDirectory = songsData[i].folder;
 				var data = songsData[i];
 				var rect = new SongRect(data.songName, data.songCharacter, data.songMusican, data.songCharter, data.color);
+				rect.id = rect.currect = time * songsData.length + i;
 				add(rect);
 				songGroup.push(rect);
 			}
@@ -269,8 +270,7 @@ class FreeplayState extends MusicBeatState
 
 		songsScroll = new ScrollManager(songGroup);
 		songMoveEvent();
-		songsScroll.init();
-		songMoveEvent();
+		songsScroll.moveElementToPosition();
 
 		//////////////////////////////////////////////////////////////////////////////////////////
 		
@@ -325,11 +325,13 @@ class FreeplayState extends MusicBeatState
 			&& (!StoryMenuState.weekCompleted.exists(leWeek.weekBefore) || !StoryMenuState.weekCompleted.get(leWeek.weekBefore)));
 	}
 
-	static public var songPosiData:Float = 0;
+	public var songPosiStart:Float = 720 * 0.35;
+	public static var songPosiData:Float = 720 * 0.35; //神人haxe不能用FlxG.height
 	public function songMoveEvent(){
 		songsScroll.check(songsMove.state);
 		for (i in 0...songGroup.length) {
-			songGroup[i].y = songPosiData + (i + songsScroll.index) * songGroup[0].light.height * 0.95;
+			songGroup[i].y = songPosiData + songGroup[i].diffY + (songGroup[i].currect) * songGroup[0].light.height * 0.95;
+			songGroup[i].calcX();
 		}
 	}
 

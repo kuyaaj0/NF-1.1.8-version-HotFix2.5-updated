@@ -10,6 +10,11 @@ class SongRect extends FlxSpriteGroup {
     var icon:HealthIcon;
 	var songName:FlxText;
 	var musican:FlxText;
+
+    public var id:Int = 0;
+    public var currect:Int = 0;
+
+    static public var fixHeight:Int = 60;
     
     public var onSelectChange:String->Void;
     public function new(songNameSt:String, songChar:String, songMusican:String, songCharter:Array<String>, songColor:Array<Int>) {
@@ -118,7 +123,7 @@ class SongRect extends FlxSpriteGroup {
 
         calcX();
 
-        this.x = FlxG.width - this.light.width + 70 + moveX + chooseX + diffX;
+        
 	}
 
     private function set_onFocus(value:Bool):Bool
@@ -128,12 +133,16 @@ class SongRect extends FlxSpriteGroup {
 		onFocus = value;
 		if (onFocus)
 		{
-			
+			addDiffRect();
 		} else {
 			
 		}
 		return value;
 	}
+
+    public function addDiffRect() {
+        
+    }
 
     ///////////////////////////////////////////////////////////////////////
 
@@ -142,5 +151,9 @@ class SongRect extends FlxSpriteGroup {
     public var diffX:Float = 0;
     public function calcX() {
         moveX = Math.pow(Math.abs(this.y + this.light.height / 2 - FlxG.height / 2) / (FlxG.height / 2) * 10, 1.9);
+        this.x = FlxG.width - this.light.width + 70 + moveX + chooseX + diffX;
     }
+
+    public var moveY:Float = 0;
+    public var diffY:Float = 0;
 }

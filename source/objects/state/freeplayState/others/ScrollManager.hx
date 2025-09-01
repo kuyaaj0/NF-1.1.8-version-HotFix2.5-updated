@@ -4,62 +4,55 @@ import objects.state.freeplayState.song.SongRect;
 
 class ScrollManager {
 
-    public var index:Int = 0;
-
-    var virtualIndex:Int = 0;
-
     var target:Array<SongRect>;
 	public function new(tar:Array<SongRect>) { 
         this.target = tar;
     }
 
-    public function init(){
-        moveElementToPosition(true);
-        index = virtualIndex = 0;
-    }
-
+    var scrollFix:Int = 0;
     public function check(state:String) {
-        if (state == "up") {
-            if (target[0].y + target[0].light.height < FlxG.height * 0.5 - Math.floor(target.length * 0.8) * target[0].light.height)
-                moveElementToPosition(true);
-        } else if (state == "down") {
-            if (target[target.length - 1].y > FlxG.height * 0.5 + Math.floor(target.length * 0.8) * target[0].light.height)
-                moveElementToPosition(false);
+        scrollFix = Math.ceil(FreeplayState.instance.songPosiStart / SongRect.fixHeight) + 2;
+        if (state == "up" || state == "down") {
+            moveElementToPosition();
         }
     }
 
-    function moveElementToPosition(isUp:Bool) {
-        var moveCount:Int = 0;
-        
-        for (member in 0...target.length) {
-            if (isUp) {
-                if (target[member].y + target[member].light.height < FlxG.height * 0.5 - Math.floor(target.length * 0.8) * target[0].light.height)
-                    moveCount++;
-                else break;
+    var count:Int = 0;
+    var _count:Int = 0;
+    public function moveElementToPosition() {
+        if (FreeplayState.instance.songsMove.target > FreeplayState.instance.songPosiStart + SongRect.fixHeight * 0.95 * (target.length)) {
+           FreeplayState.songPosiData = FreeplayState.instance.songsMove.target = FreeplayState.instance.songsMove.target - SongRect.fixHeight * 0.95 * (target.length);
+        }
+        if (FreeplayState.instance.songsMove.target < FreeplayState.instance.songPosiStart - SongRect.fixHeight * 0.95 * (target.length)) {
+           FreeplayState.songPosiData = FreeplayState.instance.songsMove.target = FreeplayState.instance.songsMove.target + SongRect.fixHeight * 0.95 * (target.length);
+        }
+
+        count = Math.floor((FreeplayState.instance.songsMove.target - FreeplayState.instance.songPosiStart) / SongRect.fixHeight);
+
+        if (count == _count) return;
+        _count = count;
+
+        var flipData:Int = target.length-1 - count - scrollFix;
+
+        for (i in 0...target.length) {
+            if (i <= flipData) {
+                target[i].currect = i;
             } else {
-                if (target[target.length - 1 - member].y > FlxG.height * 0.5 + Math.floor(target.length * 0.8) * target[0].light.height)
-                    moveCount++;
-                else break;
+                target[i].currect = i - target.length;
             }
         }
 
-        var removed = target.splice(isUp ? 0 : target.length - 1 - moveCount, moveCount);
-        
-        if (isUp) {
-            for (i in 0...removed.length)
-                target.push(removed[i]);
-            virtualIndex += moveCount;
-        } else {
-            for (i in 0...removed.length)
-                target.insert(0, removed[removed.length - 1 - i]);
-            virtualIndex -= moveCount;
+        for (i in 0...target.length) {
+            if (flipData < 0) {
+                for (i in 0...Std.int(Math.abs(flipData))) {
+                    target[target.length-1 - i].currect = target[0].currect-1 - i;
+                }
+            }
+            if (flipData - target.length-1 - scrollFix >= 0) {
+                for (i in 0...Std.int(flipData - target.length-1 - scrollFix)) {
+                    target[i].currect = target[target.length-1].currect+1 + i;
+                }
+            }
         }
-
-        //if (virtualIndex > target.length) virtualIndex -= target.length;
-        //if (virtualIndex < target.length * -1) virtualIndex += target.length;
-
-        index = virtualIndex;
-        trace("index: " + index);
     }
-
 }
