@@ -4,8 +4,8 @@
       "name": "lime",
       "type": "git",
       "dir": null,
-      "ref": "main",
-      "url": "https://github.com/beihu235/lime"
+      "ref": "develop",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/lime"
     },
     {
       "name": "openfl",
