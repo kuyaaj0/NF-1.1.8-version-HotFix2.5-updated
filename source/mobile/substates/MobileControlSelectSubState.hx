@@ -230,22 +230,26 @@ class MobileControlSelectSubState extends MusicBeatSubstate
 		leftArrow.x = inputvari.x - 60;
 		rightArrow.x = inputvari.x + inputvari.width + 10;
 
+		var mouse = FlxG.mouse;
+
+		if (mouse.overlaps(leftArrow) && mouse.pressed)
+			leftArrow.animation.play('press');
+		else
+			leftArrow.animation.play('idle');
+
+		if (mouse.overlaps(rightArrow) && mouse.pressed)
+			rightArrow.animation.play('press')
+		else
+			rightArrow.animation.play('idle');
+
+		if (mouse.overlaps(leftArrow) && mouse.justPressed)
+			changeSelection(-1);
+		else if (mouse.overlaps(rightArrow) && mouse.justPressed)
+			changeSelection(1);
+
 		for (touch in FlxG.touches.list)
 		{
-			if (touch.overlaps(leftArrow) && touch.pressed)
-				leftArrow.animation.play('press');
-			else
-				leftArrow.animation.play('idle');
-
-			if (touch.overlaps(rightArrow) && touch.pressed)
-				rightArrow.animation.play('press')
-			else
-				rightArrow.animation.play('idle');
-
-			if (touch.overlaps(leftArrow) && touch.justPressed)
-				changeSelection(-1);
-			else if (touch.overlaps(rightArrow) && touch.justPressed)
-				changeSelection(1);
+			
 
 			if (controlsItems[Math.floor(curSelected)] == 'Pad-Custom')
 			{

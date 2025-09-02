@@ -57,9 +57,8 @@ class MusicBeatState extends FlxUIState
 		mobileControls = new MobileControls();
 
 		var stage = Lib.current.stage;
-		var scale = Math.min(stage.stageWidth / 1280, stage.stageHeight / 720);
-		var newWidth = stage.stageWidth / scale;
-		var newHeight = stage.stageHeight / scale;
+		var newWidth = stage.stageWidth / (stage.stageWidth / 1280);
+		var newHeight = stage.stageHeight / (stage.stageHeight / 720);
 
 		camControls = new FlxCamera(newWidth, newHeight);
 		camControls.x = (FlxG.width - newWidth) / 2;
