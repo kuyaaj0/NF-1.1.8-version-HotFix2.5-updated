@@ -127,7 +127,7 @@ jobs:
             }
           
       - name: Uploading new cache
-        if: github.event.inputs.dependencies_to_update == 'all' || github.event.inputs.dependencies_to_update == 'android' || steps.cache.outputs.cache-hit != 'true'
+        if: steps.cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
         with:
           key: cache-build-Android
@@ -223,7 +223,7 @@ jobs:
             }
           
       - name: Save build cache
-        if: github.event.inputs.dependencies_to_update == 'all' || github.event.inputs.dependencies_to_update == 'ios' || steps.cache.outputs.cache-hit != 'true'
+        if: steps.cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
         with:
           key: cache-build-iOS
