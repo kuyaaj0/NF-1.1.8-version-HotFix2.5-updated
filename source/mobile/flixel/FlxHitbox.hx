@@ -338,8 +338,9 @@ class FlxHitbox extends FlxMobileInputManager
 		hint.multiTouch = true;
 		hint.moves = false;
 		hint.scrollFactor.set();
-		hint.alpha = 0.00001;
+		hint.alpha = 0.5;
 		hint.antialiasing = ClientPrefs.data.antialiasing;
+		/*
 		if (ClientPrefs.data.playControlsAlpha >= 0)
 		{
 			hint.onDown.callback = function()
@@ -382,6 +383,7 @@ class FlxHitbox extends FlxMobileInputManager
 				});
 			}
 		}
+			*/
 		#if FLX_DEBUG
 		hint.ignoreDrawDebug = true;
 		#end

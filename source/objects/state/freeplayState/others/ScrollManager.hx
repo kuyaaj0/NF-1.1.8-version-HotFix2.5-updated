@@ -27,7 +27,7 @@ class ScrollManager {
             FreeplayState.songPosiData = FreeplayState.instance.songsMove.target = FreeplayState.instance.songsMove.target + SongRect.fixHeight * 0.95 * (target.length);
         }
 
-        count = Math.floor((FreeplayState.instance.songsMove.target - FreeplayState.instance.songPosiStart) / SongRect.fixHeight);
+        count = Math.floor((FreeplayState.instance.songsMove.target - FreeplayState.instance.songPosiStart) / (SongRect.fixHeight * 0.95));
 
         if (count == _count) return;
         _count = count;

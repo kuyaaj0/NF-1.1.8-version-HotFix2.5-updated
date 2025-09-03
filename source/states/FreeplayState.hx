@@ -291,7 +291,7 @@ class FreeplayState extends MusicBeatState
 
 		collectionButton = new CollectionButton(977, 105);
 		add(collectionButton);
-		
+
 		//////////////////////////////////////////////////////////////////////////////////////////
 
 		downBG = new Rect(0, FlxG.height - 49, FlxG.width, 51, 0, 0); //嗯卧槽怎么全屏会漏
@@ -300,7 +300,6 @@ class FreeplayState extends MusicBeatState
 
 		backRect = new BackButton(0, FlxG.height - 65, 195, 65);
 		add(backRect);
-
 
 		for (data in 0...funcData.length)
 		{
