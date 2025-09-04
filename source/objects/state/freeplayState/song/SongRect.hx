@@ -13,7 +13,7 @@ class SongRect extends FlxSpriteGroup {
 
     /////////////////////////////////////////////////////////////////////
 
-    static public var fixHeight:Int = 60;
+    static public var fixHeight:Int = #if mobile 80 #else 60 #end;
     private var filePath:String = 'song/';
 
     public var id:Int = 0;
@@ -23,7 +23,7 @@ class SongRect extends FlxSpriteGroup {
     public function new(songNameSt:String, songChar:String, songMusican:String, songCharter:Array<String>, songColor:Array<Int>) {
         super(x, y);
 
-        light = new Rect(0, 0, 560, 60, 20, 20, FlxColor.WHITE, 1, 1, EngineSet.mainColor);
+        light = new Rect(0, 0, 560, fixHeight, fixHeight / 2, fixHeight / 2, FlxColor.WHITE, 1, 1, EngineSet.mainColor);
         light.antialiasing = ClientPrefs.data.antialiasing;
         add(light);
 
@@ -67,17 +67,17 @@ class SongRect extends FlxSpriteGroup {
     }
 
     function addBGCache(filesLoad:String, extraLoad:Bool, songColor:Array<Int>) {
-		var spr = new FlxSprite(0, 0).loadGraphic(Paths.image(filesLoad, null, false, extraLoad));
+        var newGraphic:FlxGraphic = Paths.image(filesLoad, null, false, extraLoad);
 
         var matrix:Matrix = new Matrix();
-        var scale:Float = light.width / spr.width;
-        if (light.height / spr.height > scale)
-            scale = light.height / spr.height;
+        var scale:Float = light.width / newGraphic.width;
+        if (light.height / newGraphic.height > scale)
+            scale = light.height / newGraphic.height;
         matrix.scale(scale, scale);
-        matrix.translate(-(spr.width * scale - light.width) / 2, -(spr.height * scale - light.height) / 2);
+        matrix.translate(-(newGraphic.width * scale - light.width) / 2, -(newGraphic.height * scale - light.height) / 2);
 
         var resizedBitmapData:BitmapData = new BitmapData(Std.int(light.width), Std.int(light.height), true, 0x00000000);
-        resizedBitmapData.draw(spr.pixels, matrix);
+        resizedBitmapData.draw(newGraphic.bitmap, matrix);
         
         if (!extraLoad)
         {
@@ -94,12 +94,12 @@ class SongRect extends FlxSpriteGroup {
         
         resizedBitmapData.copyChannel(light.pixels, new Rectangle(0, 0, light.width, light.height), new Point(), BitmapDataChannel.ALPHA, BitmapDataChannel.ALPHA);
 
-        spr.loadGraphic(resizedBitmapData);
+        newGraphic = FlxGraphic.fromBitmapData(resizedBitmapData);
 
-        Cache.currentTrackedFrames.set('freeplay-song-' + Mods.currentModDirectory + '-' + filesLoad + 'color: r:' + songColor[0] + ' g:' + songColor[1] + ' b:' + songColor[2], spr.frames);
+        Cache.currentTrackedFrames.set('freeplay-song-' + Mods.currentModDirectory + '-' + filesLoad + 'color: r:' + songColor[0] + ' g:' + songColor[1] + ' b:' + songColor[2], newGraphic.imageFrame);
 
-        var mainBGcache = new FlxSprite(0, 0).loadGraphic(Paths.image(filesLoad, null, false, extraLoad));
-        Cache.currentTrackedFrames.set('freeplay-bg-' + Mods.currentModDirectory + '-' + filesLoad, mainBGcache.frames);//预加载大界面的图像
+        var mainBGcache:FlxGraphic = Paths.image(filesLoad, null, false, extraLoad);
+        Cache.currentTrackedFrames.set('freeplay-bg-' + Mods.currentModDirectory + '-' + filesLoad, mainBGcache.imageFrame);//预加载大界面的图像
 	}
 
     static var lineShape:Shape = null;
@@ -107,12 +107,13 @@ class SongRect extends FlxSpriteGroup {
 	{
         if (lineShape == null) {
             lineShape = new Shape();
-            var lineSize:Int = 1;
+            var lineSize:Int = 2;
+            var round:Int = Std.int(bitmap.height / 2);
             lineShape.graphics.beginFill(EngineSet.mainColor);
             lineShape.graphics.lineStyle(1, EngineSet.mainColor, 1);
-            lineShape.graphics.drawRoundRect(0, 0, bitmap.width, bitmap.height, 20, 20);
+            lineShape.graphics.drawRoundRect(0, 0, bitmap.width, bitmap.height, round, round);
             lineShape.graphics.lineStyle(0, 0, 0);
-            lineShape.graphics.drawRoundRect(lineSize, lineSize, bitmap.width - lineSize * 2, bitmap.height - lineSize * 2, 20, 20);
+            lineShape.graphics.drawRoundRect(lineSize, lineSize, bitmap.width - lineSize * 2, bitmap.height - lineSize * 2, round - lineSize * 2, round - lineSize * 2);
             lineShape.graphics.endFill();
         }
 

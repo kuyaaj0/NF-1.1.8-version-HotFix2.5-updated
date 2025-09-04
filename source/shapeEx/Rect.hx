@@ -10,14 +10,22 @@ class Rect extends FlxSprite
 
 		this.mainRound = roundWidth;
 
-		if (Cache.currentTrackedFrames.get('rect-w'+width+'-h:'+height+'-rw:'+roundWidth+'-rh:'+roundHeight) == null) addCache(width, height, roundWidth, roundHeight, lineStyle, lineColor);
-		frames = Cache.currentTrackedFrames.get('rect-w'+width+'-h:'+height+'-rw:'+roundWidth+'-rh:'+roundHeight);
+		if (Cache.currentTrackedFrames.get('rect-w'+Std.int(width)+'-h:'+Std.int(height)+'-rw:'+Std.int(roundWidth)+'-rh:'+Std.int(roundHeight)) == null) addCache(width, height, roundWidth, roundHeight, lineStyle, lineColor);
+		frames = Cache.currentTrackedFrames.get('rect-w'+Std.int(width)+'-h:'+Std.int(height)+'-rw:'+Std.int(roundWidth)+'-rh:'+Std.int(roundHeight));
 		antialiasing = ClientPrefs.data.antialiasing;
 		color = Color;
 		alpha = Alpha;
 	}
+	
+	function addCache(width:Float = 0, height:Float = 0, roundWidth:Float = 0, roundHeight:Float = 0, lineStyle:Int, lineColor:FlxColor) {
+		var newGraphic:FlxGraphic = FlxGraphic.fromBitmapData(drawRect(width, height, roundWidth, roundHeight, lineStyle, lineColor));
+		newGraphic.persist = true;
+		newGraphic.destroyOnNoUse = false;
 
-	function drawRect(width:Float = 0, height:Float = 0, roundWidth:Float = 0, roundHeight:Float = 0, lineStyle:Int, lineColor:FlxColor):BitmapData
+		Cache.currentTrackedFrames.set('rect-w'+Std.int(width)+'-h:'+Std.int(height)+'-rw:'+Std.int(roundWidth)+'-rh:'+Std.int(roundHeight), newGraphic.imageFrame);
+	}
+
+	function drawRect(width:Float, height:Float, roundWidth:Float, roundHeight:Float, lineStyle:Int, lineColor:FlxColor):BitmapData
 	{
 		var shape:Shape = new Shape();
 
@@ -27,29 +35,21 @@ class Rect extends FlxSprite
 
 		var bitmap:BitmapData = new BitmapData(Std.int(width), Std.int(height), true, 0);
 		bitmap.draw(shape);
-		if (lineStyle > 0) drawLine(bitmap, lineStyle, lineColor);
+		if (lineStyle > 0) drawLine(bitmap, lineStyle, roundWidth, roundHeight, lineColor);
 		return bitmap;
 	}
 
-	function addCache(width:Float = 0, height:Float = 0, roundWidth:Float = 0, roundHeight:Float = 0, lineStyle:Int, lineColor:FlxColor) {
-		var spr:FlxSprite = new FlxSprite();
-		var newGraphic:FlxGraphic = FlxGraphic.fromBitmapData(drawRect(width, height, roundWidth, roundHeight, lineStyle, lineColor));
-		spr.loadGraphic(newGraphic);
-
-		Cache.currentTrackedFrames.set('rect-w'+width+'-h:'+height+'-rw:'+roundWidth+'-rh:'+roundHeight, spr.frames);
-	}
-
 	static var lineShape:Shape = null;
-    function drawLine(bitmap:BitmapData, lineStyle:Int, lineColor:FlxColor)
+    function drawLine(bitmap:BitmapData, lineStyle:Int, roundWidth:Float, roundHeight:Float, lineColor:FlxColor)
 	{
         if (lineShape == null) {
             lineShape = new Shape();
             var lineSize:Int = lineStyle;
             lineShape.graphics.beginFill(lineColor);
             lineShape.graphics.lineStyle(1, lineColor, 1);
-            lineShape.graphics.drawRoundRect(0, 0, bitmap.width, bitmap.height, 20, 20);
-            lineShape.graphics.lineStyle(0, 0, 0);
-            lineShape.graphics.drawRoundRect(lineSize, lineSize, bitmap.width - lineSize * 2, bitmap.height - lineSize * 2, 20, 20);
+            lineShape.graphics.drawRoundRect(0, 0, bitmap.width, bitmap.height, roundWidth, roundHeight);
+			lineShape.graphics.lineStyle(0, 0, 0);
+            lineShape.graphics.drawRoundRect(lineSize, lineSize, bitmap.width - lineSize * 2, bitmap.height - lineSize * 2, roundWidth - lineSize * 2, roundHeight - lineSize * 2);
             lineShape.graphics.endFill();
         }
 

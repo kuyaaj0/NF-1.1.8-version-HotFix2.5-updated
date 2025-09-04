@@ -229,7 +229,7 @@ class Paths
 		if (!extraLoad)
 			file = modsImages(key);
 		else
-			file = modFolders(key + '.png');
+			file = modsExImages(key);
 
 		if (Cache.currentTrackedAssets.exists(file))
 		{
@@ -258,7 +258,41 @@ class Paths
 		return null;
 	}
 
-	static public function cacheBitmap(file:String, ?bitmap:BitmapData = null, ?allowGPU:Bool = true)
+	static public function cacheImage(key:String, ?library:String = null, ?allowGPU:Bool = false, ?threadLoad:Bool = true):FlxGraphic
+	{
+		var bitmap:BitmapData = null;
+		var file:String = key + '.png';
+
+		#if MODS_ALLOWED
+		if (Cache.currentTrackedAssets.exists(file))
+		{
+			Cache.localTrackedAssets.push(file);
+			return Cache.currentTrackedAssets.get(file);
+		}
+		else if (FileSystem.exists(file))
+			bitmap = BitmapData.fromFile(file);
+		else
+		#end
+		{
+			file = getPath('images/$key.png', IMAGE, library);
+			if (Cache.currentTrackedAssets.exists(file))
+			{
+				Cache.localTrackedAssets.push(file);
+				return Cache.currentTrackedAssets.get(file);
+			}
+			else if (Assets.exists(file, IMAGE))
+				bitmap = Assets.getBitmapData(file);
+		}
+
+		if (bitmap != null)
+			return cacheBitmap(file, bitmap, allowGPU, threadLoad);
+
+		trace('oh no its returning null NOOOO ($file)');
+		return null;
+	}
+
+	static var bitmapMutex:Mutex = new Mutex();
+	static public function cacheBitmap(file:String, ?bitmap:BitmapData = null, ?allowGPU:Bool = true, ?threadLoad:Bool = false)
 	{
 		if (bitmap == null)
 		{
@@ -276,8 +310,11 @@ class Paths
 				return null;
 		}
 
+		var thread:Bool = false;
+		if (threadLoad != null) thread = threadLoad;
+
 		Cache.localTrackedAssets.push(file);
-		if (allowGPU && ClientPrefs.data.cacheOnGPU)
+		if (allowGPU && ClientPrefs.data.cacheOnGPU && !thread)
 		{
 			var texture:RectangleTexture = FlxG.stage.context3D.createRectangleTexture(bitmap.width, bitmap.height, BGRA, true);
 			texture.uploadFromBitmapData(bitmap);
@@ -289,7 +326,10 @@ class Paths
 		var newGraphic:FlxGraphic = FlxGraphic.fromBitmapData(bitmap, false, file);
 		newGraphic.persist = true;
 		newGraphic.destroyOnNoUse = false;
-		Cache.currentTrackedAssets.set(file, newGraphic);
+		if (thread) bitmapMutex.acquire();
+			Cache.currentTrackedAssets.set(file, newGraphic);
+		if (thread) bitmapMutex.release();
+		
 		return newGraphic;
 	}
 
@@ -475,7 +515,7 @@ class Paths
 			modLibPath += '$path/';
 
 		var thread:Bool = false;
-		if (threadLoad != null) thread = true;
+		if (threadLoad != null) thread = threadLoad;
 
 		var file:String = '';
 		
@@ -555,6 +595,11 @@ class Paths
 	inline static public function modsImages(key:String)
 	{
 		return modFolders('images/' + key + '.png');
+	}
+
+	inline static public function modsExImages(key:String)
+	{
+		return modFolders(key + '.png');
 	}
 
 	inline static public function modsXml(key:String)

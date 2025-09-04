@@ -352,10 +352,10 @@ class RoundRect extends FlxSpriteGroup
 		var bitmap:BitmapData = new BitmapData(Std.int(width), Std.int(height), true, 0);
 		bitmap.draw(shape);
 
-		var spr:FlxSprite = new FlxSprite();
 		var newGraphic:FlxGraphic = FlxGraphic.fromBitmapData(bitmap);
-		spr.loadGraphic(newGraphic);
-		Cache.currentTrackedFrames.set('roundRect-round' +type+'-w'+width+'-h:'+height, spr.frames);
+		newGraphic.persist = true;
+		newGraphic.destroyOnNoUse = false;
+		Cache.currentTrackedFrames.set('roundRect-round' +type+'-w'+width+'-h:'+height, newGraphic.imageFrame);
 	}
 
 	function drawRect(x:Float, y:Float, width:Float = 0, height:Float = 0):BaseSprite
@@ -375,10 +375,10 @@ class RoundRect extends FlxSpriteGroup
 		var bitmap:BitmapData = new BitmapData(Std.int(width), Std.int(height), true, 0);
 		bitmap.draw(shape);
 
-		var spr:FlxSprite = new FlxSprite();
 		var newGraphic:FlxGraphic = FlxGraphic.fromBitmapData(bitmap);
-		spr.loadGraphic(newGraphic);
-		Cache.currentTrackedFrames.set('roundRect-rect-w'+width+'-h:'+height, spr.frames);
+		newGraphic.persist = true;
+		newGraphic.destroyOnNoUse = false;
+		Cache.currentTrackedFrames.set('roundRect-rect-w'+width+'-h:'+height, newGraphic.imageFrame);
 	}
 
 	public static function getTweenEaseByString(?ease:String = '')

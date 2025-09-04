@@ -1,6 +1,4 @@
-package objects.state.freeplayState.others;
-
-import objects.state.freeplayState.song.SongRect;
+package backend.state.freeplayState;
 
 class ScrollManager {
 
@@ -33,6 +31,8 @@ class ScrollManager {
         _count = count;
 
         var flipData:Int = target.length-1 - count - scrollFix;
+
+        if (target.length < 0) return;
 
         for (i in 0...target.length) {
             if (i <= flipData) {

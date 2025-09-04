@@ -233,7 +233,7 @@ class Main extends Sprite
 		Data.setup();
 
 		if (ClientPrefs.data.gcFreeZone)
-			cpp.NativeGc.enterGCFreeZone;
+			cpp.NativeGc.enterGCFreeZone();
 		
 		// shader coords fix
 		FlxG.signals.gameResized.add(function(w, h)
@@ -271,12 +271,12 @@ class Main extends Sprite
 	{
 		if (type == true)
 		{
-			cpp.NativeGc.exitGCFreeZone;
+			cpp.NativeGc.exitGCFreeZone();
 			type = false;
 		}
 		else
 		{
-			cpp.NativeGc.enterGCFreeZone;
+			cpp.NativeGc.enterGCFreeZone();
 			type = true;
 		}
 	}

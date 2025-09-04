@@ -8,3 +8,5 @@ import openfl.display.Shape;
 import flash.geom.ColorTransform;
 import flash.geom.Point;
 import flash.geom.Matrix;
+
+import flixel.graphics.FlxGraphic;

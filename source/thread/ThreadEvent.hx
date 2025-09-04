@@ -11,7 +11,7 @@ import flixel.FlxG;
 
 
 class ThreadEvent {
-    var event:Dynamic->Void = null;
+    var event:Void->Void = null;
     var workThread:Thread;
     var mainThread:Thread;
     var updateListener:Void->Void = null; //每帧监听
@@ -19,7 +19,7 @@ class ThreadEvent {
     static var IDcount:Int = 0;
     var id:Int = 0; //线程的专属id
 
-    public static function create(job:()->Void, event:Dynamic->Void):ThreadEvent
+    public static function create(job:()->Void, event:Void->Void):ThreadEvent
     {
         var thread = new ThreadEvent(event);
 		thread.__create(job);
@@ -40,7 +40,7 @@ class ThreadEvent {
         });
 	}
 
-    public function new(event:Dynamic->Void) {
+    public function new(event:Void->Void) {
         this.event = event;
         this.mainThread = Thread.current();
         addIndividualListener();
@@ -50,7 +50,7 @@ class ThreadEvent {
         var msg = Thread.readMessage(blocking);
         if (msg != null && Reflect.hasField(msg, "type") && msg.type.toLowerCase() == "complete" && msg.data.result == id) {
             if (event != null) {
-                event('wc');
+                event();
             }
 
             if (updateListener != null) {
