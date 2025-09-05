@@ -13,6 +13,8 @@ class MobileControls extends FlxTypedSpriteGroup<FlxMobileInputManager>
 	// YOU CAN'T CHANGE PROPERTIES USING THIS EXCEPT WHEN IN RUNTIME!!
 	public var current:CurrentManager;
 
+	public var isHitbox:Bool = false;
+
 	public static var mode(get, set):Int;
 	public static var forcedControl:Null<Int>;
 
@@ -69,6 +71,7 @@ class MobileControls extends FlxTypedSpriteGroup<FlxMobileInputManager>
 			case 4:
 				hitbox = new FlxHitbox();
 				add(hitbox);
+				isHitbox = true;
 		}
 	}
 

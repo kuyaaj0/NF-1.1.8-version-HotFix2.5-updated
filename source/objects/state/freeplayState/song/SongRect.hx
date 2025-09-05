@@ -14,7 +14,6 @@ class SongRect extends FlxSpriteGroup {
     /////////////////////////////////////////////////////////////////////
 
     static public var fixHeight:Int = #if mobile 80 #else 60 #end;
-    private var filePath:String = 'song/';
 
     public var id:Int = 0;
     public var currect:Int = 0;

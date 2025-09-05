@@ -10,7 +10,7 @@ class DiffRect extends FlxSpriteGroup {
 
     /////////////////////////////////////////////////////////////////////
 
-    static public var fixHeight:Int = 60;
+    static public var fixHeight:Int = #if mobile 40 #else 30 #end;
     private var filePath:String = 'song/';
 
     public var id:Int = 0;
