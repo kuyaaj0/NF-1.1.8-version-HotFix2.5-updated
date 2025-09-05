@@ -329,7 +329,6 @@ class FlxHitbox extends FlxMobileInputManager
 
 	private function createHint(X:Float, Y:Float, Width:Int, Height:Int, Color:Int = 0xFFFFFF):FlxButton
 	{
-		var hintTween:FlxTween = null;
 		var hint = new FlxButton(X, Y);
 		hint.loadGraphic(createHintGraphic(Width, Height));
 		hint.color = Color;
@@ -340,50 +339,22 @@ class FlxHitbox extends FlxMobileInputManager
 		hint.scrollFactor.set();
 		hint.alpha = 0.5;
 		hint.antialiasing = ClientPrefs.data.antialiasing;
-		/*
+		
 		if (ClientPrefs.data.playControlsAlpha >= 0)
 		{
 			hint.onDown.callback = function()
 			{
-				if (hintTween != null)
-					hintTween.cancel();
-
-				hintTween = FlxTween.tween(hint, {alpha: ClientPrefs.data.playControlsAlpha}, ClientPrefs.data.playControlsAlpha / 100, {
-					ease: FlxEase.circInOut,
-					onComplete: function(twn:FlxTween)
-					{
-						hintTween = null;
-					}
-				});
+				alpha = ClientPrefs.data.playControlsAlpha;
 			}
 			hint.onUp.callback = function()
 			{
-				if (hintTween != null)
-					hintTween.cancel();
-
-				hintTween = FlxTween.tween(hint, {alpha: 0.00001}, ClientPrefs.data.playControlsAlpha / 10, {
-					ease: FlxEase.circInOut,
-					onComplete: function(twn:FlxTween)
-					{
-						hintTween = null;
-					}
-				});
+				alpha = 0.00001;
 			}
 			hint.onOut.callback = function()
 			{
-				if (hintTween != null)
-					hintTween.cancel();
-
-				hintTween = FlxTween.tween(hint, {alpha: 0.00001}, ClientPrefs.data.playControlsAlpha / 10, {
-					ease: FlxEase.circInOut,
-					onComplete: function(twn:FlxTween)
-					{
-						hintTween = null;
-					}
-				});
+				alpha = 0.00001;
 			}
 		}
-			*/
 		#if FLX_DEBUG
 		hint.ignoreDrawDebug = true;
 		#end
@@ -404,7 +375,6 @@ class FlxHitbox extends FlxMobileInputManager
 		shape.graphics.lineStyle(0, 0, 0);
 		shape.graphics.drawRect(3, 3, Width - 6, Height - 6);
 		shape.graphics.endFill();
-		shape.graphics.beginGradientFill(RADIAL, [0xFFFFFF, FlxColor.TRANSPARENT], [guh, 0], [0, 255], null, null, null, 0.5);
 		shape.graphics.drawRect(3, 3, Width - 6, Height - 6);
 		shape.graphics.endFill();
 

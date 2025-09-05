@@ -374,7 +374,6 @@ class PlayState extends MusicBeatState
 		else
 			replayExam.init();
 
-
 		camGame = initPsychCamera();
 		camHUD = new FlxCamera();
 		camOther = new FlxCamera();
