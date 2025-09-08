@@ -52,7 +52,7 @@ class Main extends Sprite
 	private static var game = {
 		width: 1280, // WINDOW width
 		height: 720, // WINDOW height
-		initialState: #if mobile InitState #else InitState #end, // initial game state
+		initialState: #if mobile PassState #else InitState #end, // initial game state
 		zoom: -1.0, // game state bounds
 		framerate: 60, // default framerate
 		skipSplash: true, // if the default flixel splash screen should be skipped
@@ -80,11 +80,9 @@ class Main extends Sprite
 		
 		Lib.current.addChild(new Main());
 		#if cpp
-		cpp.NativeGc.enable(true);
-		cpp.NativeGc.run(true);
 
-		//cpp.vm.Gc.enable(true);
-		//cpp.vm.Gc.run(true);  
+		cpp.vm.Gc.enable(true);
+		cpp.vm.Gc.run(true);  
 		#end
 	}
 	

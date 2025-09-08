@@ -84,7 +84,8 @@ class Paths
 		}
 
 		// run the garbage collector for good measure lmfao
-		System.gc();
+		cpp.vm.Gc.run(true);
+		//System.gc();
 	}
 
 	///////////////////////////////////////////上面是缓存清除功能，下面是路径功能
@@ -617,19 +618,33 @@ class Paths
 		return modFolders('images/' + key + '.json');
 	}
 
-	/* Goes unused for now
+	static public function modFolders(key:String)
+	{
+		if (Mods.currentModDirectory != null && Mods.currentModDirectory.length > 0)
+		{
+			var fileToCheck:String = mods(Mods.currentModDirectory + '/' + key);
+			if (FileSystem.exists(fileToCheck))
+			{
+				return fileToCheck;
+			}
+		} //检测当前mods有没有这个文件
 
-		inline static public function modsShaderFragment(key:String, ?library:String)
+		for (mod in Mods.getGlobalMods())
 		{
-			return modFolders('shaders/'+key+'.frag');
-		}
-		inline static public function modsShaderVertex(key:String, ?library:String)
+			var fileToCheck:String = mods(mod + '/' + key);
+			if (FileSystem.exists(fileToCheck))
+				return fileToCheck;
+		} //检测全部mods有没有这个文件
+
+		var fileToCheck:String = mods(key);
+		if (FileSystem.exists(fileToCheck))
 		{
-			return modFolders('shaders/'+key+'.vert');
-		}
-		inline static public function modsAchievements(key:String) {
-			return modFolders('achievements/' + key + '.json');
-	}*/
+			return fileToCheck;
+		} //检测mod的根目录有没有这个文件（列如mods/images）
+
+		return #if mobile Sys.getCwd() + #end 'assets/shared/' + key;
+	}
+
 	static public function modFolders(key:String)
 	{
 		if (Mods.currentModDirectory != null && Mods.currentModDirectory.length > 0)

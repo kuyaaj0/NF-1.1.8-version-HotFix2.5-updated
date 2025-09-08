@@ -15,7 +15,7 @@ import backend.Replay;
 import backend.diffCalc.StarRating;
 
 import backend.state.freeplayState.*;
-//import backend.state.freeplayState.PreThreadLoad.DataPrepare;
+import backend.state.freeplayState.PreThreadLoad.DataPrepare;
 import objects.state.freeplayState.detail.*;
 import objects.state.freeplayState.down.*;
 import objects.state.freeplayState.others.*;
@@ -80,7 +80,7 @@ class FreeplayState extends MusicBeatState
 
 	///////////////////////////////////////////////////////////////////////////////////////////////
 
-	//public var prepareLoad:PreThreadLoad;
+	public var prepareLoad:PreThreadLoad;
 
 	///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -253,7 +253,7 @@ class FreeplayState extends MusicBeatState
 
 		//////////////////////////////////////////////////////////////////////////////////////////
 
-		/*
+		
 		var songRectload:Array<DataPrepare> = [];
 
 		for (time in 0...Math.ceil((Math.ceil(FlxG.height / SongRect.fixHeight * 0.95) + 2) / songsData.length)){
@@ -267,7 +267,7 @@ class FreeplayState extends MusicBeatState
 
 		prepareLoad = new PreThreadLoad();
 		prepareLoad.start(songRectload);
-		*/
+		
 
 		for (time in 0...Math.ceil((Math.ceil(FlxG.height / SongRect.fixHeight * 0.95) + 2) / songsData.length)){
 			for (i in 0...songsData.length)

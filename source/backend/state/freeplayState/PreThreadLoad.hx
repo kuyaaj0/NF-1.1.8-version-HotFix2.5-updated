@@ -10,22 +10,14 @@ import Lambda;
 import openfl.display.BitmapData;
 import openfl.geom.ColorTransform;
 import openfl.geom.Rectangle;
-import sys.FileSystem;
 
 typedef DataPrepare = {
-    name:String,
-    color:Array<Int>,
-    icon:String,
-    modPath:String
+    modPath:String,
+    bgPath:String,
+    iconPath:String,
+    color:Array<Int>
 }
 
-typedef RectData = {
-    path:String,
-    color:Array<Int>,
-    modPath:String
-}
-
-//haxe用线程加载太不稳定了，所以我放弃了--狐月影
 class PreThreadLoad {
     public var loadFinish:Bool = false;
 
@@ -34,7 +26,7 @@ class PreThreadLoad {
 
     ///////////////////////////////////////////////////////
 
-    var loadRect:Array<RectData> = [];
+    var loadRect:Array<DataPrepare> = [];
     var loadIcon:Array<String> = [];
 
     var rectPool:FixedThreadPool;
@@ -47,14 +39,14 @@ class PreThreadLoad {
         countMutex = new Mutex();
     }
 
-    var rectPre:Map<String, RectData> = [];
+    var rectPre:Map<String, DataPrepare> = [];
     var iconPre:Array<String> = [];
     public function start(data:Array<DataPrepare>) {
         ThreadEvent.create(function() {
             for (mem in data) {
                 if (mem.modPath != '') mem.modPath = mem.modPath + '/';
 
-                var rd:RectData = pathCheck(mem);
+                var rd:DataPrepare = bgPathCheck(mem);
                 if (!rectPre.exists(rd.modPath + ' ' + rd.path + ' ' + rd.color))
                     rectPre.set(rd.modPath + ' ' + rd.path + ' ' + rd.color, rd);
 
@@ -72,12 +64,14 @@ class PreThreadLoad {
         }, load);
     }
 
-    function pathCheck(rect:DataPrepare):RectData {
+    function bgPathCheck(rect:DataPrepare):DataPrepare {
         var filesLoad = 'data/' + rect.name + '/bg';
         if (!FileSystem.exists(Paths.mods(rect.modPath + filesLoad + '.png'))) 
             filesLoad = 'images/menuDesat';
+        if (!FileSystem.exists(Paths.mods(rect.modPath + filesLoad + '.png'))) 
             
-        return {path:Paths.mods(rect.modPath + filesLoad), color:rect.color, modPath:rect.modPath};
+            
+        return rect;
     }
 
     function iconCheck(rect:DataPrepare):String {
@@ -103,12 +97,12 @@ class PreThreadLoad {
         iconPool = new FixedThreadPool(iconThread);
 
         for (i in 0...loadRect.length) {
-            var rectData = loadRect[i];
+            var DataPrepare = loadRect[i];
             rectPool.run(() -> {
-                var newGraphic:FlxGraphic = Paths.cacheImage(rectData.path, null, false, true);
+                var newGraphic:FlxGraphic = Paths.cacheImage(DataPrepare.path, null, false, true);
                 if (newGraphic == null) {
 
-                    trace('load rect: ' + rectData.path + ' fail');
+                    trace('load rect: ' + DataPrepare.path + ' fail');
                     return;
                 }
                 
@@ -124,10 +118,10 @@ class PreThreadLoad {
                 resizedBitmapData.draw(newGraphic.bitmap, matrix);
 
                 
-                if (rectData.path.indexOf('menuDesat') != -1)
+                if (DataPrepare.path.indexOf('menuDesat') != -1)
                 {
                     var colorTransform:ColorTransform = new ColorTransform();
-                    var color:FlxColor = FlxColor.fromRGB(rectData.color[0], rectData.color[1], rectData.color[2]);
+                    var color:FlxColor = FlxColor.fromRGB(DataPrepare.color[0], DataPrepare.color[1], DataPrepare.color[2]);
                     colorTransform.redMultiplier = color.redFloat;
                     colorTransform.greenMultiplier = color.greenFloat;
                     colorTransform.blueMultiplier = color.blueFloat;
@@ -147,7 +141,7 @@ class PreThreadLoad {
                 if (count >= maxCount) {
                     loadFinish = true;
                 }
-                trace('load rect: ' + rectData.path + ' finish');
+                trace('load rect: ' + DataPrepare.path + ' finish');
                 countMutex.release();
             });
         }

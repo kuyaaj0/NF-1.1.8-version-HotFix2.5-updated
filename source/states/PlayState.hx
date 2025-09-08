@@ -58,7 +58,7 @@ import crowplexus.iris.Iris;
 import crowplexus.hscript.Expr.Error as IrisError;
 import crowplexus.hscript.Printer;
 #end
-//import modchart.Manager;
+import modchart.Manager;
 
 @:allow(backend.Replay)
 /**
@@ -322,8 +322,6 @@ class PlayState extends MusicBeatState
 
 	var diffBotplay:Bool;
 
-	//public var modchart:Manager;
-
 	public function new()
 	{
 		super();
@@ -352,7 +350,6 @@ class PlayState extends MusicBeatState
 			}
 		}
 		else keysArray = ['note_left', 'note_down', 'note_up', 'note_right'];
-
 
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
@@ -1220,9 +1217,6 @@ class PlayState extends MusicBeatState
 			generateStaticArrows(0);
 			generateStaticArrows(1);
 
-			///modchart = new Manager(); //目前版本的modchart有问题
-			//addManager(modchart);
-
 			for (i in 0...playerStrums.length)
 			{
 				setOnScripts('defaultPlayerStrumX' + i, playerStrums.members[i].x);
@@ -1357,7 +1351,7 @@ class PlayState extends MusicBeatState
 		insert(members.indexOf(dadGroup), obj);
 	}
 
-	/*
+	
 	public function addManager(obj:Manager)
 	{
 		if (obj.playfields == null || obj.playfields.length == 0)
@@ -1365,7 +1359,6 @@ class PlayState extends MusicBeatState
 
 		add(obj);
 	}
-	*/
 
 	public function clearNotesBefore(time:Float)
 	{
