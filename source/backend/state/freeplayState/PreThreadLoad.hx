@@ -44,8 +44,6 @@ class PreThreadLoad {
     public function start(data:Array<DataPrepare>) {
         ThreadEvent.create(function() {
             for (mem in data) {
-                if (mem.modPath != '') mem.modPath = mem.modPath + '/';
-
                 var rd:DataPrepare = bgPathCheck(mem);
                 if (!rectPre.exists(rd.modPath + ' ' + rd.path + ' ' + rd.color))
                     rectPre.set(rd.modPath + ' ' + rd.path + ' ' + rd.color, rd);
@@ -68,7 +66,7 @@ class PreThreadLoad {
         var filesLoad = 'data/' + rect.name + '/bg';
         if (!FileSystem.exists(Paths.mods(rect.modPath + filesLoad + '.png'))) 
             filesLoad = 'images/menuDesat';
-        if (!FileSystem.exists(Paths.mods(rect.modPath + filesLoad + '.png'))) 
+        if (!FileSystem.exists(Paths.mods(rect.modPath + filesLoad + '.png')))
             
             
         return rect;
@@ -113,10 +111,8 @@ class PreThreadLoad {
                 matrix.scale(scale, scale);
                 matrix.translate(-(newGraphic.width * scale - light.width) / 2, -(newGraphic.height * scale - light.height) / 2);
                 
-
                 var resizedBitmapData:BitmapData = new BitmapData(Std.int(light.width), Std.int(light.height), true, 0x00000000);
                 resizedBitmapData.draw(newGraphic.bitmap, matrix);
-
                 
                 if (DataPrepare.path.indexOf('menuDesat') != -1)
                 {

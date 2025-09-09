@@ -645,29 +645,19 @@ class Paths
 		return #if mobile Sys.getCwd() + #end 'assets/shared/' + key;
 	}
 
-	static public function modFolders(key:String)
+	static public function modCachePath(modPath:String, key:String)
 	{
-		if (Mods.currentModDirectory != null && Mods.currentModDirectory.length > 0)
-		{
-			var fileToCheck:String = mods(Mods.currentModDirectory + '/' + key);
-			if (FileSystem.exists(fileToCheck))
-			{
-				return fileToCheck;
-			}
-		} //检测当前mods有没有这个文件
+		if (modPath != '') modPath = modPath + '/';
+		var fileToCheck:String = mods(modPath + key);
+		if (FileSystem.exists(fileToCheck))
+			return fileToCheck;
 
 		for (mod in Mods.getGlobalMods())
 		{
 			var fileToCheck:String = mods(mod + '/' + key);
 			if (FileSystem.exists(fileToCheck))
 				return fileToCheck;
-		} //检测全部mods有没有这个文件
-
-		var fileToCheck:String = mods(key);
-		if (FileSystem.exists(fileToCheck))
-		{
-			return fileToCheck;
-		} //检测mod的根目录有没有这个文件（列如mods/images）
+		}
 
 		return #if mobile Sys.getCwd() + #end 'assets/shared/' + key;
 	}
