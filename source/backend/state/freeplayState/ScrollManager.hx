@@ -18,14 +18,22 @@ class ScrollManager {
     var count:Int = 0;
     var _count:Int = -9999;
     public function moveElementToPosition() {
-        if (FreeplayState.instance.songsMove.target > FreeplayState.instance.songPosiStart + SongRect.fixHeight * 0.95 * (target.length)) {
-            FreeplayState.songPosiData = FreeplayState.instance.songsMove.target = FreeplayState.instance.songsMove.target - SongRect.fixHeight * 0.95 * (target.length);
+        if (FreeplayState.instance.songsMove.target > FreeplayState.instance.songPosiStart + SongRect.fixHeight * FreeplayState.instance.inter * target.length) {
+            FreeplayState.songPosiData = FreeplayState.instance.songsMove.target = FreeplayState.instance.songsMove.target - SongRect.fixHeight * FreeplayState.instance.inter * target.length;   
+                
+            if (FreeplayState.instance.songsMove.lerpData > FreeplayState.instance.songPosiStart + SongRect.fixHeight * FreeplayState.instance.inter * target.length) {
+                FreeplayState.instance.songsMove.lerpData -= SongRect.fixHeight * FreeplayState.instance.inter * target.length;            
+            }     
         }
-        if (FreeplayState.instance.songsMove.target < FreeplayState.instance.songPosiStart - SongRect.fixHeight * 0.95 * (target.length)) {
-            FreeplayState.songPosiData = FreeplayState.instance.songsMove.target = FreeplayState.instance.songsMove.target + SongRect.fixHeight * 0.95 * (target.length);
-        }
+        else if (FreeplayState.instance.songsMove.target < FreeplayState.instance.songPosiStart - SongRect.fixHeight * FreeplayState.instance.inter * target.length) {
+            FreeplayState.songPosiData = FreeplayState.instance.songsMove.target = FreeplayState.instance.songsMove.target + SongRect.fixHeight * FreeplayState.instance.inter * target.length;
+            
+            if (FreeplayState.instance.songsMove.lerpData < FreeplayState.instance.songPosiStart - SongRect.fixHeight * FreeplayState.instance.inter * target.length) {
+                FreeplayState.instance.songsMove.lerpData += SongRect.fixHeight * FreeplayState.instance.inter * target.length;
+            }
+        }              
 
-        count = Math.floor((FreeplayState.instance.songsMove.target - FreeplayState.instance.songPosiStart) / (SongRect.fixHeight * 0.95));
+        count = FreeplayState.curSelected = Math.floor((FreeplayState.instance.songsMove.target - FreeplayState.instance.songPosiStart) / (SongRect.fixHeight * FreeplayState.instance.inter));
 
         if (count == _count) return;
         _count = count;

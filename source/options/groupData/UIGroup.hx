@@ -29,7 +29,7 @@ class UIGroup extends OptionCata
 		var option:Option = new Option(this, 'judgementCounter', BOOL);
 		addOption(option);
 
-		var option:Option = new Option(this, 'keyboardDisplay', BOOL);
+		var option:Option = new Option(this, 'KeyboardViewer', BOOL);
 		addOption(option, true);
 
 		/////--TimeBar--\\\\\

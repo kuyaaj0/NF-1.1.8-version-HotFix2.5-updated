@@ -216,7 +216,7 @@ class PlayState extends MusicBeatState
 
 	var songPercent:Float = 0;
 
-	public var keyboardDisplay:KeyboardDisplay;
+	public var KeyboardViewer:KeyboardViewer;
 
 	public var ratingsData:Array<Rating> = Rating.loadDefault();
 
@@ -719,11 +719,11 @@ class PlayState extends MusicBeatState
 
 		generateSong(SONG.song);
 
-		keyboardDisplay = new KeyboardDisplay(ClientPrefs.data.comboOffset[4], ClientPrefs.data.comboOffset[5]);
-		keyboardDisplay.antialiasing = ClientPrefs.data.antialiasing;
-		keyboardDisplay.visible = ClientPrefs.data.keyboardDisplay;
-		add(keyboardDisplay);
-		keyboardDisplay.cameras = [camHUD];
+		KeyboardViewer = new KeyboardViewer(ClientPrefs.data.comboOffset[4], ClientPrefs.data.comboOffset[5]);
+		KeyboardViewer.antialiasing = ClientPrefs.data.antialiasing;
+		KeyboardViewer.visible = ClientPrefs.data.KeyboardViewer;
+		add(KeyboardViewer);
+		KeyboardViewer.cameras = [camHUD];
 
 		camFollow = new FlxObject(0, 0, 1, 1);
 		camFollow.setPosition(camPos.x, camPos.y);
@@ -2122,9 +2122,9 @@ class PlayState extends MusicBeatState
 				resetRPC(startTimer != null && startTimer.finished);
 			});
 
-			for (key in 0...keyboardDisplay.keys) {
+			for (key in 0...KeyboardViewer.keys) {
 				if (!Controls.instance.pressed(keysArray[key]))
-					keyboardDisplay.released(key);
+					KeyboardViewer.released(key);
 			}
 		}
 	}
@@ -2682,7 +2682,7 @@ class PlayState extends MusicBeatState
 		persistentDraw = true;
 		paused = true;
 
-		keyboardDisplay.save();
+		KeyboardViewer.save();
 
 		if (FlxG.sound.music != null)
 		{
@@ -3234,7 +3234,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		keyboardDisplay.save();
+		KeyboardViewer.save();
 
 		timeBar.visible = false;
 		timeTxt.visible = false;
@@ -3727,7 +3727,7 @@ class PlayState extends MusicBeatState
 		if (!generatedMusic || endingSong || char.stunned)
 			return;
 
-		keyboardDisplay.pressed(key);
+		KeyboardViewer.pressed(key);
 
 		replayExam.push(Conductor.songPosition, key, 1);
 		// 回放数据的保存
@@ -3865,7 +3865,7 @@ class PlayState extends MusicBeatState
 	{
 		if (ClientPrefs.data.playOpponent ? !cpuControlled_opponent : !cpuControlled && startedCountdown && !paused)
 		{
-			keyboardDisplay.released(key);
+			KeyboardViewer.released(key);
 
 			replayExam.push(Conductor.songPosition, key, 0);
 			// 回放数据的保存

@@ -30,7 +30,7 @@ class UIGroup
 		var option:Option = new Option(Language.get('judgementCounter'), 'judgementCounter', BOOL);
 		follow.addOption(option);
 
-		var option:Option = new Option(Language.get('keyboardDisplay'), 'keyboardDisplay', BOOL);
+		var option:Option = new Option(Language.get('KeyboardViewer'), 'KeyboardViewer', BOOL);
 		follow.addOption(option);
 
 		///////////////////////////////

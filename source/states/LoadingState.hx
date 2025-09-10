@@ -25,7 +25,7 @@ import sys.thread.Thread;
 import sys.thread.FixedThreadPool;
 import sys.thread.Mutex;
 
-
+import thread.ThreadEvent;
 
 class LoadingState extends MusicBeatState
 {
@@ -44,7 +44,6 @@ class LoadingState extends MusicBeatState
 
 	static var isPlayState:Bool = false; //如果是要进入playstate
 	static var allowPrepare:Bool = false; //允许执行prepare事件
-	static var allowLoad:Bool = false; //允许执行加载
 
 
 
@@ -196,12 +195,11 @@ class LoadingState extends MusicBeatState
 
 		super.create();
 
-		Thread.create(() ->
-		{
+		ThreadEvent.create(function() {
 			prepareMutex.acquire();
 			startPrepare();
 			prepareMutex.release();
-		});
+		}, startThreads);
 	}
 
 
@@ -234,7 +232,6 @@ class LoadingState extends MusicBeatState
 
 		isPlayState = true;
 		allowPrepare = true;
-		allowLoad = false;
 	}
 
 	static function startPrepare()
@@ -337,9 +334,7 @@ class LoadingState extends MusicBeatState
 		preloadScript();
 
 		allowPrepare = false;
-		allowLoad = true;
 	}
-
 	
 
 	public static function preloadCharacter(char:String, ?prefixVocals:String)
@@ -591,9 +586,6 @@ class LoadingState extends MusicBeatState
 		loads.angle += 1.5;
 		if (dontUpdate)
 			return;
-
-		if (allowLoad)
-			startThreads();
 		
 		if (allowPrepare) return;
 
@@ -667,8 +659,6 @@ class LoadingState extends MusicBeatState
 
 	public static function startThreads()
 	{
-		allowLoad = false;
-
 		loadMax = imagesToPrepare.length + soundsToPrepare.length + musicToPrepare.length + songsToPrepare.length;
 		loaded = 0;
 

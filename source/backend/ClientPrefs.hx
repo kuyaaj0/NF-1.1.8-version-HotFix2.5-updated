@@ -79,7 +79,7 @@ import states.TitleState;
 	public var showRating:Bool = true;
 	public var opponentStrums:Bool = true;
 	public var judgementCounter:Bool = false;
-	public var keyboardDisplay:Bool = true;
+	public var KeyboardViewer:Bool = true;
 	// TimeBar s
 	public var timeBarType:String = 'Time Left';
 	// HealthBar s

@@ -39,6 +39,9 @@ class FreeplayState extends MusicBeatState
 {
 	static public var filePath:String = 'menuExtendHide/freeplay/';
 	static public var instance:FreeplayState;
+	
+	static public var curSelected:Int = 0;
+	static public var curDifficulty:Int = 0;
 
 	///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -256,20 +259,19 @@ class FreeplayState extends MusicBeatState
 		
 		var songRectload:Array<DataPrepare> = [];
 
-		for (time in 0...Math.ceil((Math.ceil(FlxG.height / SongRect.fixHeight * 0.95) + 2) / songsData.length)){
+		for (time in 0...Math.ceil((Math.ceil(FlxG.height / SongRect.fixHeight * inter) + 2) / songsData.length)){
 			for (i in 0...songsData.length)
 			{
 				var data = songsData[i];
-				var rectGrp = {name: data.songName, color: data.color, icon: data.songCharacter, modPath: songsData[i].folder};
+				var rectGrp = {modPath: songsData[i].folder, bgPath: data.songName, iconPath: data.songCharacter, color: data.color};
 				songRectload.push(rectGrp);
 			}
 		}
 
 		prepareLoad = new PreThreadLoad();
-		prepareLoad.start(songRectload);
-		
+		//prepareLoad.start(songRectload); //狗屎haxe
 
-		for (time in 0...Math.ceil((Math.ceil(FlxG.height / SongRect.fixHeight * 0.95) + 2) / songsData.length)){
+		for (time in 0...Math.ceil((Math.ceil(FlxG.height / SongRect.fixHeight * inter) + 2) / songsData.length)){
 			for (i in 0...songsData.length)
 			{
 				Mods.currentModDirectory = songsData[i].folder;
@@ -282,7 +284,7 @@ class FreeplayState extends MusicBeatState
 		}
 
 		songsMove = new MouseMove(FreeplayState, 'songPosiData', 
-								[],
+								[], //无限滑动
 								[	
 									[FlxG.width * 0.5, FlxG.width], 
 									[0, FlxG.height]
@@ -352,22 +354,52 @@ class FreeplayState extends MusicBeatState
 
 	public var songPosiStart:Float = 720 * 0.35;
 	public static var songPosiData:Float = 720 * 0.35; //神人haxe不能用FlxG.height
+	public var inter:Float = 0.95;
 	public function songMoveEvent(){
 		songsScroll.check(songsMove.state);
+		if (songGroup.length <= 0) return;
 		for (i in 0...songGroup.length) {
-			songGroup[i].y = songPosiData + songGroup[i].diffY + (songGroup[i].currect) * songGroup[0].light.height * 0.95;
+			songGroup[i].y = songPosiData + songGroup[i].diffY + (songGroup[i].currect) * SongRect.fixHeight * inter;
 			songGroup[i].calcX();
 		}
-	}
-
-	public static function destroyFreeplayVocals() {
-		
 	}
 
 	public var allowUpdate:Bool = false;
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
+	}
+
+	function changeSelection(change:Int = 0, playSound:Bool = true)
+	{
+	    songsMove.lerpData = songPosiStart + (curSelected + change) * SongRect.fixHeight * inter;
+		///if (playSound)
+			//FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+
+		/*
+		var newColor:Int = songsData[curSelected].color;
+		if (newColor != intendedColor)
+		{
+			intendedColor = newColor;
+			FlxTween.cancelTweensOf(bg);
+			FlxTween.color(bg, 1, bg.color, intendedColor);
+		}
+			*/
+
+		Mods.currentModDirectory = songsData[curSelected].folder;
+		PlayState.storyWeek = songsData[curSelected].week;
+		Difficulty.loadFromWeek();
+
+		changeDiff();
+	}
+	
+	function changeDiff(change:Int = 0)
+	{
+		curDifficulty = FlxMath.wrap(curDifficulty + change, 0, Difficulty.list.length - 1);
+	}
+	
+	public static function destroyFreeplayVocals() {
+		
 	}
 }
 
@@ -378,7 +410,6 @@ class SongMetadata
 	public var songCharacter:String = "";
 	public var color:Array<Int> = [0, 0, 0];
 	public var folder:String = "";
-	public var lastDifficulty:String = null;
 	public var bg:Dynamic;
 	public var searchnum:Int = 0;
 	public var songMusican:String = 'N/A';

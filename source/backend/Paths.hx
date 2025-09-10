@@ -259,39 +259,6 @@ class Paths
 		return null;
 	}
 
-	static public function cacheImage(key:String, ?library:String = null, ?allowGPU:Bool = false, ?threadLoad:Bool = true):FlxGraphic
-	{
-		var bitmap:BitmapData = null;
-		var file:String = key + '.png';
-
-		#if MODS_ALLOWED
-		if (Cache.currentTrackedAssets.exists(file))
-		{
-			Cache.localTrackedAssets.push(file);
-			return Cache.currentTrackedAssets.get(file);
-		}
-		else if (FileSystem.exists(file))
-			bitmap = BitmapData.fromFile(file);
-		else
-		#end
-		{
-			file = getPath('images/$key.png', IMAGE, library);
-			if (Cache.currentTrackedAssets.exists(file))
-			{
-				Cache.localTrackedAssets.push(file);
-				return Cache.currentTrackedAssets.get(file);
-			}
-			else if (Assets.exists(file, IMAGE))
-				bitmap = Assets.getBitmapData(file);
-		}
-
-		if (bitmap != null)
-			return cacheBitmap(file, bitmap, allowGPU, threadLoad);
-
-		trace('oh no its returning null NOOOO ($file)');
-		return null;
-	}
-
 	static var bitmapMutex:Mutex = new Mutex();
 	static public function cacheBitmap(file:String, ?bitmap:BitmapData = null, ?allowGPU:Bool = true, ?threadLoad:Bool = false)
 	{
@@ -314,7 +281,10 @@ class Paths
 		var thread:Bool = false;
 		if (threadLoad != null) thread = threadLoad;
 
+        if (thread) bitmapMutex.acquire();
 		Cache.localTrackedAssets.push(file);
+		if (thread) bitmapMutex.release();
+		
 		if (allowGPU && ClientPrefs.data.cacheOnGPU && !thread)
 		{
 			var texture:RectangleTexture = FlxG.stage.context3D.createRectangleTexture(bitmap.width, bitmap.height, BGRA, true);

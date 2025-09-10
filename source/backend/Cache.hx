@@ -41,4 +41,15 @@ class Cache {
 		'assets/shared/music/breakfast.$Paths.SOUND_EXT',
 		'assets/shared/music/tea-time.$Paths.SOUND_EXT',
 	];
+
+	public static function setFrame(key:String, frame:FlxFramesCollection)
+	{
+		Cache.currentTrackedFrames.set(key, frame);
+		Cache.localTrackedAssets.push(key);
+	}
+
+	public static function getFrame(key:String):FlxFramesCollection
+	{
+		return Cache.currentTrackedFrames.get(key);
+	}
 }

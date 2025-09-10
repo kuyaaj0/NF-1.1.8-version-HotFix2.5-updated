@@ -1,7 +1,6 @@
 package thread;
 
 import sys.thread.Thread;
-import flixel.FlxG;
 
 /**
  * 在使用此类时，请确保你在以前已经研究过haxe线程的用法

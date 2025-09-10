@@ -25,19 +25,12 @@ class SongRect extends FlxSpriteGroup {
         light = new Rect(0, 0, 560, fixHeight, fixHeight / 2, fixHeight / 2, FlxColor.WHITE, 1, 1, EngineSet.mainColor);
         light.antialiasing = ClientPrefs.data.antialiasing;
         add(light);
-
-        var extraLoad:Bool = false;
-        var filesLoad = 'data/' + songNameSt + '/bg';
-        if (FileSystem.exists(Paths.modFolders(filesLoad + '.png'))) {
-            extraLoad = true;
-        } else {
-            filesLoad = 'menuDesat';
-            extraLoad = false;
-        }
-        if (Cache.currentTrackedFrames.get('freeplay-song-' + Mods.currentModDirectory + '-' + filesLoad + 'color: r:' + songColor[0] + ' g:' + songColor[1] + ' b:' + songColor[2]) == null) addBGCache(filesLoad, extraLoad, songColor);
+        
+        var path:String = PreThreadLoad.bgPathCheck(Mods.currentModDirectory, 'data/${songNameSt}/bg');
+        if (Cache.getFrame(path + ' r:' + songColor[0] + ' g:' + songColor[1] + ' b:' + songColor[2]) == null) addBGCache(path, songColor);
 
         bg = new FlxSprite();
-        bg.frames = Cache.currentTrackedFrames.get('freeplay-song-' + Mods.currentModDirectory + '-' + filesLoad + 'color: r:' + songColor[0] + ' g:' + songColor[1] + ' b:' + songColor[2]);
+        bg.frames = Cache.getFrame(path + ' r:' + songColor[0] + ' g:' + songColor[1] + ' b:' + songColor[2]);
 		bg.antialiasing = ClientPrefs.data.antialiasing;
 		add(bg);
 
@@ -65,8 +58,8 @@ class SongRect extends FlxSpriteGroup {
 		add(musican);
     }
 
-    function addBGCache(filesLoad:String, extraLoad:Bool, songColor:Array<Int>) {
-        var newGraphic:FlxGraphic = Paths.image(filesLoad, null, false, extraLoad);
+    function addBGCache(filesLoad:String, songColor:Array<Int>) {
+        var newGraphic:FlxGraphic = Paths.cacheBitmap(filesLoad, null, false);
 
         var matrix:Matrix = new Matrix();
         var scale:Float = light.width / newGraphic.width;
@@ -78,7 +71,7 @@ class SongRect extends FlxSpriteGroup {
         var resizedBitmapData:BitmapData = new BitmapData(Std.int(light.width), Std.int(light.height), true, 0x00000000);
         resizedBitmapData.draw(newGraphic.bitmap, matrix);
         
-        if (!extraLoad)
+        if (filesLoad.indexOf('menuDesat') != -1)
         {
             var colorTransform:ColorTransform = new ColorTransform();
             var color:FlxColor = FlxColor.fromRGB(songColor[0], songColor[1], songColor[2]);
@@ -95,10 +88,10 @@ class SongRect extends FlxSpriteGroup {
 
         newGraphic = FlxGraphic.fromBitmapData(resizedBitmapData);
 
-        Cache.currentTrackedFrames.set('freeplay-song-' + Mods.currentModDirectory + '-' + filesLoad + 'color: r:' + songColor[0] + ' g:' + songColor[1] + ' b:' + songColor[2], newGraphic.imageFrame);
+        Cache.setFrame(filesLoad + ' r:' + songColor[0] + ' g:' + songColor[1] + ' b:' + songColor[2], newGraphic.imageFrame);
 
-        var mainBGcache:FlxGraphic = Paths.image(filesLoad, null, false, extraLoad);
-        Cache.currentTrackedFrames.set('freeplay-bg-' + Mods.currentModDirectory + '-' + filesLoad, mainBGcache.imageFrame);//预加载大界面的图像
+        var mainBGcache:FlxGraphic = Paths.cacheBitmap(filesLoad, null, false);
+        Cache.setFrame('freePlayBG-' + filesLoad, mainBGcache.imageFrame); //预加载大界面的图像
 	}
 
     static var lineShape:Shape = null;

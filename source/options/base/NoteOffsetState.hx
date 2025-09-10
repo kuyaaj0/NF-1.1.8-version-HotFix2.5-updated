@@ -4,7 +4,7 @@ import backend.StageData;
 import objects.Character;
 import objects.Bar;
 import flixel.addons.display.shapes.FlxShapeCircle;
-import objects.KeyboardDisplay;
+import objects.KeyboardViewer;
 import states.stages.StageWeek1 as BackgroundStage;
 
 class NoteOffsetState extends MusicBeatState
@@ -20,7 +20,7 @@ class NoteOffsetState extends MusicBeatState
 	var coolText:FlxText;
 	var rating:FlxSprite;
 	var comboNums:FlxSpriteGroup;
-	var keyboardDisplay:KeyboardDisplay;
+	var keyboardViewer:KeyboardViewer;
 	var dumbTexts:FlxTypedGroup<FlxText>;
 
 	var barPercent:Float = 0;
@@ -91,9 +91,9 @@ class NoteOffsetState extends MusicBeatState
 		comboNums.cameras = [camHUD];
 		add(comboNums);
 
-		keyboardDisplay = new KeyboardDisplay(0, 0);
-		keyboardDisplay.cameras = [camHUD];
-		add(keyboardDisplay);
+		keyboardViewer = new KeyboardViewer(0, 0);
+		keyboardViewer.cameras = [camHUD];
+		add(keyboardViewer);
 
 		var seperatedScore:Array<Int> = [];
 		for (i in 0...3)
@@ -352,10 +352,10 @@ class NoteOffsetState extends MusicBeatState
 					startComboOffset.y = ClientPrefs.data.comboOffset[1];
 					// trace('heya');
 				}
-				else if (startMousePos.x - keyboardDisplay._x >= 0
-					&& startMousePos.x - keyboardDisplay._x <= keyboardDisplay._width
-					&& startMousePos.y - keyboardDisplay._y >= 0
-					&& startMousePos.y - keyboardDisplay._y <= keyboardDisplay._height)
+				else if (startMousePos.x - keyboardViewer._x >= 0
+					&& startMousePos.x - keyboardViewer._x <= keyboardViewer._width
+					&& startMousePos.y - keyboardViewer._y >= 0
+					&& startMousePos.y - keyboardViewer._y <= keyboardViewer._height)
 				{
 					holdingObjectType = 2;
 					startComboOffset.x = ClientPrefs.data.comboOffset[4];
@@ -540,10 +540,10 @@ class NoteOffsetState extends MusicBeatState
 		comboNums.x = coolText.x - 90 + ClientPrefs.data.comboOffset[2];
 		comboNums.y += 80 - ClientPrefs.data.comboOffset[3];
 
-		keyboardDisplay.x = ClientPrefs.data.comboOffset[4];
-		keyboardDisplay.y = ClientPrefs.data.comboOffset[5];
-		keyboardDisplay._x = ClientPrefs.data.comboOffset[4];
-		keyboardDisplay._y = ClientPrefs.data.comboOffset[5];
+		keyboardViewer.x = ClientPrefs.data.comboOffset[4];
+		keyboardViewer.y = ClientPrefs.data.comboOffset[5];
+		keyboardViewer._x = ClientPrefs.data.comboOffset[4];
+		keyboardViewer._y = ClientPrefs.data.comboOffset[5];
 		reloadTexts();
 	}
 
@@ -597,7 +597,7 @@ class NoteOffsetState extends MusicBeatState
 	{
 		rating.visible = onComboMenu;
 		comboNums.visible = onComboMenu;
-		keyboardDisplay.visible = onComboMenu;
+		keyboardViewer.visible = onComboMenu;
 		dumbTexts.visible = onComboMenu;
 
 		timeBar.visible = !onComboMenu;
