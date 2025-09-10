@@ -121,6 +121,13 @@
       "url": "https://github.com/NovaFlare-Engine-haxelib/linc_luajit"
     },
     {
+      "name": "luahscript",
+      "type": "git",
+      "dir": null,
+      "ref": "main",
+      "url": "https://github.com/VapireMox/luahscript"
+    },
+    {
       "name": "spine-haxe",
       "type": "git",
       "dir": "spine-haxe",
