@@ -83,7 +83,7 @@ class FreeplayState extends MusicBeatState
 
 	///////////////////////////////////////////////////////////////////////////////////////////////
 
-	public var prepareLoad:PreThreadLoad;
+	//public var prepareLoad:PreThreadLoad;
 
 	///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -268,8 +268,8 @@ class FreeplayState extends MusicBeatState
 			}
 		}
 
-		prepareLoad = new PreThreadLoad();
-		//prepareLoad.start(songRectload); //狗屎haxe
+		//prepareLoad = new PreThreadLoad();
+		//prepareLoad.start(songRectload); //狗屎haxe，多线程无效了
 
 		for (time in 0...Math.ceil((Math.ceil(FlxG.height / SongRect.fixHeight * inter) + 2) / songsData.length)){
 			for (i in 0...songsData.length)

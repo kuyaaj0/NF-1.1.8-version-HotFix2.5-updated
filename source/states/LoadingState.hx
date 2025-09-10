@@ -20,12 +20,15 @@ import states.FreeplayState;
 import backend.Song;
 import backend.StageData;
 import backend.Rating;
+import backend.state.loadingState.*;
 
 import sys.thread.Thread;
 import sys.thread.FixedThreadPool;
 import sys.thread.Mutex;
-
 import thread.ThreadEvent;
+
+import luahscript.exprs.LuaExpr;
+import luahscript.LuaParser;
 
 class LoadingState extends MusicBeatState
 {
@@ -195,11 +198,16 @@ class LoadingState extends MusicBeatState
 
 		super.create();
 
+		startPrepare();
+		startThreads();
+
+		/*
 		ThreadEvent.create(function() {
 			prepareMutex.acquire();
 			startPrepare();
 			prepareMutex.release();
 		}, startThreads);
+		*/
 	}
 
 
@@ -492,7 +500,7 @@ class LoadingState extends MusicBeatState
 			luaToLoad = Paths.getSharedPath(luaFile);
 
 		if (FileSystem.exists(luaToLoad))
-		#elseif sys
+		#else
 		var luaToLoad:String = Paths.getSharedPath(luaFile);
 		if (Assets.exists(luaToLoad))
 		#end
@@ -503,76 +511,58 @@ class LoadingState extends MusicBeatState
 
 	static function scriptFilesCheck(path:String)
 	{
-		var input:String = File.getContent(path);
-		var lines = input.split("\n");
+		var input:String = File.getContent(path);	
+		trace('scriptPath: ' + path);
 
-		for (line in lines)
-		{
-			line = line.trim();
-			if (line.startsWith('makeLuaSprite'))
-			{
-				var keyValue = line.split(",");
-				var pushData:String = keyValue[1].trim();
-				pushData = pushData.replace("'", '');
-				imagesToPrepare.push(pushData);
+		if (StringTools.fastCodeAt(input, 0) == 0xFEFF) {
+			input = input.substr(1);
+		} //防止BOM字符 <UTF-8 with BOM> <\65279>
+
+		var parser = new LuaParser();
+		var e:LuaExpr = parser.parseFromString(input);
+	
+		LuaExtraTools.searchCallback(e, function(e:LuaExpr, params:Array<LuaExpr>) {
+			switch(e.expr) {
+				case EIdent('makeLuaSprite'):
+					if (LuaExtraTools.getValue(params[1]) != null)
+						imagesToPrepare.push(Std.string(LuaExtraTools.getValue(params[1])));
+				case EIdent('makeAnimatedLuaSprite'):
+					if (LuaExtraTools.getValue(params[1]) != null)
+							imagesToPrepare.push(Std.string(LuaExtraTools.getValue(params[1])));
+				case EIdent('precacheImage'):
+					if (LuaExtraTools.getValue(params[0]) != null)
+							imagesToPrepare.push(Std.string(LuaExtraTools.getValue(params[0])));
+				case EIdent('addCharacterToList'):
+					if (LuaExtraTools.getValue(params[0]) != null)
+							imagesToPrepare.push(Std.string(LuaExtraTools.getValue(params[0])));
+				case EIdent('Paths.image'):
+					if (LuaExtraTools.getValue(params[0]) != null)
+							imagesToPrepare.push(Std.string(LuaExtraTools.getValue(params[0])));
+
+				////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+				case EIdent('precacheSound'):
+					if (LuaExtraTools.getValue(params[0]) != null)
+							soundsToPrepare.push(Std.string(LuaExtraTools.getValue(params[0])));
+				case EIdent('precacheMusic'):
+					if (LuaExtraTools.getValue(params[0]) != null)
+							soundsToPrepare.push(Std.string(LuaExtraTools.getValue(params[0])));
+
+				case EIdent('playSound'):
+					if (LuaExtraTools.getValue(params[0]) != null)
+							soundsToPrepare.push(Std.string(LuaExtraTools.getValue(params[0])));
+				case EIdent('playMusic'):
+					if (LuaExtraTools.getValue(params[0]) != null)
+							musicToPrepare.push(Std.string(LuaExtraTools.getValue(params[0])));
+
+				////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+				case EIdent('addLuaScript'):
+					if (LuaExtraTools.getValue(params[0]) != null)
+							startScriptNamed(Std.string(LuaExtraTools.getValue(params[0])));
+				case _:
 			}
-			if (line.startsWith('makeAnimatedLuaSprite'))
-			{
-				var keyValue = line.split(",");
-				var pushData:String = keyValue[1].trim();
-				pushData = pushData.replace("'", '');
-				imagesToPrepare.push(pushData);
-			}
-			if (line.startsWith("precacheImage('"))
-			{
-				var keyValue = line.split("('");
-				var pushData:String = keyValue[1].trim();
-				pushData = pushData.replace("'", '');
-				pushData = pushData.replace(")", '');
-				imagesToPrepare.push(pushData);
-			}
-			else if (line.startsWith('precacheImage("'))
-			{
-				var keyValue = line.split('("');
-				var pushData:String = keyValue[1].trim();
-				pushData = pushData.replace('"', '');
-				pushData = pushData.replace(")", '');
-				imagesToPrepare.push(pushData);
-			}
-			if (line.startsWith("addLuaScript('"))
-			{
-				var keyValue = line.split("('");
-				var pushData:String = keyValue[1].trim();
-				pushData = pushData.replace("'", '');
-				pushData = pushData.replace(")", '');
-				imagesToPrepare.push(pushData);
-			}
-			else if (line.startsWith('addLuaScript("'))
-			{
-				var keyValue = line.split('("');
-				var pushData:String = keyValue[1].trim();
-				pushData = pushData.replace('"', '');
-				pushData = pushData.replace(")", '');
-				imagesToPrepare.push(pushData);
-			}
-			if (line.startsWith("addCharacterToList"))
-			{
-				var keyValue = line.split(",");
-				var pushData:String = keyValue[0].trim();
-				pushData = pushData.replace("addCharacterToList(", '');
-				pushData = pushData.replace("'", '');
-				pushData = pushData.replace('"', '');
-				imagesToPrepare.push(pushData);
-			}
-			if (line.startsWith("precacheSound"))
-			{
-				var keyValue = line.split("('");
-				var pushData:String = keyValue[1].trim();
-				pushData = pushData.replace("'", '');
-				pushData = pushData.replace(")", '');
-				imagesToPrepare.push(pushData);
-			}
-		}
+		});
 	}
 
 	//上面为数据准备部分
