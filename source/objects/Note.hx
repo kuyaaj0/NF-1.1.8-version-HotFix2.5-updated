@@ -769,7 +769,7 @@ class Note extends FlxSprite
 
 	static function addSkinCache(skin:String)
 	{
-		trace('add skin cache: ' + skin);
+		//trace('add skin cache: ' + skin);
 		var spr:FlxSprite = new FlxSprite();
 		spr.frames = Paths.getSparrowAtlas(skin, null, false);
 

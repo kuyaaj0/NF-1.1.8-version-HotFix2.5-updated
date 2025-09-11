@@ -29,6 +29,9 @@ import thread.ThreadEvent;
 
 import luahscript.exprs.LuaExpr;
 import luahscript.LuaParser;
+import crowplexus.hscript.Expr;
+import crowplexus.hscript.Tools;
+import crowplexus.hscript.Parser;
 
 class LoadingState extends MusicBeatState
 {
@@ -511,7 +514,7 @@ class LoadingState extends MusicBeatState
 	static function luaFilesCheck(path:String)
 	{
 		var input:String = File.getContent(path);	
-		trace('scriptPath: ' + path);
+		//trace('LUA: load Path: ' + path);
 
 		if (StringTools.fastCodeAt(input, 0) == 0xFEFF) {
 			input = input.substr(1);
@@ -520,42 +523,46 @@ class LoadingState extends MusicBeatState
 		var parser = new LuaParser();
 		var e:LuaExpr = parser.parseFromString(input);
 	
-		LuaExtraTools.searchCallback(e, function(e:LuaExpr, params:Array<LuaExpr>) {
+		ScriptExprTools.lua_searchCallback(e, function(e:LuaExpr, params:Array<LuaExpr>) {
 			switch(e.expr) {
 				case EIdent('makeLuaSprite'):
-					if (LuaExtraTools.getValue(params[1]) != null)
-						imagesToPrepare.push(Std.string(LuaExtraTools.getValue(params[1])));
+					if (ScriptExprTools.lua_getValue(params[1]) != null)
+						imagesToPrepare.push(Std.string(ScriptExprTools.lua_getValue(params[1])));
 				case EIdent('makeAnimatedLuaSprite'):
-					if (LuaExtraTools.getValue(params[1]) != null)
-							imagesToPrepare.push(Std.string(LuaExtraTools.getValue(params[1])));
+					if (ScriptExprTools.lua_getValue(params[1]) != null)
+							imagesToPrepare.push(Std.string(ScriptExprTools.lua_getValue(params[1])));
 				case EIdent('precacheImage'):
-					if (LuaExtraTools.getValue(params[0]) != null)
-							imagesToPrepare.push(Std.string(LuaExtraTools.getValue(params[0])));
+					if (ScriptExprTools.lua_getValue(params[0]) != null)
+							imagesToPrepare.push(Std.string(ScriptExprTools.lua_getValue(params[0])));
 				case EIdent('addCharacterToList'):
-					if (LuaExtraTools.getValue(params[0]) != null)
-							imagesToPrepare.push(Std.string(LuaExtraTools.getValue(params[0])));
+					if (ScriptExprTools.lua_getValue(params[0]) != null)
+							imagesToPrepare.push(Std.string(ScriptExprTools.lua_getValue(params[0])));
 
 				////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 				case EIdent('precacheSound'):
-					if (LuaExtraTools.getValue(params[0]) != null)
-							soundsToPrepare.push(Std.string(LuaExtraTools.getValue(params[0])));
+					if (ScriptExprTools.lua_getValue(params[0]) != null)
+							soundsToPrepare.push(Std.string(ScriptExprTools.lua_getValue(params[0])));
 				case EIdent('precacheMusic'):
-					if (LuaExtraTools.getValue(params[0]) != null)
-							soundsToPrepare.push(Std.string(LuaExtraTools.getValue(params[0])));
+					if (ScriptExprTools.lua_getValue(params[0]) != null)
+							musicToPrepare.push(Std.string(ScriptExprTools.lua_getValue(params[0])));
 
 				case EIdent('playSound'):
-					if (LuaExtraTools.getValue(params[0]) != null)
-							soundsToPrepare.push(Std.string(LuaExtraTools.getValue(params[0])));
+					if (ScriptExprTools.lua_getValue(params[0]) != null)
+							soundsToPrepare.push(Std.string(ScriptExprTools.lua_getValue(params[0])));
 				case EIdent('playMusic'):
-					if (LuaExtraTools.getValue(params[0]) != null)
-							musicToPrepare.push(Std.string(LuaExtraTools.getValue(params[0])));
+					if (ScriptExprTools.lua_getValue(params[0]) != null)
+							musicToPrepare.push(Std.string(ScriptExprTools.lua_getValue(params[0])));
 
 				////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 				case EIdent('addLuaScript'):
-					if (LuaExtraTools.getValue(params[0]) != null)
-							startLuaNamed(Std.string(LuaExtraTools.getValue(params[0])));
+					if (ScriptExprTools.lua_getValue(params[0]) != null)
+							startLuaNamed(Std.string(ScriptExprTools.lua_getValue(params[0])));
+
+				case EIdent('runHaxeCode'):
+					if (ScriptExprTools.lua_getValue(params[0]) != null)
+							hscriptFilesCheck(Std.string(ScriptExprTools.lua_getValue(params[0])), false);
 				case _:
 			}
 		});
@@ -578,9 +585,46 @@ class LoadingState extends MusicBeatState
 		}
 	}
 
-	static function hscriptFilesCheck(path:String)
+	static function hscriptFilesCheck(file:String, isFile:Bool = true)
 	{
+		var input:String = '';
+		if (isFile){
+			File.getContent(file);	
+			trace('Hscript: load Path: ' + file);
+		} else {
+			input = file;
+		}
 
+		if (StringTools.fastCodeAt(input, 0) == 0xFEFF) {
+			input = input.substr(1);
+		} //防止BOM字符 <UTF-8 with BOM> <\65279>
+
+		var parser = new Parser();
+		var e:Expr = parser.parseString(input);
+
+		ScriptExprTools.hx_searchCallback(e, function(e:Expr, params:Array<Expr>) {
+			switch(Tools.expr(e)) {
+				case EField(e, f, _):
+					ScriptExprTools.hx_recursion(e, function(e:Expr) {
+						switch(Tools.expr(e)) {
+							case EIdent("Paths") if(f == "image"):
+								if (ScriptExprTools.hx_getValue(params[0]) != null)
+									imagesToPrepare.push(Std.string(ScriptExprTools.hx_getValue(params[0])));
+							case EIdent("Paths") if(f == "cacheBitmap"):
+								if (ScriptExprTools.hx_getValue(params[0]) != null)
+									imagesToPrepare.push(Std.string(ScriptExprTools.hx_getValue(params[0])));
+							case EIdent("Paths") if(f == "sound"):
+								if (ScriptExprTools.hx_getValue(params[0]) != null)
+									soundsToPrepare.push(Std.string(ScriptExprTools.hx_getValue(params[0])));
+							case EIdent("Paths") if(f == "music"):
+								if (ScriptExprTools.hx_getValue(params[0]) != null)
+									musicToPrepare.push(Std.string(ScriptExprTools.hx_getValue(params[0])));
+							case _:
+						}
+					});
+				case _:
+			}
+		});
 	}
 
 	//上面为数据准备部分
@@ -698,7 +742,7 @@ class LoadingState extends MusicBeatState
 						return;
 					}
 					else if (FileSystem.exists(file)) {
-						bitmap = BitmapData.fromFile(file);
+						try{ bitmap = BitmapData.fromFile(file); }
 					}
 					else
 					#end
@@ -710,7 +754,7 @@ class LoadingState extends MusicBeatState
 							return;
 						}
 						else if (OpenFlAssets.exists(file, IMAGE)) {
-							bitmap = OpenFlAssets.getBitmapData(file);
+							try{bitmap = OpenFlAssets.getBitmapData(file); }
 						}
 						else
 						{

@@ -423,6 +423,19 @@ class HScript implements ISharedScript {
 					});
 					#end
 
+					set('addHaxeLibrary', function(libName:String, ?libPackage:String = '') {
+						try {
+							var str:String = '';
+							if(libPackage.length > 0)
+								str = libPackage + '.';
+
+							set(libName, Type.resolveClass(str + libName));
+						}
+						catch(e:Error) {
+							Iris.error(Printer.errorToString(e, false), this.interp.posInfos());
+						}
+					});
+
 					#if LUA_ALLOWED
 					set("addVirtualPad", (DPadMode:String, ActionMode:String) ->
 					{
