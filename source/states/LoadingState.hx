@@ -200,7 +200,6 @@ class LoadingState extends MusicBeatState
 
 		startPrepare();
 		startThreads();
-
 		/*
 		ThreadEvent.create(function() {
 			prepareMutex.acquire();
@@ -400,7 +399,7 @@ class LoadingState extends MusicBeatState
 				if (char == PlayState.SONG.player1)
 					dontPreloadDefaultVoices = true;
 			}
-			startScriptNamed('characters/' + char + '.lua');
+			startLuaNamed('characters/' + char + '.lua');
 		}
 		catch (e:Dynamic)
 		{
@@ -457,12 +456,12 @@ class LoadingState extends MusicBeatState
 			{
 				#if LUA_ALLOWED
 				if (file.toLowerCase().endsWith('.lua'))
-					scriptFilesCheck(folder + file);
+					luaFilesCheck(folder + file);
 				#end
 
 				#if HSCRIPT_ALLOWED
 				if (file.toLowerCase().endsWith('.hx'))
-					scriptFilesCheck(folder + file);
+					hscriptFilesCheck(folder + file);
 				#end
 			}
 
@@ -472,44 +471,44 @@ class LoadingState extends MusicBeatState
 			{
 				#if LUA_ALLOWED
 				if (file.toLowerCase().endsWith('.lua'))
-					scriptFilesCheck(folder + file);
+					luaFilesCheck(folder + file);
 				#end
 
 				#if HSCRIPT_ALLOWED
 				if (file.toLowerCase().endsWith('.hx'))
-					scriptFilesCheck(folder + file);
+					hscriptFilesCheck(folder + file);
 				#end
 			}
 
-		startScriptNamed('stages/' + PlayState.SONG.stage + '.lua');
-		startScriptNamed('stages/' + PlayState.SONG.stage + '.hx');
+		startLuaNamed('stages/' + PlayState.SONG.stage + '.lua');
+		startHscriptNamed('stages/' + PlayState.SONG.stage + '.hx');
 
 		for (event in events)
 		{
-			startScriptNamed('custom_events/' + event + '.lua');
-			startScriptNamed('custom_events/' + event + '.hx');
+			startLuaNamed('custom_events/' + event + '.lua');
+			startHscriptNamed('custom_events/' + event + '.hx');
 		}
 		#end
 	}
 
-	static function startScriptNamed(luaFile:String)
+	static function startLuaNamed(filePath:String)
 	{
 		#if MODS_ALLOWED
-		var luaToLoad:String = Paths.modFolders(luaFile);
-		if (!FileSystem.exists(luaToLoad))
-			luaToLoad = Paths.getSharedPath(luaFile);
+		var pathToLoad:String = Paths.modFolders(filePath);
+		if (!FileSystem.exists(pathToLoad))
+			pathToLoad = Paths.getSharedPath(filePath);
 
-		if (FileSystem.exists(luaToLoad))
+		if (FileSystem.exists(pathToLoad))
 		#else
-		var luaToLoad:String = Paths.getSharedPath(luaFile);
-		if (Assets.exists(luaToLoad))
+		var pathToLoad:String = Paths.getSharedPath(filePath);
+		if (Assets.exists(pathToLoad))
 		#end
 		{
-			scriptFilesCheck(luaToLoad);
+			luaFilesCheck(pathToLoad);
 		}
 	}
 
-	static function scriptFilesCheck(path:String)
+	static function luaFilesCheck(path:String)
 	{
 		var input:String = File.getContent(path);	
 		trace('scriptPath: ' + path);
@@ -535,9 +534,6 @@ class LoadingState extends MusicBeatState
 				case EIdent('addCharacterToList'):
 					if (LuaExtraTools.getValue(params[0]) != null)
 							imagesToPrepare.push(Std.string(LuaExtraTools.getValue(params[0])));
-				case EIdent('Paths.image'):
-					if (LuaExtraTools.getValue(params[0]) != null)
-							imagesToPrepare.push(Std.string(LuaExtraTools.getValue(params[0])));
 
 				////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -559,10 +555,32 @@ class LoadingState extends MusicBeatState
 
 				case EIdent('addLuaScript'):
 					if (LuaExtraTools.getValue(params[0]) != null)
-							startScriptNamed(Std.string(LuaExtraTools.getValue(params[0])));
+							startLuaNamed(Std.string(LuaExtraTools.getValue(params[0])));
 				case _:
 			}
 		});
+	}
+
+	static function startHscriptNamed(filePath:String)
+	{
+		#if MODS_ALLOWED
+		var pathToLoad:String = Paths.modFolders(filePath);
+		if (!FileSystem.exists(pathToLoad))
+			pathToLoad = Paths.getSharedPath(filePath);
+
+		if (FileSystem.exists(pathToLoad))
+		#else
+		var pathToLoad:String = Paths.getSharedPath(filePath);
+		if (Assets.exists(pathToLoad))
+		#end
+		{
+			hscriptFilesCheck(pathToLoad);
+		}
+	}
+
+	static function hscriptFilesCheck(path:String)
+	{
+
 	}
 
 	//上面为数据准备部分
@@ -639,9 +657,10 @@ class LoadingState extends MusicBeatState
 	{
 		for (key => bitmap in requestedBitmaps)
 		{
-			if (bitmap != null && Paths.cacheBitmap(key, bitmap, false) != null)
+			if (bitmap != null && Paths.cacheBitmap(key, bitmap, false) != null) {
+				FlxG.bitmap.add(bitmap, false, key);
 				trace('finished preloading image $key');
-			else
+			} else
 				trace('failed to cache image $key');
 		}
 		return (loaded == loadMax);

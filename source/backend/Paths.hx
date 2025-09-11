@@ -31,11 +31,21 @@ class Paths
 		@:privateAccess
 		for (key in FlxG.bitmap._cache.keys())
 		{
+			if (key == null) continue;
 			var obj = FlxG.bitmap._cache.get(key);
 			if (obj != null && !Cache.currentTrackedAssets.exists(key))
 			{
-				openfl.Assets.cache.removeBitmapData(key);
-				FlxG.bitmap._cache.remove(key);
+				// 先尝试移除 OpenFL 位图缓存（存在性检查以防版本差异）
+				#if (openfl && (openfl >= "9.0.0"))
+				if (openfl.Assets.cache != null)
+				#end
+				{
+					openfl.Assets.cache.removeBitmapData(key);
+				}
+				// 再从 flixel 位图缓存移除，移除前检查是否存在
+				if (FlxG.bitmap._cache.exists(key))
+					FlxG.bitmap._cache.remove(key);
+				// 销毁对象（已做 null 检查）
 				obj.destroy();
 			}
 		}
@@ -43,10 +53,16 @@ class Paths
 		// clear all sounds that are cached
 		for (key in Cache.currentTrackedSounds.keys())
 		{
-			if (!Cache.localTrackedAssets.contains(key) && !Cache.dumpExclusions.contains(key) && key != null)
+			if (key == null) continue;
+			var shouldClear = !Cache.localTrackedAssets.contains(key) && !Cache.dumpExclusions.contains(key);
+			if (shouldClear)
 			{
-				Assets.cache.clear(key);
-				Cache.currentTrackedSounds.remove(key);
+				// OpenFL 声音缓存清理：不同版本 API 行为通常安全，这里保守地包一层存在性/空值保护
+				if (Assets.cache != null)
+					Assets.cache.clear(key);
+				// 只有当 map 中仍存在该 key 时再移除，避免竞态
+				if (Cache.currentTrackedSounds.exists(key))
+					Cache.currentTrackedSounds.remove(key);
 			}
 		}
 		// flags everything to be cleared out next unused memory clear

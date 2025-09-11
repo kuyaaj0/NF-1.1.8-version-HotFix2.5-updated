@@ -296,9 +296,6 @@ class OptionsState extends MusicBeatState
 			if (num != cataGroup[cataGroup.length - 1]) {
 				moveHeight -= num.bg.waitHeight;
 				moveHeight -= UIScale.adjust(FlxG.width * (0.8 / 40));
-			} else {
-				moveHeight -= cataGroup[cataGroup.length - 1].bg.waitHeight - UIScale.adjust(FlxG.height * 0.8) * 2;
-				moveHeight -= UIScale.adjust(FlxG.width * (0.8 / 40)) * 2;
 			}
 		}
 		cataMove.moveLimit[0] = moveHeight;
@@ -394,9 +391,9 @@ class OptionsState extends MusicBeatState
 
 	public function resetData()
 	{
-		for (spr in 0...naviGroup.length) {
-			if (naviGroup[spr].cataChoose == true) {
-				cataGroup[spr].resetData();
+		for (cata in cataGroup) {
+			if (cata.checkPoint()) {
+				cata.resetData();
 				break;
 			}
 		}

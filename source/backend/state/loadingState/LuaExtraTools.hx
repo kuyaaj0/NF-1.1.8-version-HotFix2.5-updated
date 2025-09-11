@@ -25,7 +25,7 @@ class LuaExtraTools {
 	public static function searchCallback(e:LuaExpr, ?func:LuaExpr->Array<LuaExpr>->Void) {
 		if (e == null) return;
 		switch(e.expr) {
-			case EConst(_), EIdent(_):
+			case EConst(_), EIdent(_), EGoto(_), ELabel(_):
 			case EBreak, EContinue, EIgnore:
 			case EParent(e):
 				searchCallback(e, func);
@@ -84,6 +84,8 @@ class LuaExtraTools {
 					if(fi.key != null) searchCallback(fi.key, func);
 					searchCallback(fi.v, func);
 				}
+			case _:
+				null;
 		}
 	}
 }

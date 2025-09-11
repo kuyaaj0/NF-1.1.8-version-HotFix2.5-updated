@@ -2,8 +2,6 @@ package objects.state.optionState.navi;
 
 class NaviMember extends FlxSpriteGroup
 {
-    var filePath:String = 'menuExtend/OptionsState/icons/';
-
     public var optionSort:Int;
     public var isModsAdd:Bool = false;
 

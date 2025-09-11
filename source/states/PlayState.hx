@@ -325,7 +325,6 @@ class PlayState extends MusicBeatState
 	public function new()
 	{
 		super();
-		LoadingState.loadCache();
 	}
 	
 	override public function create()

@@ -514,7 +514,7 @@ class Note extends FlxSprite
 		}
 
 		skinPixel = skin;
-		skinPostfix = getNoteSkinPostfix();
+		skinPostfix = getNoteSkinPostfix(texture);
 		customSkin = skin + skinPostfix;
 		pathPixel = PlayState.isPixelStage ? 'pixelUI/' : '';
 		if (customSkin == _lastValidChecked || Paths.fileExists('images/' + pathPixel + customSkin + '.png', IMAGE))
@@ -527,10 +527,10 @@ class Note extends FlxSprite
 		}
 	}
 
-	public static function getNoteSkinPostfix()
+	public static function getNoteSkinPostfix(?texture:String = '')
 	{
 		var skin:String = '';
-		if (ClientPrefs.data.noteSkin != ClientPrefs.defaultData.noteSkin)
+		if (ClientPrefs.data.noteSkin != ClientPrefs.defaultData.noteSkin && texture == '')
 			skin = '-' + ClientPrefs.data.noteSkin.trim().toLowerCase().replace(' ', '_');
 		return skin;
 	}
@@ -769,6 +769,7 @@ class Note extends FlxSprite
 
 	static function addSkinCache(skin:String)
 	{
+		trace('add skin cache: ' + skin);
 		var spr:FlxSprite = new FlxSprite();
 		spr.frames = Paths.getSparrowAtlas(skin, null, false);
 
@@ -779,7 +780,7 @@ class Note extends FlxSprite
 			spr.animation.addByPrefix(Note.colArray[data] + 'hold', Note.colArray[data] + ' hold piece');
 			spr.animation.addByPrefix(Note.colArray[data] + 'Scroll', Note.colArray[data] + '0');
 		}
-		Cache.currentTrackedFrames.set(skin, spr.frames);
+		Cache.setFrame(skin, spr.frames);
 		Cache.currentTrackedAnims.set(skin, spr.animation);
 	}
 }
