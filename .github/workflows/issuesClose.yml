@@ -48,19 +48,12 @@ jobs:
                 issue_number: issue.number,
               });
               
-              const hasAuthorComment = events.some(event => 
-                event.event === 'commented' && 
-                event.actor?.login === issue.user.login &&
-                new Date(event.created_at) > new Date(issue.created_at)
-              );
-              
               const issueAge = now - new Date(issue.created_at);
-              const shouldClose = !hasAuthorComment && issueAge > twoDaysInMs;
+              const shouldClose = issueAge > twoDaysInMs;
               
               console.log(`Issue #${issue.number}:`, {
                 created: issue.created_at,
                 ageInDays: (issueAge / (24 * 60 * 60 * 1000)).toFixed(2),
-                hasAuthorComment: hasAuthorComment,
                 shouldClose: shouldClose
               });
               
@@ -71,7 +64,7 @@ jobs:
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   issue_number: issue.number,
-                  body: 'The issue author has not responded for more than 2 days. This issue will be automatically closed as incomplete. You can create a new issue again if needed.'
+                  body: 'The issue hasn't been responded to for a long time and has automatically closed. You can create a new issue again if needed.'
                 });
                 
                 await github.rest.issues.update({
