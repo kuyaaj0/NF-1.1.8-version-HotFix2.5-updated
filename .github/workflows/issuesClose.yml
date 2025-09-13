@@ -64,7 +64,7 @@ jobs:
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   issue_number: issue.number,
-                  body: 'The issue hasn't been responded to for a long time and has automatically closed. You can create a new issue again if needed.'
+                  body: 'The issue hasn t been responded to for a long time and has automatically closed. You can create a new issue again if needed.'
                 });
                 
                 await github.rest.issues.update({
