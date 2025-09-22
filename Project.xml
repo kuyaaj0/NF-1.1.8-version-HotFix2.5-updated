@@ -143,7 +143,6 @@
 
 	<haxelib name="modcharts" />
 	<haxeflag name="--macro" value="modchart.backend.macros.Macro.includeFiles()"/>
-	<haxeflag name="--macro" value="crowplexus.iris.macro.StarClassesMacro.build()" />
 
 	<!--<haxelib name="hx-ios-uikit" if="ios" />-->
 	<haxedef name="SHARE_MOBILE_FILES" if="ios" />
