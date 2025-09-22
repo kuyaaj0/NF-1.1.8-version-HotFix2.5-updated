@@ -208,7 +208,7 @@
 	</section>
 
 	<haxedef name="hscriptPos" if="HSCRIPT_ALLOWED" />
-	<!--haxedef name="STAR_CLASSES" if="HSCRIPT_ALLOWED" /-->
+	<haxedef name="STAR_CLASSES" if="HSCRIPT_ALLOWED" />
 
 	<section if="desktop">
 		<!--Enable Handle Error-->
