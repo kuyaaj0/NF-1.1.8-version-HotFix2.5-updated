@@ -33,29 +33,12 @@ jobs:
         uses: krdlab/setup-haxe@master
         with:
           haxe-version: ${{ env.HAXE_VERSION }}
-
-      - name: cache install
-        uses: actions/cache/restore@v4
-        with:
-          enableCrossOsArchive: true
-          key: cache-install-Haxelib
-          path: |
-            .haxelib/
         
       - name: Install Libraries
         run: |
           haxelib setup ~/haxelib
-          if [ "${{ inputs.dependencies_to_update }}" == "all" ] || [ ! -d ".haxelib/" ]; then
-            echo "Updating all dependencies..."
-            haxelib install hmm 
-            haxelib run hmm reinstall -f
-          elif [ -n "${{ inputs.dependencies_to_update }}" ] && [ "${{ github.event.inputs.dependencies_to_update }}" != "ios" ] && [ "${{ github.event.inputs.dependencies_to_update }}" != "android" ]; then
-            echo "Updating specified dependencies: ${{ inputs.dependencies_to_update }}"
-            haxelib install hmm
-            haxelib run hmm reinstall --force $(echo "${{ inputs.dependencies_to_update }}")
-          else
-            echo "No dependencies specified, only installing hmm"
-          fi
+          haxelib install hmm 
+          haxelib run hmm install
 
       - name: Make Haxelib Zip
         run: |
@@ -67,30 +50,3 @@ jobs:
           name: Haxelib
           path: /Users/runner/haxelib.zip
           if-no-files-found: error
-
-      - name: Clearing already existing cache
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const caches = await github.rest.actions.getActionsCacheList({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-            })
-            for (const cache of caches.data.actions_caches) {
-              if (cache.key == "cache-install-Haxelib") {
-                console.log('Clearing ' + cache.key + '...')
-                await github.rest.actions.deleteActionsCacheById({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  cache_id: cache.id,
-                })
-                console.log("Cache cleared.")
-              }
-            }
-      - name: Uploading new cache
-        uses: actions/cache/save@v4
-        with:
-          enableCrossOsArchive: true
-          key: cache-install-Haxelib
-          path: |
-            .haxelib/
