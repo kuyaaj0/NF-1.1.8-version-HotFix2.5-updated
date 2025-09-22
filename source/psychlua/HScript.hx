@@ -246,7 +246,8 @@ class HScript implements ISharedScript {
 	}
 
 	@:noCompletion
-	private function _importHandler(s:String, as:String):Bool {
+	private function _importHandler(s:String, as:String, ?star:Bool):Bool {
+		if(star == true) return false;
 		var path:String = #if MODS_ALLOWED Paths.mods() + #end s.replace(".", "/");
 		if(instances.exists(path)) {
 			var sc:HScript = instances.get(path);
