@@ -267,7 +267,7 @@ class Main extends Sprite
 			if(FileSystem.exists(folder) && FileSystem.isDirectory(folder)) paths.push(Path.addTrailingSlash(folder));
 
 		trace("scriptClass Paths: " + paths);
-		psychlua.stages.modules.ScriptedModuleNotify.init([crowplexus.hscript.stages.modules.ScriptedModule], paths, psychlua.stages.modules.ModuleHandler.includeExtension);
+		psychlua.stages.modules.ScriptedModuleNotify.init([crowplexus.psychlua.stages.modules.ScriptedModule], paths, psychlua.stages.modules.ModuleHandler.includeExtension);
 		#end
 	}
 
