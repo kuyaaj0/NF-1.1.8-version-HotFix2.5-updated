@@ -1,30 +1,11 @@
 package psychlua.stages.modules;
 
 class ModuleHandler {
-	public static final supportExtension:Array<String> = ["hxc", "hxs"];
-
 	private static var moduleArray:Array<Module> = [];
+	public static var includeExtension:Array<String> = ["hxc", "hxs"];
 
 	public static function init() {
 		moduleArray = [];
-
-		#if MODS_ALLOWED
-		var paths:Array<String> = [];
-
-		for (folder in Mods.directoriesWithFile(Paths.getSharedPath(), 'stageScripts/modules/'))
-			if(FileSystem.exists(folder) && FileSystem.isDirectory(folder)) paths.push(Path.addTrailingSlash(folder));
-
-		for(path in paths) {
-			for(fn in CoolUtil.readDirectoryRecursive(path)) {
-				if(supportExtension.contains(Path.extension(fn))) {
-					var sc:ModuleHScript = new ModuleHScript(fn, fn.substring(path.length, fn.lastIndexOf("/")));
-					sc.execute();
-					//只进行加载class，然后立刻扔掉（
-					sc.destroy();
-				}
-			}
-		}
-		#end
 
 		for(fp in ScriptedModule.__sc_scriptClassLists()) {
 			var instance:Module = ScriptedModule.createScriptClassInstance(fp);
@@ -162,68 +143,5 @@ class ModuleHandler {
 		}
 
 		return null;
-	}
-}
-
-class ModuleHScript extends HScript {
-	var paName:String = null;
-
-	public function new(path:String, ?paName:String) {
-		if(paName == "/") paName = null;
-		if(paName != null) {
-			this.paName = paName.replace("/", ".");
-		}
-
-		super(path);
-		interp.allowScriptClass = interp.allowScriptEnum = true;
-	}
-
-	override function loadFile() {
-		if(!active) return;
-
-		#if MODS_ALLOWED
-		if(FileSystem.exists(filePath)) {
-			scriptCode = try {
-				File.getContent(filePath);
-			} catch(e) {
-				Iris.warn('Invalid Expected File Path -> "$filePath"', cast {fileName: this.origin, lineNumber: 0});
-				null;
-			}
-		} else {
-			Iris.warn('This File Path Was Not Exist -> "$filePath"', cast {fileName: this.origin, lineNumber: 0});
-		}
-		#else
-		if(openfl.Assets.exists(filePath)) {
-			scriptCode = try {
-				openfl.Assets.getText(filePath);
-			} catch(e) {
-				Iris.warn('Invalid Expected This File Path -> "$filePath"', cast {fileName: this.origin, lineNumber: 0});
-				null;
-			}
-		} else {
-			Iris.warn('This File Path Was Not Exist -> "$filePath"', cast {fileName: this.origin, lineNumber: 0});
-		}
-		#end
-
-		if(scriptCode != null && scriptCode.trim() != '') {
-			try {
-				expr = parser.parseString(scriptCode, this.origin, this.paName);
-			}
-			#if hscriptPos
-			catch(e:Error) {
-				Iris.error(Printer.errorToString(e, false), cast {fileName: e.origin, lineNumber: e.line});
-				active = false;
-			}
-			#end
-			catch(e) {
-				Iris.error(Std.string(e), cast {fileName: this.origin, lineNumber: 0});
-				active = false;
-			}
-		}
-	}
-
-	override function preset(parent:Dynamic) {
-		set("ScriptedModule", ScriptedModule);
-		super.preset(parent);
 	}
 }

@@ -167,12 +167,10 @@ class InitState extends MusicBeatState
 		}
 		#end
 		#end
-		
-		//clear up
-		crowplexus.hscript.Interp.clearCache();
-	
+
+
 		Mods.loadTopMod();
-	
+
 		if (FlxG.save.data != null && FlxG.save.data.fullscreen)
 		{
 			FlxG.fullscreen = FlxG.save.data.fullscreen;
@@ -180,10 +178,13 @@ class InitState extends MusicBeatState
 		}
 		persistentUpdate = true;
 		persistentDraw = true;
-		
+
+		Main.initScriptModules();
+		#if HSCRIPT_ALLOWED
 		psychlua.stages.modules.ModuleHandler.init();
 		psychlua.stages.GlobalHandler.init();
-	
+		#end
+
 		ColorblindFilter.UpdateColors();
 	
 		if (FlxG.save.data.weekCompleted != null)

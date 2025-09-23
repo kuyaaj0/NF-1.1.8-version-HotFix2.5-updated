@@ -62,6 +62,18 @@ class Main extends Sprite
 	public static var fpsVar:FPS;
 	public static var watermark:Watermark;
 
+	#if HSCRIPT_ALLOWED
+	public static var scriptedClasses:Array<crowplexus.hscript.scriptclass.IScriptedClass> = [
+		psychlua.scriptClasses.ScriptedBaseStage,
+		psychlua.scriptClasses.ScriptedGroup,
+		psychlua.scriptClasses.ScriptedSprite,
+		psychlua.scriptClasses.ScriptedSpriteGroup,
+		psychlua.scriptClasses.ScriptedState,
+		psychlua.scriptClasses.ScriptedSubstate,
+		psychlua.stages.modules.ScriptedModule,
+	];
+	#end
+
 	#if mobile
 	public static final platform:String = "Phones";
 	#else
@@ -256,6 +268,18 @@ class Main extends Sprite
 			sprite.__cacheBitmap = null;
 			sprite.__cacheBitmapData = null;
 		}
+	}
+
+	@:allow(states.backend.InitState)
+	private static function initScriptModules() {
+		#if (MODS_ALLOWED && HSCRIPT_ALLOWED)
+		var paths:Array<String> = [];
+
+		for (folder in Mods.directoriesWithFile(Paths.getSharedPath(), 'stageScripts/modules/'))
+			if(FileSystem.exists(folder) && FileSystem.isDirectory(folder)) paths.push(Path.addTrailingSlash(folder));
+
+		psychlua.stages.modules.ScriptedModuleNotify.init(Main.scriptedClasses, paths, psychlua.stages.modules.ModuleHandler.includeExtension);
+		#end
 	}
 
 	function toggleFullScreen(event:KeyboardEvent)
