@@ -63,7 +63,7 @@ class Main extends Sprite
 	public static var watermark:Watermark;
 
 	#if HSCRIPT_ALLOWED
-	public static var scriptedClasses:Array<crowplexus.hscript.scriptclass.IScriptedClass> = [
+	public static var scriptedClasses:Array<Class<Dynamic>> = [
 		psychlua.scriptClasses.ScriptedBaseStage,
 		psychlua.scriptClasses.ScriptedGroup,
 		psychlua.scriptClasses.ScriptedSprite,
