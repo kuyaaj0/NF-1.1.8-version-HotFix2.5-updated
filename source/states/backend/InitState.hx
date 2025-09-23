@@ -179,7 +179,7 @@ class InitState extends MusicBeatState
 		persistentUpdate = true;
 		persistentDraw = true;
 
-		Main.initScriptModules();
+		//Main.initScriptModules();
 		#if HSCRIPT_ALLOWED
 		psychlua.stages.modules.ModuleHandler.init();
 		psychlua.stages.GlobalHandler.init();
