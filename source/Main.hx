@@ -52,7 +52,7 @@ class Main extends Sprite
 	private static var game = {
 		width: 1280, // WINDOW width
 		height: 720, // WINDOW height
-		initialState: #if mobile PassState #else InitState #end, // initial game state
+		initialState: InitState, // initial game state
 		zoom: -1.0, // game state bounds
 		framerate: 60, // default framerate
 		skipSplash: true, // if the default flixel splash screen should be skipped
@@ -65,11 +65,6 @@ class Main extends Sprite
 	#if HSCRIPT_ALLOWED
 	public static var scriptedClasses:Array<Class<Dynamic>> = [
 		psychlua.scriptClasses.ScriptedBaseStage,
-		psychlua.scriptClasses.ScriptedGroup,
-		psychlua.scriptClasses.ScriptedSprite,
-		psychlua.scriptClasses.ScriptedSpriteGroup,
-		psychlua.scriptClasses.ScriptedState,
-		psychlua.scriptClasses.ScriptedSubstate,
 		psychlua.stages.modules.ScriptedModule,
 	];
 	#end
