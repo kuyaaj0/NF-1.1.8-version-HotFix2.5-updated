@@ -62,13 +62,6 @@ class Main extends Sprite
 	public static var fpsVar:FPS;
 	public static var watermark:Watermark;
 
-	#if HSCRIPT_ALLOWED
-	public static var scriptedClasses:Array<Class<Dynamic>> = [
-		psychlua.scriptClasses.ScriptedBaseStage,
-		psychlua.stages.modules.ScriptedModule,
-	];
-	#end
-
 	#if mobile
 	public static final platform:String = "Phones";
 	#else
@@ -273,7 +266,8 @@ class Main extends Sprite
 		for (folder in Mods.directoriesWithFile(Paths.getSharedPath(), 'stageScripts/modules/'))
 			if(FileSystem.exists(folder) && FileSystem.isDirectory(folder)) paths.push(Path.addTrailingSlash(folder));
 
-		psychlua.stages.modules.ScriptedModuleNotify.init(Main.scriptedClasses, paths, psychlua.stages.modules.ModuleHandler.includeExtension);
+		trace("scriptClass Paths: " + paths);
+		psychlua.stages.modules.ScriptedModuleNotify.init([crowplexus.hscript.stages.modules.ScriptedModule], paths, psychlua.stages.modules.ModuleHandler.includeExtension);
 		#end
 	}
 
