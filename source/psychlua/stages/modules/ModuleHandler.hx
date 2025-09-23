@@ -8,9 +8,11 @@ class ModuleHandler {
 		moduleArray = [];
 
 		for(fp in ScriptedModule.__sc_scriptClassLists()) {
-			var instance:Module = ScriptedModule.createScriptClassInstance(fp);
-			instance.onCreate();
-			moduleArray.push(instance);
+			ModuleAgency.runThrow(function() {
+				var instance:Module = ScriptedModule.createScriptClassInstance(fp);
+				instance.onCreate();
+				moduleArray.push(instance);
+			}, "hscript");
 		}
 
 		globalHandler();
@@ -137,7 +139,9 @@ class ModuleHandler {
 			if(module.active) {
 				var func:Dynamic = Reflect.getProperty(module, name);
 				if(Reflect.isFunction(func)) {
-					var result:Dynamic = Reflect.callMethod(null, func, args ?? []);
+					ModuleAgency.runThrow(function() {
+						Reflect.callMethod(null, func, args ?? []);
+					}, "hscript");
 				}
 			}
 		}
