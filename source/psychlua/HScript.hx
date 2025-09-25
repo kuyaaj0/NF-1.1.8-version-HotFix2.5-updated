@@ -15,6 +15,8 @@ import crowplexus.hscript.Parser;
 import crowplexus.hscript.Interp;
 import crowplexus.hscript.Printer;
 import crowplexus.hscript.ISharedScript;
+import psychlua.stages.modules.ScriptedModuleNotify;
+import psychlua.stages.modules.ModuleAgency;
 
 typedef HScriptInfos =
 {
@@ -247,13 +249,38 @@ class HScript implements ISharedScript {
 
 	@:noCompletion
 	private function _importHandler(s:String, as:String, ?star:Bool):Bool {
-		if(star == true) return false;
 		var path:String = #if MODS_ALLOWED Paths.mods() + #end s.replace(".", "/");
 		if(instances.exists(path)) {
 			var sc:HScript = instances.get(path);
 			if(sc.active) {
 				this.interp.imports.set((as != null && as.trim() != "" ? as : Tools.last(s.split("."))), sc);
 				return true;
+			}
+		} else {
+			final last = s.lastIndexOf(".");
+			final p = (star == true ? s : s.substr(0, last > -1 ? last : 0));
+			#if STAR_CLASSES
+			if(star == true) {
+				@:privateAccess if(ScriptedModuleNotify.classSystems.exists(p)) {
+					for(m in ScriptedModuleNotify.classSystems.get(p)) {
+						for(id=>cl in m.unusedClasses) {
+							if(m._preClassesName.contains(id)) m.unusedClasses.remove(id);
+							m.__interp.execute(cl);
+						}
+					}
+				}
+			} else
+			#end
+			{
+				final cn = (star == true ? "" : s.substr(last > -1 ? last + 1 : 0));
+				@:privateAccess if(ScriptedModuleNotify.classSystems.exists(p)) {
+					for(m in ScriptedModuleNotify.classSystems.get(p)) {
+						if(m.unusedClasses.exists(cn)) {
+							m.__interp.execute(m.unusedClasses.get(cn));
+							break;
+						}
+					}
+				}
 			}
 		}
 		return false;
