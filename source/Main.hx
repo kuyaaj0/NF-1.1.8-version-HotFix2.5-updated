@@ -267,7 +267,19 @@ class Main extends Sprite
 			if(FileSystem.exists(folder) && FileSystem.isDirectory(folder)) paths.push(Path.addTrailingSlash(folder));
 
 		trace("scriptClass Paths: " + paths);
-		psychlua.stages.modules.ScriptedModuleNotify.init([psychlua.stages.modules.ScriptedModule], paths, psychlua.stages.modules.ModuleHandler.includeExtension);
+		psychlua.stages.modules.ScriptedModuleNotify.init([psychlua.stages.modules.ScriptedModule], paths, psychlua.stages.modules.ModuleHandler.includeExtension, [
+			"ScriptedState" => psychlua.scriptClasses.ScriptedState,
+			"ScriptedBaseStage" => psychlua.scriptClasses.ScriptedBaseStage,
+			"ScriptedGroup" => psychlua.scriptClasses.ScriptedGroup,
+			"ScriptedSprite" => psychlua.scriptClasses.ScriptedSprite,
+			"ScriptedSpriteGroup" => psychlua.scriptClasses.ScriptedSpriteGroup,
+			"ScriptedSubstate" => psychlua.scriptClasses.ScriptedSubstate,
+
+			"FlxG" => flixel.FlxG,
+			"MusicBeatState" => backend.MusicBeatState,
+			"PlayState" => states.PlayState,
+			"Application" => lime.app.Application,
+		]);
 		#end
 	}
 
