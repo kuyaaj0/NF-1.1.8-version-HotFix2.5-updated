@@ -41,10 +41,7 @@ class HScript implements ISharedScript {
 
 	public var filePath(default, null):String;
 	public var modFolder:String;
-	public var origin(get, never):String;
-	@:dox(hide) private inline function get_origin():String {
-		return #if MODS_ALLOWED (modFolder != null && modFolder.trim() != "" ? "(" + modFolder + ")" : "") + (filePath.contains(haxe.io.Path.addTrailingSlash(Paths.mods(modFolder.trim()))) ? filePath.substr(haxe.io.Path.addTrailingSlash(Paths.mods(modFolder.trim())).length) : filePath) #else filePath #end;
-	}
+	public var origin(default, null):String;
 
 	private var withoutExtension:String;
 
@@ -58,6 +55,7 @@ class HScript implements ISharedScript {
 
 		filePath = file;
 		withoutExtension = haxe.io.Path.withoutExtension(file);
+		origin = Mods.toDisplayPath(file);
 		#if MODS_ALLOWED
 		var myFolder:Array<String> = filePath.split('/');
 		if(myFolder.contains("mods")) {

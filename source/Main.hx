@@ -264,7 +264,10 @@ class Main extends Sprite
 		var paths:Array<String> = [];
 
 		for (folder in Mods.directoriesWithFile(Paths.getSharedPath(), 'stageScripts/modules/'))
-			if(FileSystem.exists(folder) && FileSystem.isDirectory(folder)) paths.push(Path.addTrailingSlash(folder));
+			if(FileSystem.exists(folder) && FileSystem.isDirectory(folder)) {
+				final path = Path.addTrailingSlash(folder);
+				paths.push(path + "$" + Mods.toDisplayPath(path));
+			}
 
 		trace("scriptClass Paths: " + paths);
 		psychlua.stages.modules.ScriptedModuleNotify.init([psychlua.stages.modules.ScriptedModule], paths, psychlua.stages.modules.ModuleHandler.includeExtension, [

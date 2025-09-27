@@ -250,6 +250,28 @@ class Mods
 		#end
 	}
 
+	// Very NB
+	public static function toDisplayPath(path:String, ?ignores:Array<String>):String {
+		var ar = ~/^(.*\/)?(mods|assets)\//;
+		if(ar.match(path)) {
+			switch(ar.matched(2)) {
+				case "mods":
+					var r = ~/^(.*\/)?mods\/([^\/]+)\/(.*)$/g;
+					if(r.match(path)) {
+						if(ignores == null) ignores = Mods.ignoreModFolders;
+						if(ignores.contains(r.matched(2))) {
+							return r.replace(path, "(Mod:[*Global])$2/$3");
+						}
+					}
+					return r.replace(path, "(Mod:'$2')$3");
+				case "assets":
+					var r = ~/^(.*\/)?assets\/(.*)$/g;
+					return r.replace(path, "(Assets)$2");
+			}
+		}
+		return path;
+	}
+
 	public static function loadTopMod()
 	{
 		Mods.currentModDirectory = '';
