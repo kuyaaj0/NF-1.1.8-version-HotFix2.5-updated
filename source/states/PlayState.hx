@@ -50,11 +50,10 @@ import states.stages.objects.*;
 import psychlua.*;
 #else
 import psychlua.LuaUtils;
-import psychlua.hscript.HScript;
-import psychlua.hscript.HScriptGroup;
 #end
 #if HSCRIPT_ALLOWED
-import crowplexus.iris.Iris;
+import psychlua.hscript.HScript;
+import psychlua.hscript.HScriptGroup;
 import crowplexus.hscript.Expr.Error as IrisError;
 import crowplexus.hscript.Printer;
 #end

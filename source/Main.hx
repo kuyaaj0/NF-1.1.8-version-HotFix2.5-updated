@@ -23,10 +23,6 @@ import backend.extraKeys.ExtraKeysHandler;
 
 import developer.console.TraceInterceptor;
 
-#if HSCRIPT_ALLOWED
-import crowplexus.iris.Iris;
-import psychlua.HScript.HScriptInfos;
-#end
 #if desktop
 import backend.device.ALSoftConfig;
 #end
