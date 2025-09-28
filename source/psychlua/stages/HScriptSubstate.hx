@@ -10,10 +10,10 @@ class HScriptSubstate extends MusicBeatSubstate {
 	public var scriptName:String;
 	public var scriptData:Null<Dynamic>;
 
-	private var hscriptArray:Array<HScript>;
+	private var stateScripts:HScriptGroup;
 
 	public function new(name:String, ?data:Null<Dynamic>) {
-		hscriptArray = new Array<HScript>();
+		stateScripts = new HScriptGroup();
 
 		this.scriptName = name;
 		this.scriptData = data;
@@ -29,100 +29,84 @@ class HScriptSubstate extends MusicBeatSubstate {
 					var sc:HScript = new HScript(path + fn, this);
 					sc.set("MusicBeatState", MusicBeatState);
 					sc.set("MusicBeatSubstate", MusicBeatSubstate);
-					sc.execute();
-					hscriptArray.push(sc);
+					stateScripts.add(sc);
 				}
 			}
 		}
 		#end
+		stateScripts.execute();
 
 		super();
 	}
 
 	override function create() {
-		callOnScript("onCreate");
+		stateScripts.call("onCreate");
 		super.create();
-		callOnScript("onCreatePost");
+		stateScripts.call("onCreatePost");
 	}
 
 	override function update(elapsed:Float) {
-		callOnScript("onUpdate", [elapsed]);
+		stateScripts.call("onUpdate", [elapsed]);
 		super.update(elapsed);
-		callOnScript("onUpdatePost");
+		stateScripts.call("onUpdatePost");
 	}
 
 	override function draw() {
-		callOnScript("onDraw");
+		stateScripts.call("onDraw");
 		super.draw();
-		callOnScript("onDrawPost");
+		stateScripts.call("onDrawPost");
 	}
 
 	override function openSubState(SubState:FlxSubState) {
-		callOnScript("onOpenSubState", [SubState]);
+		stateScripts.call("onOpenSubState", [SubState]);
 		super.openSubState(SubState);
-		callOnScript("onOpenSubStatePost", [SubState]);
+		stateScripts.call("onOpenSubStatePost", [SubState]);
 	}
 
 	override function closeSubState() {
-		callOnScript("onCloseSubState");
+		stateScripts.call("onCloseSubState");
 		super.closeSubState();
-		callOnScript("onCloseSubStatePost");
+		stateScripts.call("onCloseSubStatePost");
 	}
 
 	override function close() {
-		callOnScript("onClose");
+		stateScripts.call("onClose");
 		super.close();
-		callOnScript("onClosePost");
+		stateScripts.call("onClosePost");
 	}
 
 	override function onFocusLost() {
-		callOnScript("onFocusLost");
+		stateScripts.call("onFocusLost");
 		super.onFocusLost();
 	}
 
 	override function onFocus() {
-		callOnScript("onFocus");
+		stateScripts.call("onFocus");
 		super.onFocus();
 	}
 
 	override function onResize(Width:Int, Height:Int) {
-		callOnScript("onResize", [Width, Height]);
+		stateScripts.call("onResize", [Width, Height]);
 		super.onResize(Width, Height);
 	}
 
 	override function stepHit() {
-		callOnScript("onStepHit");
+		stateScripts.call("onStepHit");
 		super.stepHit();
 	}
 
 	override function beatHit() {
-		callOnScript("onBeatHit");
+		stateScripts.call("onBeatHit");
 		super.beatHit();
 	}
 
 	override function sectionHit() {
-		callOnScript("onSectionHit");
+		stateScripts.call("onSectionHit");
 		super.beatHit();
 	}
 
 	override function destroy() {
-		if(hscriptArray != null && hscriptArray.length > 0) for(sc in hscriptArray) {
-			if(sc != null) {
-				if(sc.exists("onDestroy")) sc.call("onDestroy");
-				sc.destroy();
-			}
-		}
-
+		stateScripts.destroy(true);
 		super.destroy();
-	}
-
-	public function callOnScript(name:String, ?args:Array<Dynamic>):Dynamic {
-		if(hscriptArray != null && hscriptArray.length > 0) for(sc in hscriptArray) {
-			if(sc != null && sc.exists(name)) {
-				sc.call(name, args);
-			}
-		}
-
-		return null;
 	}
 }

@@ -1,4 +1,4 @@
-package psychlua;
+package psychlua.hscript;
 
 import flixel.FlxBasic;
 import objects.Character;

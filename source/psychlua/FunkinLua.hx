@@ -26,7 +26,7 @@ import substates.GameOverSubstate;
 import psychlua.LuaUtils;
 import psychlua.LuaUtils.LuaTweenOptions;
 #if HSCRIPT_ALLOWED
-import psychlua.HScript;
+import psychlua.hscript.HScriptBase;
 #end
 import psychlua.DebugLuaText;
 import psychlua.ModchartSprite;
@@ -44,7 +44,6 @@ class FunkinLua
 	public var closed:Bool = false;
 
 	#if HSCRIPT_ALLOWED
-	public var hscript:HScript = null;
 	public var hscriptBase:HScriptBase = null;
 	#end
 
@@ -1924,12 +1923,6 @@ class FunkinLua
 		lua = null;
 	#end
 		#if HSCRIPT_ALLOWED
-		if (hscript != null)
-		{
-			hscript.destroy();
-			hscript = null;
-		}
-
 		if (hscriptBase != null)
 			hscriptBase.interp = null;
 		hscriptBase = null;

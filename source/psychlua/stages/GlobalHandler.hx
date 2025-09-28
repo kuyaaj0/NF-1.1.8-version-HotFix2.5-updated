@@ -1,13 +1,13 @@
 package psychlua.stages;
 
 class GlobalHandler {
-	private static var grp:Array<HScript>;
+	private static var grp:HScriptGroup;
 
 	public static function init() {
-		if(grp != null && grp.length > 0) for(sc in grp) {
-			sc.destroy();
+		if(grp != null) {
+			grp.destroy();
 		}
-		grp = [];
+		grp = new HScriptGroup();
 
 		#if MODS_ALLOWED
 		var paths:Array<String> = [];
@@ -19,13 +19,13 @@ class GlobalHandler {
 			for(fn in FileSystem.readDirectory(path)) {
 				if(Path.extension(fn) == "hx") {
 					var sc:HScript = new HScript(path + fn);
-					sc.execute();
-					sc.call("onCreate");
-					grp.push(sc);
+					grp.add(sc);
 				}
 			}
 		}
 		#end
+		grp.execute();
+		grp.call("onCreate");
 
 		globalHandler();
 	}

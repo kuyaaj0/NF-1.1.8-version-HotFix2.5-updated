@@ -50,10 +50,10 @@ import states.stages.objects.*;
 import psychlua.*;
 #else
 import psychlua.LuaUtils;
-import psychlua.HScript;
+import psychlua.hscript.HScript;
+import psychlua.hscript.HScriptGroup;
 #end
 #if HSCRIPT_ALLOWED
-import psychlua.HScript.HScriptInfos;
 import crowplexus.iris.Iris;
 import crowplexus.hscript.Expr.Error as IrisError;
 import crowplexus.hscript.Printer;
@@ -105,6 +105,7 @@ class PlayState extends MusicBeatState
 	#if HSCRIPT_ALLOWED
 	public var hscriptArray:Array<HScript> = [];
 	public var instancesExclude:Array<String> = [];
+	public var hscriptGrp:HScriptGroup;
 	#end
 
 	#if LUA_ALLOWED
@@ -336,6 +337,8 @@ class PlayState extends MusicBeatState
 		
 		// for lua
 		instance = this;
+		hscriptGrp = new HScriptGroup();
+		hscriptArray = hscriptGrp.scriptMembers;
 
 		PauseSubState.songName = null; // Reset to default
 		playbackRate = ClientPrefs.getGameplaySetting('songspeed');
@@ -787,6 +790,8 @@ class PlayState extends MusicBeatState
 				#end
 			}
 		#end
+		hscriptGrp.execute();
+		hscriptGrp.call("onCreate");
 
 		addMobileControls(false);
 
@@ -4514,15 +4519,7 @@ class PlayState extends MusicBeatState
 		#end
 
 		#if HSCRIPT_ALLOWED
-		for (script in hscriptArray)
-			if (script != null)
-			{
-				script.call('onDestroy');
-				script.destroy();
-			}
-
-		while (hscriptArray.length > 0)
-			hscriptArray.pop();
+		hscriptGrp.destroy(true);
 		#end
 
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
@@ -4699,10 +4696,8 @@ class PlayState extends MusicBeatState
 	public function initHScript(file:String)
 	{
 		var newScript:HScript = new HScript(file, this);
-		newScript.execute();
-		newScript.call('onCreate');
 		trace('initialized hscript interp successfully: $file');
-		hscriptArray.push(newScript);
+		hscriptGrp.add(newScript);
 	}
 	#end
 
