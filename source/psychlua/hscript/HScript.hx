@@ -19,7 +19,7 @@ import psychlua.stages.modules.ScriptedModuleNotify;
 import psychlua.stages.modules.ModuleAgency;
 
 class HScript implements ISharedScript {
-	private static var instances:Map<String, HScript> = new Map<String, HScript>();
+	public static var instances:Map<String, HScript> = new Map<String, HScript>();
 
 	public var standard(get, never):Dynamic;
 	public function get_standard():Dynamic {
