@@ -10,10 +10,10 @@ class HScriptState extends MusicBeatState {
 	public var scriptName:String;
 	public var scriptData:Null<Dynamic>;
 
-	private var stateScripts:HScriptGroup;
+	private var stateScripts:HScriptPack;
 
 	public function new(name:String, ?data:Null<Dynamic>) {
-		stateScripts = new HScriptGroup();
+		stateScripts = new HScriptPack();
 
 		this.scriptName = name;
 		this.scriptData = data;

@@ -1,7 +1,7 @@
 #if !macro
 import psychlua.hscript.HScript;
 import haxe.io.Path;
-import psychlua.hscript.HScriptGroup;
+import psychlua.hscript.HScriptPack;
 import crowplexus.iris.Iris;
 import crowplexus.hscript.Printer;
 import crowplexus.hscript.Expr;

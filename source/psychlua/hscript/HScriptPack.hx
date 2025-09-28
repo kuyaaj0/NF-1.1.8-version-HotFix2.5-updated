@@ -5,7 +5,7 @@ import crowplexus.hscript.ISharedScript;
 import crowplexus.hscript.Expr;
 
 @:access(psychlua.hscript.HScript)
-class HScriptGroup implements ISharedScript {
+class HScriptPack implements ISharedScript {
 	public var standard(get, never):Dynamic;
 	public function get_standard():Dynamic {
 		return this;

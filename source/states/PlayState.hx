@@ -53,7 +53,7 @@ import psychlua.LuaUtils;
 #end
 #if HSCRIPT_ALLOWED
 import psychlua.hscript.HScript;
-import psychlua.hscript.HScriptGroup;
+import psychlua.hscript.HScriptPack;
 import crowplexus.hscript.Expr.Error as IrisError;
 import crowplexus.hscript.Printer;
 #end
@@ -104,7 +104,7 @@ class PlayState extends MusicBeatState
 	#if HSCRIPT_ALLOWED
 	public var hscriptArray:Array<HScript> = [];
 	public var instancesExclude:Array<String> = [];
-	public var hscriptGrp:HScriptGroup;
+	public var hscriptGrp:HScriptPack;
 	#end
 
 	#if LUA_ALLOWED
@@ -336,7 +336,7 @@ class PlayState extends MusicBeatState
 		
 		// for lua
 		instance = this;
-		hscriptGrp = new HScriptGroup();
+		hscriptGrp = new HScriptPack();
 		hscriptArray = hscriptGrp.scriptMembers;
 
 		PauseSubState.songName = null; // Reset to default
@@ -1012,7 +1012,7 @@ class PlayState extends MusicBeatState
 
 		if (doPush)
 		{
-			if (Iris.instances.exists(scriptFile))
+			if (HScript.instances.exists(scriptFile))
 				doPush = false;
 
 			if (doPush)

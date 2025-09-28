@@ -1,6 +1,6 @@
 package objects.state.optionState;
 
-import psychlua.HScript;
+import psychlua.hscript.HScript;
 import objects.state.optionState.Option;
 
 class HScriptGroup extends OptionCata {
