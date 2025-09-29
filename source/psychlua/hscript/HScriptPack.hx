@@ -104,9 +104,8 @@ class HScriptPack implements ISharedScript {
 	}
 
 	public function destroy(needCall:Bool = false) {
-		var i:Int = -1;
-		while(i++ < this.counts - 1) {
-			final sc:HScript = this.scriptMembers[i];
+		while(this.counts > 0) {
+			final sc:HScript = this.scriptMembers.shift();
 			if(sc != null) {
 				if(needCall) sc.call("onDestroy");
 				sc.destroy();
