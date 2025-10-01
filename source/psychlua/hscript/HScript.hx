@@ -285,6 +285,7 @@ class HScript implements ISharedScript {
 			set('File', File);
 			set('FileSystem', FileSystem);
 			#end
+			set("Json", haxe.Json);
 			set('FlxG', flixel.FlxG);
 			set('FlxMath', flixel.math.FlxMath);
 			set('FlxSprite', flixel.FlxSprite);

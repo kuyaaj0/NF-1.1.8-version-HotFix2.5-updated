@@ -11,7 +11,6 @@ class ScriptExprTools {
 		if(e == null) return null;
 		return switch(Tools.expr(e)) {
 			case EParent(e): hx_getValue(e);
-			case EDirectValue(d): d;
 			case EConst(c):
 				switch(c) {
 					case CString(s): s;
@@ -31,7 +30,7 @@ class ScriptExprTools {
 	public static function hx_searchCallback(e:Expr, ?func:Expr->Array<Expr>->Void) {
 		if(e == null) return;
 		switch(Tools.expr(e)) {
-			case EIgnore(_), EIdent(_), EImport(_, _), EClass(_, _, _, _, _), EEnum(_, _, _), EDirectValue(_), EUsing(_):
+			case EIgnore(_), EIdent(_), EImport(_, _), EClass(_, _, _, _, _), EEnum(_, _, _), ETypedef(_, _), EUsing(_):
 			case EBreak, EContinue:
 			case EConst(c):
 				switch(c) {
