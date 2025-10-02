@@ -283,7 +283,7 @@ class FunkinLua
 			if (!FileSystem.exists(path))
 				if (!FileSystem.exists(path+'.json'))
 					return {};
-			return Json.parse(FileSystem.getText(path));
+			return Json.parse(File.getContent(path));
 			#else
 			if (!Assets.exists(path))
 				if (!Assets.exists(path+'.json'))
