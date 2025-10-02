@@ -274,6 +274,23 @@ class FunkinLua
 				game.callOnHScript(funcName, args, ignoreStops, excludeScripts, excludeValues);
 				return true;
 			});
+		
+		set("readJson", function(jsonFile:String)
+		{
+			//var path:String = jsonFile;
+			var path:String = Paths.getPath(jsonFile, TEXT);
+			#if MODS_ALLOWED
+			if (!FileSystem.exists(path))
+				if (!FileSystem.exists(path+'.json'))
+					return {};
+			return Json.parse(FileSystem.getText(path);
+			#else
+			if (!Assets.exists(path))
+				if (!Assets.exists(path+'.json'))
+					return {};
+			return Json.parse(Assets.getText(path);
+			#end
+		});
 
 		set("callScript", function(luaFile:String, funcName:String, ?args:Array<Dynamic> = null)
 		{
