@@ -1,4 +1,4 @@
-package psychlua;
+package psychlua.hscript;
 
 import flixel.FlxBasic;
 import objects.Character;
@@ -18,18 +18,8 @@ import crowplexus.hscript.ISharedScript;
 import psychlua.stages.modules.ScriptedModuleNotify;
 import psychlua.stages.modules.ModuleAgency;
 
-typedef HScriptInfos =
-{
-	> haxe.PosInfos,
-	var ?funcName:String;
-	var ?showLine:Null<Bool>;
-	#if LUA_ALLOWED
-	var ?isLua:Null<Bool>;
-	#end
-}
-
 class HScript implements ISharedScript {
-	private static var instances:Map<String, HScript> = new Map<String, HScript>();
+	public static var instances:Map<String, HScript> = new Map<String, HScript>();
 
 	public var standard(get, never):Dynamic;
 	public function get_standard():Dynamic {
@@ -44,6 +34,7 @@ class HScript implements ISharedScript {
 	public var origin(default, null):String;
 
 	private var withoutExtension:String;
+	var manualRun:Bool;
 
 	var scriptCode(default, null):Null<String>;
 	var expr:Expr;
@@ -74,7 +65,8 @@ class HScript implements ISharedScript {
 		preset(parent);
 
 		loadFile();
-		if(manualRun)
+		this.manualRun = manualRun;
+		if(this.manualRun)
 			execute();
 
 		if(!instances.exists(this.withoutExtension)) instances.set(this.withoutExtension, this);
@@ -293,6 +285,7 @@ class HScript implements ISharedScript {
 			set('File', File);
 			set('FileSystem', FileSystem);
 			#end
+			set("Json", haxe.Json);
 			set('FlxG', flixel.FlxG);
 			set('FlxMath', flixel.math.FlxMath);
 			set('FlxSprite', flixel.FlxSprite);

@@ -4,7 +4,7 @@ import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.FlxGraphic;
 import flixel.math.FlxRect;
-
+import flixel.graphics.frames.FlxFrame;
 import openfl.display.BitmapData;
 import openfl.display3D.textures.RectangleTexture;
 import openfl.utils.AssetType;
@@ -18,7 +18,6 @@ import sys.thread.Mutex;
 import backend.Cache; //用于拆分path代码功能过于冗杂的问题
 
 import haxe.Json;
-
 class Paths
 {
 	inline public static var SOUND_EXT = #if web "mp3" #else "ogg" #end;
@@ -317,6 +316,38 @@ class Paths
 		if (thread) bitmapMutex.release();
 		
 		return newGraphic;
+	}
+
+	static public function getMultiImage(key:String, ?library:String = null, ?allowGPU:Bool = true):FlxAtlasFrames
+	{
+		var myFrames = new FlxAtlasFrames(null);
+		var pngList:Array<String> = [];
+		var files:Array<String> = backend.CoolUtil.readDirectoryRecursive(Paths.getPath('images/' + key, null, library));
+		for (file in files){
+		var root = Paths.getPath('images/' + key) + '/';
+			if (file.endsWith('.png'))
+			{
+				if (file.startsWith(root))
+				{
+				file = file.substr(root.length,file.length);
+				}
+			file = file.substr(0,file.length - 4);
+			if (!pngList.contains(file))
+			pngList.push(file);
+			}
+		}
+		for (fileName in pngList){
+                             var image:FlxGraphic = image(key + '/' + fileName, null, allowGPU);
+		@:privateAccess
+      		var anim = new FlxFrame(image);
+    		anim.name = fileName;
+    		anim.frame = FlxRect.get(0, 0, image.bitmap.width, image.bitmap.height);
+    		anim.sourceSize.set(image.bitmap.width, image.bitmap.height);
+    		anim.offset.set(0, 0);
+    		myFrames.pushFrame(anim);
+    		}
+		
+		return myFrames;
 	}
 
 	static public function getTextFromFile(key:String, ?ignoreMods:Bool = false):String

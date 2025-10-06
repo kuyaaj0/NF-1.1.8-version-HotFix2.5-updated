@@ -50,11 +50,10 @@ import states.stages.objects.*;
 import psychlua.*;
 #else
 import psychlua.LuaUtils;
-import psychlua.HScript;
 #end
 #if HSCRIPT_ALLOWED
-import psychlua.HScript.HScriptInfos;
-import crowplexus.iris.Iris;
+import psychlua.hscript.HScript;
+import psychlua.hscript.HScriptPack;
 import crowplexus.hscript.Expr.Error as IrisError;
 import crowplexus.hscript.Printer;
 #end
@@ -105,6 +104,7 @@ class PlayState extends MusicBeatState
 	#if HSCRIPT_ALLOWED
 	public var hscriptArray:Array<HScript> = [];
 	public var instancesExclude:Array<String> = [];
+	public var hscriptGrp:HScriptPack;
 	#end
 
 	#if LUA_ALLOWED
@@ -336,6 +336,8 @@ class PlayState extends MusicBeatState
 		
 		// for lua
 		instance = this;
+		hscriptGrp = new HScriptPack();
+		hscriptArray = hscriptGrp.scriptMembers;
 
 		PauseSubState.songName = null; // Reset to default
 		playbackRate = ClientPrefs.getGameplaySetting('songspeed');
@@ -787,6 +789,8 @@ class PlayState extends MusicBeatState
 				#end
 			}
 		#end
+		hscriptGrp.execute();
+		hscriptGrp.call("onCreate");
 
 		addMobileControls(false);
 
@@ -1008,7 +1012,7 @@ class PlayState extends MusicBeatState
 
 		if (doPush)
 		{
-			if (Iris.instances.exists(scriptFile))
+			if (HScript.instances.exists(scriptFile))
 				doPush = false;
 
 			if (doPush)
@@ -4513,15 +4517,7 @@ class PlayState extends MusicBeatState
 		#end
 
 		#if HSCRIPT_ALLOWED
-		for (script in hscriptArray)
-			if (script != null)
-			{
-				script.call('onDestroy');
-				script.destroy();
-			}
-
-		while (hscriptArray.length > 0)
-			hscriptArray.pop();
+		hscriptGrp.destroy(true);
 		#end
 
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
@@ -4698,10 +4694,8 @@ class PlayState extends MusicBeatState
 	public function initHScript(file:String)
 	{
 		var newScript:HScript = new HScript(file, this);
-		newScript.execute();
-		newScript.call('onCreate');
 		trace('initialized hscript interp successfully: $file');
-		hscriptArray.push(newScript);
+		hscriptGrp.add(newScript);
 	}
 	#end
 

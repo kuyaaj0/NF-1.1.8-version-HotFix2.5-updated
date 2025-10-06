@@ -23,10 +23,6 @@ import backend.extraKeys.ExtraKeysHandler;
 
 import developer.console.TraceInterceptor;
 
-#if HSCRIPT_ALLOWED
-import crowplexus.iris.Iris;
-import psychlua.HScript.HScriptInfos;
-#end
 #if desktop
 import backend.device.ALSoftConfig;
 #end
@@ -271,6 +267,7 @@ class Main extends Sprite
 
 		trace("scriptClass Paths: " + paths);
 		psychlua.stages.modules.ScriptedModuleNotify.init([psychlua.stages.modules.ScriptedModule], paths, psychlua.stages.modules.ModuleHandler.includeExtension, [
+			// Extended Class
 			"ScriptedState" => psychlua.scriptClasses.ScriptedState,
 			"ScriptedBaseStage" => psychlua.scriptClasses.ScriptedBaseStage,
 			"ScriptedGroup" => psychlua.scriptClasses.ScriptedGroup,
@@ -278,10 +275,24 @@ class Main extends Sprite
 			"ScriptedSpriteGroup" => psychlua.scriptClasses.ScriptedSpriteGroup,
 			"ScriptedSubstate" => psychlua.scriptClasses.ScriptedSubstate,
 
+			// Flixel Something
 			"FlxG" => flixel.FlxG,
+			"FlxSprite" => flixel.FlxSprite,
+			"FlxGroup" => flixel.group.FlxGroup,
+			"FlxSpriteGroup" => flixel.group.FlxSpriteGroup,
+			"FlxText" => flixel.text.FlxText,
+
 			"MusicBeatState" => backend.MusicBeatState,
 			"PlayState" => states.PlayState,
 			"Application" => lime.app.Application,
+
+			// Engine Something
+			'Conductor' => backend.Conductor,
+			"Paths" => backend.Paths,
+			'ClientPrefs' => backend.ClientPrefs,
+			#if ACHIEVEMENTS_ALLOWED
+			'Achievements' => backend.Achievements,
+			#end
 		]);
 		#end
 	}

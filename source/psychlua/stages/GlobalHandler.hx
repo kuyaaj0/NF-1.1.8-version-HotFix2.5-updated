@@ -1,13 +1,13 @@
 package psychlua.stages;
 
 class GlobalHandler {
-	private static var grp:Array<HScript>;
+	private static var grp:HScriptPack;
 
 	public static function init() {
-		if(grp != null && grp.length > 0) for(sc in grp) {
-			sc.destroy();
+		if(grp != null) {
+			grp.destroy();
 		}
-		grp = [];
+		grp = new HScriptPack();
 
 		#if MODS_ALLOWED
 		var paths:Array<String> = [];
@@ -19,13 +19,13 @@ class GlobalHandler {
 			for(fn in FileSystem.readDirectory(path)) {
 				if(Path.extension(fn) == "hx") {
 					var sc:HScript = new HScript(path + fn);
-					sc.execute();
-					sc.call("onCreate");
-					grp.push(sc);
+					grp.add(sc);
 				}
 			}
 		}
 		#end
+		grp.execute();
+		grp.call("onCreate");
 
 		globalHandler();
 	}
@@ -73,72 +73,72 @@ class GlobalHandler {
 			switch(id) {
 				case "onStateSwitch":
 					sbCallbacks.set(id, function() {
-						GlobalHandler.call(id);
+						GlobalHandler.grp.call(id);
 					});
 					FlxG.signals.preStateSwitch.add(cast sbCallbacks.get(id));
 				case "onStateSwitchPost":
 					sbCallbacks.set(id, function() {
-						GlobalHandler.call(id);
+						GlobalHandler.grp.call(id);
 					});
 					FlxG.signals.postStateSwitch.add(cast sbCallbacks.get(id));
 				case "onStateCreate":
 					sbCallbacks.set(id, function(state:FlxState) {
-						GlobalHandler.call(id, [state]);
+						GlobalHandler.grp.call(id, [state]);
 					});
 					FlxG.signals.preStateCreate.add(cast sbCallbacks.get(id));
 				case "onGameResized":
 					sbCallbacks.set(id, function(width:Int, height:Int) {
-						GlobalHandler.call(id, [width, height]);
+						GlobalHandler.grp.call(id, [width, height]);
 					});
 					FlxG.signals.gameResized.add(cast sbCallbacks.get(id));
 				case "onGameReset":
 					sbCallbacks.set(id, function() {
-						GlobalHandler.call(id);
+						GlobalHandler.grp.call(id);
 					});
 					FlxG.signals.preGameReset.add(cast sbCallbacks.get(id));
 				case "onGameResetPost":
 					sbCallbacks.set(id, function() {
-						GlobalHandler.call(id);
+						GlobalHandler.grp.call(id);
 					});
 					FlxG.signals.postGameReset.add(cast sbCallbacks.get(id));
 				case "onGameStart":
 					sbCallbacks.set(id, function() {
-						GlobalHandler.call(id);
+						GlobalHandler.grp.call(id);
 					});
 					FlxG.signals.preGameStart.add(cast sbCallbacks.get(id));
 				case "onGameStartPost":
 					sbCallbacks.set(id, function() {
-						GlobalHandler.call(id);
+						GlobalHandler.grp.call(id);
 					});
 					FlxG.signals.postGameStart.add(cast sbCallbacks.get(id));
 				case "onUpdate":
 					sbCallbacks.set(id, function() {
-						GlobalHandler.call(id, [FlxG.elapsed]);
+						GlobalHandler.grp.call(id, [FlxG.elapsed]);
 					});
 					FlxG.signals.preUpdate.add(cast sbCallbacks.get(id));
 				case "onUpdatePost":
 					sbCallbacks.set(id, function() {
-						GlobalHandler.call(id, [FlxG.elapsed]);
+						GlobalHandler.grp.call(id, [FlxG.elapsed]);
 					});
 					FlxG.signals.postUpdate.add(cast sbCallbacks.get(id));
 				case "onDraw":
 					sbCallbacks.set(id, function() {
-						GlobalHandler.call(id);
+						GlobalHandler.grp.call(id);
 					});
 					FlxG.signals.preDraw.add(cast sbCallbacks.get(id));
 				case "onDrawPost":
 					sbCallbacks.set(id, function() {
-						GlobalHandler.call(id);
+						GlobalHandler.grp.call(id);
 					});
 					FlxG.signals.postDraw.add(cast sbCallbacks.get(id));
 				case "onFocusGained":
 					sbCallbacks.set(id, function() {
-						GlobalHandler.call(id);
+						GlobalHandler.grp.call(id);
 					});
 					FlxG.signals.focusGained.add(cast sbCallbacks.get(id));
 				case "onFocusLost":
 					sbCallbacks.set(id, function() {
-						GlobalHandler.call(id);
+						GlobalHandler.grp.call(id);
 					});
 					FlxG.signals.focusLost.add(cast sbCallbacks.get(id));
 				case _:
@@ -146,15 +146,4 @@ class GlobalHandler {
 		}
 	}
 
-	public static function call(funcName:String, ?args:Array<Dynamic>):Dynamic {
-		if(grp != null && grp.length > 0) {
-			for(sc in grp) {
-				if(sc != null && sc.exists(funcName)) {
-					sc.call(funcName, args);
-				}
-			}
-		}
-
-		return null;
-	}
 }

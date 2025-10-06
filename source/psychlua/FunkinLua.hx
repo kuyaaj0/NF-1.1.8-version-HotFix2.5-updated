@@ -26,7 +26,7 @@ import substates.GameOverSubstate;
 import psychlua.LuaUtils;
 import psychlua.LuaUtils.LuaTweenOptions;
 #if HSCRIPT_ALLOWED
-import psychlua.HScript;
+import psychlua.hscript.HScriptBase;
 #end
 import psychlua.DebugLuaText;
 import psychlua.ModchartSprite;
@@ -44,7 +44,6 @@ class FunkinLua
 	public var closed:Bool = false;
 
 	#if HSCRIPT_ALLOWED
-	public var hscript:HScript = null;
 	public var hscriptBase:HScriptBase = null;
 	#end
 
@@ -275,6 +274,23 @@ class FunkinLua
 				game.callOnHScript(funcName, args, ignoreStops, excludeScripts, excludeValues);
 				return true;
 			});
+		
+		set("readJson", function(jsonFile:String)
+		{
+			//var path:String = jsonFile;
+			var path:String = Paths.getPath(jsonFile, TEXT);
+			#if MODS_ALLOWED
+			if (!FileSystem.exists(path))
+				if (!FileSystem.exists(path+'.json'))
+					return {};
+			return Json.parse(File.getContent(path));
+			#else
+			if (!Assets.exists(path))
+				if (!Assets.exists(path+'.json'))
+					return {};
+			return Json.parse(Assets.getText(path));
+			#end
+		});
 
 		set("callScript", function(luaFile:String, funcName:String, ?args:Array<Dynamic> = null)
 		{
@@ -1924,12 +1940,6 @@ class FunkinLua
 		lua = null;
 	#end
 		#if HSCRIPT_ALLOWED
-		if (hscript != null)
-		{
-			hscript.destroy();
-			hscript = null;
-		}
-
 		if (hscriptBase != null)
 			hscriptBase.interp = null;
 		hscriptBase = null;
