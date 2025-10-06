@@ -6,21 +6,23 @@ class SongRect extends FlxSpriteGroup {
     
     public var light:Rect;
     private var bg:FlxSprite;
-    public var diffRectArray:Array<DiffRect> = [];
+    public var diffGroup:Array<DiffRect> = [];
     private var icon:HealthIcon;
 	private var songName:FlxText;
 	private var musican:FlxText;
 
     /////////////////////////////////////////////////////////////////////
 
-    static public var fixHeight:Int = #if mobile 80 #else 60 #end;
+    static public final fixHeight:Int = #if mobile 80 #else 60 #end;
+
+    static public var focusRect:SongRect;
 
     public var id:Int = 0;
     public var currect:Int = 0;
     
     public var onSelectChange:String->Void;
     public function new(songNameSt:String, songChar:String, songMusican:String, songCharter:Array<String>, songColor:Array<Int>) {
-        super(x, y);
+        super(0, 0);
 
         light = new Rect(0, 0, 560, fixHeight, fixHeight / 2, fixHeight / 2, FlxColor.WHITE, 1, 1, EngineSet.mainColor);
         light.antialiasing = ClientPrefs.data.antialiasing;
@@ -112,14 +114,39 @@ class SongRect extends FlxSpriteGroup {
 		bitmap.draw(lineShape);
 	}
 
-    public var onFocus(default, set):Bool = true;
+    public var onFocus(default, set):Bool = true; //是当前这个歌曲被选择
     override function update(elapsed:Float)
 	{
 		super.update(elapsed);
 
         calcX();
 
+        var mouse = FreeplayState.instance.mouseEvent;
+
+		var overlaps = mouse.overlaps(this);
+
+        if (overlaps) {
+            if (mouse.justReleased) {
+                choose();
+            }
+        }
+
+        updateFocus();
         
+	}
+
+    public static function updateFocus() {
+        focusRect = FreeplayState.instance.songGroup[FreeplayState.curSelected];
+    }
+	
+    //////////////////////////////////////////////////////////////////////////////////////////////
+	
+	function choose() {
+	    FreeplayState.curSelected = this.id;
+	    FreeplayState.moveSelected = this.currect;
+	    FreeplayState.instance.changeSelection();   
+        updateFocus();
+        createDiff();
 	}
 
     private function set_onFocus(value:Bool):Bool
@@ -129,16 +156,95 @@ class SongRect extends FlxSpriteGroup {
 		onFocus = value;
 		if (onFocus)
 		{
-			addDiffRect();
+
 		} else {
 			
 		}
 		return value;
 	}
 
-    public function addDiffRect() {
+    //////////////////////////////////////////////////////////////////////////////////////////////
+
+    public var diffAdded:Bool = false;
+    public function createDiff() {
+        if (diffAdded) return;
+
+        Difficulty.loadFromWeek();
+
+        for (mem in FreeplayState.instance.songGroup) {
+            mem.diffAdded = false;
+            if (mem.currect > focusRect.currect) mem.addInterY(fixHeight * 0.15);
+            else if (mem.currect == focusRect.currect) mem.addInterY(fixHeight * 0.1);
+            else mem.addInterY(0);
+            
+            if (mem.currect > focusRect.currect) mem.addDiffY();
+            else mem.addDiffY(false);
+            
+            if (mem != focusRect) mem.destoryDiff();
+        }
         
+        diffAdded = true;
     }
+    
+    public function destoryDiff() {
+        if (!diffAdded) return;
+        
+        diffAdded = false;
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////
+
+    public function scrollFix(isUp:Bool = true) {
+        if (isUp) {
+            
+        } else {
+
+        }
+    }
+
+    /*
+    public function createDiff(color:FlxColor, charter:Array<String>, imme:Bool = false)
+	{
+		desDiff();
+		haveDiffDis = true;
+		for (diff in 0...Difficulty.list.length)
+		{
+			var chart:String = charter[diff];
+			if (charter[diff] == null)
+				chart = charter[0];
+			var rect = new DiffRect(Difficulty.list[diff], color, chart, this);
+			diffRectGroup.add(rect);
+			diffRectArray.push(rect);
+			rect.member = diff;
+			rect.posY = background.height + 10 + diff * 70;
+			if (imme)
+				rect.lerpPosY = rect.posY;
+			if (diff == FreeplayState.curDifficulty)
+				rect.onFocus = true;
+			else
+				rect.onFocus = false;
+		}
+	}
+
+	public function desDiff()
+	{
+		haveDiffDis = false;
+		if (diffRectArray.length < 1)
+			return;
+		for (i in 0...diffRectGroup.length)
+		{
+			diffRectArray.shift();
+		}
+
+		for (member in diffRectGroup.members)
+		{
+			if (member == null)
+				return; // 奇葩bug了属于
+			diffRectGroup.remove(member);
+			member.destroy();
+		}
+	}
+    */
 
     ///////////////////////////////////////////////////////////////////////
 
@@ -149,7 +255,126 @@ class SongRect extends FlxSpriteGroup {
         moveX = Math.pow(Math.abs(this.y + this.light.height / 2 - FlxG.height / 2) / (FlxG.height / 2) * 10, 1.9);
         this.x = FlxG.width - this.light.width + 70 + moveX + chooseX + diffX;
     }
+    
+    var moveTime:Float = 0.3;
 
-    public var moveY:Float = 0;
-    public var diffY:Float = 0;
+    public var interY:Float = 0;
+    public var diffY:Float = 0;    
+    public function moveY(startY:Float) {        
+        this.y = startY + interY + diffY;
+    }
+    
+    private var interTween:FlxTween;
+    public function addInterY(target:Float) {
+        if (interTween != null) interTween.cancel();
+        interTween = FlxTween.num(interY, target, moveTime, {ease: FlxEase.expoInOut}, function(v){interY = v;});
+    }
+    
+    private var diffTween:FlxTween;
+    public function addDiffY(isAdd:Bool = true) {
+        if (diffTween != null) diffTween.cancel();
+        diffTween = FlxTween.num(diffY, isAdd ? Difficulty.list.length * DiffRect.fixHeight * 1.05 : 0, moveTime, {ease: FlxEase.expoInOut}, function(v){diffY = v;});
+    }
+}
+
+class CurLight extends FlxSprite
+{
+    /**
+     * 圆角矩形，带从左到右的透明度渐变，并支持缓存复用。
+     */
+    public function new(
+        X:Float = 0, Y:Float = 0,
+        width:Float = 0, height:Float = 0,
+        roundWidth:Float = 0, roundHeight:Float = 0,
+        Color:FlxColor = FlxColor.WHITE,
+        alphaLeft:Float = 0, alphaRight:Float = 1,
+        easingPower:Float = 1.0
+    ) {
+        super(X, Y);
+
+        var key = CurLight.cacheKey(width, height, roundWidth, roundHeight, alphaLeft, alphaRight, easingPower);
+
+        if (Cache.getFrame(key) == null) {
+            CurLight.addCache(key, width, height, roundWidth, roundHeight, alphaLeft, alphaRight, easingPower);
+        }
+        frames = Cache.getFrame(key);
+
+        antialiasing = ClientPrefs.data.antialiasing;
+        color = Color;
+        alpha = 1;
+    }
+
+    static inline function cacheKey(
+        width:Float, height:Float,
+        roundWidth:Float, roundHeight:Float,
+        alphaLeft:Float, alphaRight:Float,
+        easingPower:Float
+    ):String {
+        var w = Std.int(width);
+        var h = Std.int(height);
+        var rw = Std.int(roundWidth);
+        var rh = Std.int(roundHeight);
+        var al = Std.int(alphaLeft * 1000);
+        var ar = Std.int(alphaRight * 1000);
+        var ep = Std.int(easingPower * 1000);
+        return 'curlight-w'+w+'-h:'+h+'-rw:'+rw+'-rh:'+rh+'-al:'+al+'-ar:'+ar+'-ep:'+ep;
+    }
+
+    static function addCache(
+        key:String,
+        width:Float, height:Float,
+        roundWidth:Float, roundHeight:Float,
+        alphaLeft:Float, alphaRight:Float,
+        easingPower:Float
+    ):Void {
+        var bmp = CurLight.drawCurLight(width, height, roundWidth, roundHeight, alphaLeft, alphaRight, easingPower);
+        var g:FlxGraphic = FlxGraphic.fromBitmapData(bmp);
+        g.persist = true;
+        g.destroyOnNoUse = false;
+        Cache.setFrame(key, g.imageFrame);
+    }
+
+    static function drawCurLight(
+        width:Float, height:Float,
+        roundWidth:Float, roundHeight:Float,
+        alphaLeft:Float, alphaRight:Float,
+        easingPower:Float
+    ):BitmapData {
+        // 圆角遮罩
+        var shape:Shape = new Shape();
+        shape.graphics.beginFill(0xFFFFFFFF);
+        shape.graphics.drawRoundRect(0, 0, Std.int(width), Std.int(height), roundWidth, roundHeight);
+        shape.graphics.endFill();
+
+        var maskBmp:BitmapData = new BitmapData(Std.int(width), Std.int(height), true, 0x00000000);
+        maskBmp.draw(shape);
+
+        // 构建渐变 alpha 并与遮罩相交
+        var finalBmp:BitmapData = new BitmapData(Std.int(width), Std.int(height), true, 0x00000000);
+        var w:Int = Std.int(width);
+        var h:Int = Std.int(height);
+
+        var colAlpha:Array<Int> = [];
+        for (x in 0...w) {
+            var t:Float = w <= 1 ? 1.0 : x / (w - 1);
+            if (easingPower != 1.0) t = Math.pow(t, easingPower);
+            var a:Float = alphaLeft + (alphaRight - alphaLeft) * t;
+            if (a < 0) a = 0; else if (a > 1) a = 1;
+            colAlpha[x] = Std.int(a * 255);
+        }
+
+        for (x in 0...w) {
+            var ca:Int = colAlpha[x];
+            for (y in 0...h) {
+                var m:Int = maskBmp.getPixel32(x, y);
+                var ma:Int = (m >>> 24) & 0xFF;
+                if (ma > 0) {
+                    var fa:Int = ca < ma ? ca : ma;
+                    var pixel:Int = (fa << 24) | 0xFFFFFF;
+                    finalBmp.setPixel32(x, y, pixel);
+                }
+            }
+        }
+        return finalBmp;
+    }
 }

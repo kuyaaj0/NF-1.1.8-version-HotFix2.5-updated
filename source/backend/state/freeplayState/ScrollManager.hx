@@ -22,7 +22,8 @@ class ScrollManager {
             FreeplayState.songPosiData = FreeplayState.instance.songsMove.target = FreeplayState.instance.songsMove.target - SongRect.fixHeight * FreeplayState.instance.inter * target.length;   
                 
             if (FreeplayState.instance.songsMove.lerpData > FreeplayState.instance.songPosiStart + SongRect.fixHeight * FreeplayState.instance.inter * target.length) {
-                FreeplayState.instance.songsMove.lerpData -= SongRect.fixHeight * FreeplayState.instance.inter * target.length;            
+                FreeplayState.instance.songsMove.lerpData -= SongRect.fixHeight * FreeplayState.instance.inter * target.length;     
+                FreeplayState.moveSelected += target.length;
             }     
         }
         else if (FreeplayState.instance.songsMove.target < FreeplayState.instance.songPosiStart - SongRect.fixHeight * FreeplayState.instance.inter * target.length) {
@@ -30,10 +31,11 @@ class ScrollManager {
             
             if (FreeplayState.instance.songsMove.lerpData < FreeplayState.instance.songPosiStart - SongRect.fixHeight * FreeplayState.instance.inter * target.length) {
                 FreeplayState.instance.songsMove.lerpData += SongRect.fixHeight * FreeplayState.instance.inter * target.length;
+                FreeplayState.moveSelected -= target.length;
             }
         }              
 
-        count = FreeplayState.curSelected = Math.floor((FreeplayState.instance.songsMove.target - FreeplayState.instance.songPosiStart) / (SongRect.fixHeight * FreeplayState.instance.inter));
+        count = Math.floor((FreeplayState.instance.songsMove.target - FreeplayState.instance.songPosiStart) / (SongRect.fixHeight * FreeplayState.instance.inter));
 
         if (count == _count) return;
         _count = count;
@@ -47,6 +49,7 @@ class ScrollManager {
                 target[i].currect = i;
             } else {
                 target[i].currect = i - target.length;
+                //target[i].setCurrect();
             }
         }
 
@@ -59,6 +62,7 @@ class ScrollManager {
             if (flipData - target.length-1 - scrollFix >= 0) {
                 for (i in 0...Std.int(flipData - target.length-1 - scrollFix)) {
                     target[i].currect = target[target.length-1].currect+1 + i;
+                    target[i].scrollFix(false);
                 }
             }
         }

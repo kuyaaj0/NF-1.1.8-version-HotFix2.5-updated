@@ -69,7 +69,6 @@ class Paths
 		Cache.localTrackedAssets = [];
 		Cache.currentTrackedFrames = [];
 		Cache.currentTrackedAnims = [];
-		Cache.currentTrackedBitmaps = [];
 		#if !html5 openfl.Assets.cache.clear("songs"); #end
 	}
 
@@ -492,7 +491,7 @@ class Paths
 
 	
 	static var soundMutex:Mutex = new Mutex();
-	public static function returnSound(path:Null<String>, key:String, ?library:String, ?threadLoad:Bool, ?extraLoad:Bool = false)
+	public static function returnSound(path:Null<String>, key:String, ?library:String, ?threadLoad:Bool = false, ?extraLoad:Bool = false)
 	{
 		#if MODS_ALLOWED
 		var modLibPath:String = '';
@@ -501,8 +500,7 @@ class Paths
 		if (path != null)
 			modLibPath += '$path/';
 
-		var thread:Bool = false;
-		if (threadLoad != null) thread = threadLoad;
+		var thread:Bool = threadLoad;
 
 		var file:String = '';
 		

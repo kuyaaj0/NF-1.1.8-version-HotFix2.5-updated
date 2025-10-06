@@ -4,7 +4,6 @@ import haxe.Json;
 
 import lime.utils.Assets;
 
-import openfl.display.BitmapData;
 import openfl.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;
 import openfl.display.BitmapData;
@@ -32,6 +31,7 @@ import luahscript.LuaParser;
 import crowplexus.hscript.Expr;
 import crowplexus.hscript.Tools;
 import crowplexus.hscript.Parser;
+import cutscenes.DialogueBoxPsych;
 
 class LoadingState extends MusicBeatState
 {
@@ -201,15 +201,14 @@ class LoadingState extends MusicBeatState
 
 		super.create();
 
-		startPrepare();
-		startThreads();
-		/*
+		//startPrepare();
+		//startThreads();
+
 		ThreadEvent.create(function() {
 			prepareMutex.acquire();
 			startPrepare();
 			prepareMutex.release();
 		}, startThreads);
-		*/
 	}
 
 
@@ -229,9 +228,6 @@ class LoadingState extends MusicBeatState
 		if (music != null)
 			musicToPrepare = musicToPrepare.concat(music);
 	}
-	
-
-	static var dontPreloadDefaultVoices:Bool = false;
 
 	public static function prepareToSong()
 	{
@@ -320,15 +316,13 @@ class LoadingState extends MusicBeatState
 		if (gfVersion == null)
 			gfVersion = 'gf';
 
-		dontPreloadDefaultVoices = false;
-			preloadCharacter(player1, prefixVocals);
+		preloadCharacter(player1, prefixVocals);
 
-		if (!dontPreloadDefaultVoices && prefixVocals != null)
+		if (prefixVocals != null)
 		{
+			songsToPrepare.push(prefixVocals);
 			songsToPrepare.push('$prefixVocals-Player');
 			songsToPrepare.push('$prefixVocals-Opponent');
-			if(Paths.fileExists('$prefixVocals.${Paths.SOUND_EXT}', SOUND, false, 'songs'))
-				songsToPrepare.push(prefixVocals);
 		}
 
 		if (player2 != player1)
@@ -393,14 +387,12 @@ class LoadingState extends MusicBeatState
 			}
 			#end
 
-			imagesToPrepare.push('icons/' + char);
-			imagesToPrepare.push('icons/icon-' + char);
+			imagesToPrepare.push('icons/' + character.healthicon);
+			imagesToPrepare.push('icons/icon-' + character.healthicon);
 
 			if (prefixVocals != null && character.vocals_file != null && character.vocals_file.length > 0)
 			{
 				songsToPrepare.push(prefixVocals + "-" + character.vocals_file);
-				if (char == PlayState.SONG.player1)
-					dontPreloadDefaultVoices = true;
 			}
 			startLuaNamed('characters/' + char + '.lua');
 		}
@@ -449,6 +441,10 @@ class LoadingState extends MusicBeatState
 		imagesToPrepare.push(uiPrefix + 'set' + uiSuffix);
 		imagesToPrepare.push(uiPrefix + 'go' + uiSuffix);
 		imagesToPrepare.push('healthBar');
+
+		if (PlayState.isStoryMode)  {
+			imagesToPrepare.push('speech_bubble');
+		}
 	}
 
 	static function preloadScript()
@@ -513,6 +509,7 @@ class LoadingState extends MusicBeatState
 
 	static function luaFilesCheck(path:String)
 	{
+		trace('LUA: load Path: ' + path);
 		var input:String = File.getContent(path);	
 		//trace('LUA: load Path: ' + path);
 
@@ -522,47 +519,75 @@ class LoadingState extends MusicBeatState
 
 		var parser = new LuaParser();
 		var e:LuaExpr = parser.parseFromString(input);
+		trace('work');
 	
 		ScriptExprTools.lua_searchCallback(e, function(e:LuaExpr, params:Array<LuaExpr>) {
 			switch(e.expr) {
 				case EIdent('makeLuaSprite'):
-					if (ScriptExprTools.lua_getValue(params[1]) != null)
+					if (ScriptExprTools.lua_getValue(params[1]) != null || ScriptExprTools.lua_getValue(params[1]) != '')
 						imagesToPrepare.push(Std.string(ScriptExprTools.lua_getValue(params[1])));
 				case EIdent('makeAnimatedLuaSprite'):
-					if (ScriptExprTools.lua_getValue(params[1]) != null)
+					if (ScriptExprTools.lua_getValue(params[1]) != null || ScriptExprTools.lua_getValue(params[1]) != '')
 							imagesToPrepare.push(Std.string(ScriptExprTools.lua_getValue(params[1])));
 				case EIdent('precacheImage'):
-					if (ScriptExprTools.lua_getValue(params[0]) != null)
+					if (ScriptExprTools.lua_getValue(params[0]) != null || ScriptExprTools.lua_getValue(params[0]) != '')
 							imagesToPrepare.push(Std.string(ScriptExprTools.lua_getValue(params[0])));
 				case EIdent('addCharacterToList'):
-					if (ScriptExprTools.lua_getValue(params[0]) != null)
+					if (ScriptExprTools.lua_getValue(params[0]) != null || ScriptExprTools.lua_getValue(params[0]) != '')
 							imagesToPrepare.push(Std.string(ScriptExprTools.lua_getValue(params[0])));
 
 				////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 				case EIdent('precacheSound'):
-					if (ScriptExprTools.lua_getValue(params[0]) != null)
+					if (ScriptExprTools.lua_getValue(params[0]) != null || ScriptExprTools.lua_getValue(params[0]) != '')
 							soundsToPrepare.push(Std.string(ScriptExprTools.lua_getValue(params[0])));
 				case EIdent('precacheMusic'):
-					if (ScriptExprTools.lua_getValue(params[0]) != null)
+					if (ScriptExprTools.lua_getValue(params[0]) != null || ScriptExprTools.lua_getValue(params[0]) != '')
 							musicToPrepare.push(Std.string(ScriptExprTools.lua_getValue(params[0])));
 
 				case EIdent('playSound'):
-					if (ScriptExprTools.lua_getValue(params[0]) != null)
+					if (ScriptExprTools.lua_getValue(params[0]) != null || ScriptExprTools.lua_getValue(params[0]) != '')
 							soundsToPrepare.push(Std.string(ScriptExprTools.lua_getValue(params[0])));
 				case EIdent('playMusic'):
-					if (ScriptExprTools.lua_getValue(params[0]) != null)
+					if (ScriptExprTools.lua_getValue(params[0]) != null || ScriptExprTools.lua_getValue(params[0]) != '')
 							musicToPrepare.push(Std.string(ScriptExprTools.lua_getValue(params[0])));
 
 				////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 				case EIdent('addLuaScript'):
-					if (ScriptExprTools.lua_getValue(params[0]) != null)
+					if (ScriptExprTools.lua_getValue(params[0]) != null || ScriptExprTools.lua_getValue(params[0]) != '')
 							startLuaNamed(Std.string(ScriptExprTools.lua_getValue(params[0])));
 
 				case EIdent('runHaxeCode'):
-					if (ScriptExprTools.lua_getValue(params[0]) != null)
+					if (ScriptExprTools.lua_getValue(params[0]) != null || ScriptExprTools.lua_getValue(params[0]) != '')
 							hscriptFilesCheck(Std.string(ScriptExprTools.lua_getValue(params[0])), false);
+				case EIdent('startDialogue'):
+					if (PlayState.isStoryMode)  {
+						if (ScriptExprTools.lua_getValue(params[0]) != null || ScriptExprTools.lua_getValue(params[0]) != '') {
+							var dialogueFile = Std.string(ScriptExprTools.lua_getValue(params[0]));
+							var path:String;
+							#if MODS_ALLOWED
+							path = Paths.modsJson(Paths.formatToSongPath(PlayState.SONG.song) + '/' + dialogueFile);
+							if (!FileSystem.exists(path))
+							#end
+							path = Paths.json(Paths.formatToSongPath(PlayState.SONG.song) + '/' + dialogueFile);
+
+							#if MODS_ALLOWED
+							if (FileSystem.exists(path))
+							#else
+							if (Assets.exists(path))
+							#end
+							{
+								var dialogueList:DialogueFile = DialogueBoxPsych.parseDialogue(path);
+								for (i in 0...dialogueList.dialogue.length)							
+									if (dialogueList.dialogue[i] != null)								
+										imagesToPrepare.push(Std.string(dialogueList.dialogue[i].portrait));																
+							}
+						}
+						if (ScriptExprTools.lua_getValue(params[1]) != null || ScriptExprTools.lua_getValue(params[1]) != '') {
+							musicToPrepare.push(Std.string(ScriptExprTools.lua_getValue(params[1])));
+						}
+					}
 				case _:
 			}
 		});
@@ -608,16 +633,16 @@ class LoadingState extends MusicBeatState
 					ScriptExprTools.hx_recursion(e, function(e:Expr) {
 						switch(Tools.expr(e)) {
 							case EIdent("Paths") if(f == "image"):
-								if (ScriptExprTools.hx_getValue(params[0]) != null)
+								if (ScriptExprTools.hx_getValue(params[0]) != null || ScriptExprTools.hx_getValue(params[0]) != '')
 									imagesToPrepare.push(Std.string(ScriptExprTools.hx_getValue(params[0])));
 							case EIdent("Paths") if(f == "cacheBitmap"):
-								if (ScriptExprTools.hx_getValue(params[0]) != null)
+								if (ScriptExprTools.hx_getValue(params[0]) != null || ScriptExprTools.hx_getValue(params[0]) != '')
 									imagesToPrepare.push(Std.string(ScriptExprTools.hx_getValue(params[0])));
 							case EIdent("Paths") if(f == "sound"):
-								if (ScriptExprTools.hx_getValue(params[0]) != null)
+								if (ScriptExprTools.hx_getValue(params[0]) != null || ScriptExprTools.hx_getValue(params[0]) != '')
 									soundsToPrepare.push(Std.string(ScriptExprTools.hx_getValue(params[0])));
 							case EIdent("Paths") if(f == "music"):
-								if (ScriptExprTools.hx_getValue(params[0]) != null)
+								if (ScriptExprTools.hx_getValue(params[0]) != null || ScriptExprTools.hx_getValue(params[0]) != '')
 									musicToPrepare.push(Std.string(ScriptExprTools.hx_getValue(params[0])));
 							case _:
 						}
@@ -712,6 +737,8 @@ class LoadingState extends MusicBeatState
 
 	public static function startThreads()
 	{
+		Sys.sleep(0.01);
+
 		loadMax = imagesToPrepare.length + soundsToPrepare.length + musicToPrepare.length + songsToPrepare.length;
 		loaded = 0;
 
@@ -731,7 +758,7 @@ class LoadingState extends MusicBeatState
 			{
 				try
 				{	
-					var bitmap:BitmapData;
+					var bitmap:BitmapData = null;
 					var file:String = null;
 
 					#if MODS_ALLOWED
@@ -809,7 +836,6 @@ class LoadingState extends MusicBeatState
 		countMutex.acquire();
 		loaded++;
 		countMutex.release();
-		Sys.sleep(0.001);
 	}
 
 	//////////////////////////////////////////////
@@ -852,14 +878,13 @@ class LoadingState extends MusicBeatState
 			if (member.endsWith('/') || (!Paths.fileExists(myKey, type, false, library) && (doTrace = true)))
 			{
 				arr.remove(member);
-				//if (doTrace)
-					//trace('Removed invalid $prefix: $member');
 			}
 			else
 				i++;
 		}
 	}
 
+	/*
 	static public function loadCache() {
 		for (key => bitmap in requestedBitmaps)
 		{
@@ -870,6 +895,7 @@ class LoadingState extends MusicBeatState
 		}
 		requestedBitmaps.clear();
 	}
+	*/
 	
 	//////////////////////////////////////////////
 

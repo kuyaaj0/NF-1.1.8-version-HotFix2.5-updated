@@ -7,7 +7,6 @@ import sys.io.File;
 #end
 import tjson.TJSON as Json;
 import openfl.utils.Assets;
-// import backend.Controls;
 #if sys
 import sys.FileSystem;
 import sys.io.File;
@@ -204,6 +203,10 @@ class DialogueBoxPsych extends FlxSpriteGroup
 				}
 			}
 
+			if (Controls.instance.justPressed('back')) {
+				endDialogue();
+			}
+
 			if (Controls.instance.justPressed('accept') || justTouched)
 			{
 				// If the current dialogue still going
@@ -221,30 +224,7 @@ class DialogueBoxPsych extends FlxSpriteGroup
 				// If the current dialogue is finished and it's the last dialogue
 				else if (currentText >= dialogueList.dialogue.length)
 				{
-					dialogueEnded = true;
-					for (i in 0...textBoxTypes.length)
-					{
-						var checkArray:Array<String> = ['', 'center-'];
-						var animName:String = box.animation.curAnim.name;
-						for (j in 0...checkArray.length)
-						{
-							if (animName == checkArray[j] + textBoxTypes[i] || animName == checkArray[j] + textBoxTypes[i] + 'Open')
-							{
-								box.animation.play(checkArray[j] + textBoxTypes[i] + 'Open', true);
-							}
-						}
-					}
-
-					box.animation.curAnim.curFrame = box.animation.curAnim.frames.length - 1;
-					box.animation.curAnim.reverse();
-					if (daText != null)
-					{
-						daText.kill();
-						remove(daText);
-						daText.destroy();
-					}
-
-					FlxG.sound.music.fadeOut(1, 0);
+					endDialogue();
 				}
 				else
 				{
@@ -493,6 +473,33 @@ class DialogueBoxPsych extends FlxSpriteGroup
 		{
 			nextDialogueThing();
 		}
+	}
+
+	function endDialogue() {
+		dialogueEnded = true;
+		for (i in 0...textBoxTypes.length)
+		{
+			var checkArray:Array<String> = ['', 'center-'];
+			var animName:String = box.animation.curAnim.name;
+			for (j in 0...checkArray.length)
+			{
+				if (animName == checkArray[j] + textBoxTypes[i] || animName == checkArray[j] + textBoxTypes[i] + 'Open')
+				{
+					box.animation.play(checkArray[j] + textBoxTypes[i] + 'Open', true);
+				}
+			}
+		}
+
+		box.animation.curAnim.curFrame = box.animation.curAnim.frames.length - 1;
+		box.animation.curAnim.reverse();
+		if (daText != null)
+		{
+			daText.kill();
+			remove(daText);
+			daText.destroy();
+		}
+
+		FlxG.sound.music.fadeOut(1, 0);
 	}
 
 	public static function parseDialogue(path:String):DialogueFile

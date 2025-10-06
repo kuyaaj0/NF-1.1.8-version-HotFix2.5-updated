@@ -344,15 +344,15 @@ class FlxHitbox extends FlxMobileInputManager
 		{
 			hint.onDown.callback = function()
 			{
-				alpha = ClientPrefs.data.playControlsAlpha;
+				hint.alpha = ClientPrefs.data.playControlsAlpha;
 			}
 			hint.onUp.callback = function()
 			{
-				alpha = 0.00001;
+				hint.alpha = 0.00001;
 			}
 			hint.onOut.callback = function()
 			{
-				alpha = 0.00001;
+				hint.alpha = 0.00001;
 			}
 		}
 		#if FLX_DEBUG
