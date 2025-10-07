@@ -1195,7 +1195,9 @@ class FunkinLua
 				leSprite.imageName = image;
 				game.modchartSprites.set(tag, leSprite);
 				leSprite.active = true;
-			}
+			} /*else {
+				trace('stop make sprite: ' + tag);
+			} */
 		});
 		set("makeAnimatedLuaSprite", function(tag:String, ?image:String = null, ?x:Float = 0, ?y:Float = 0, ?spriteType:String = "sparrow")
 		{
@@ -1207,7 +1209,9 @@ class FunkinLua
 				LuaUtils.loadFrames(leSprite, image, spriteType);
 				leSprite.imageName = image;
 				game.modchartSprites.set(tag, leSprite);
-			}
+			} /*else {
+				trace('stop make sprite: ' + tag);
+			} */
 		});
 
 		set("makeGraphic", function(obj:String, width:Int = 256, height:Int = 256, color:String = 'FFFFFF')
@@ -1305,8 +1309,10 @@ class FunkinLua
 			if (mySprite == null)
 				return false;
 
-			if (game.checkSprites.get(tag) != null && game.checkSprites.get(tag) == mySprite.imageName)
+			if (game.checkSprites.get(tag) != null && game.checkSprites.get(tag) == mySprite.imageName) {
+				//trace('already added: ' + tag);
 				return false;
+			}
 
 			if (front)
 				LuaUtils.getTargetInstance().add(mySprite);
@@ -1828,7 +1834,6 @@ class FunkinLua
 		CustomSubstate.implement(this);
 		ShaderFunctions.implement(this);
 		DeprecatedFunctions.implement(this);
-		#if android AndroidFunctions.implement(this); #end
 
 		try
 		{
