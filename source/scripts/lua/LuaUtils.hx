@@ -369,9 +369,7 @@ class LuaUtils
 	{
 		#if LUA_ALLOWED
 		if (!PlayState.instance.modchartTexts.exists(tag))
-		{
 			return;
-		}
 
 		var target:FlxText = PlayState.instance.modchartTexts.get(tag);
 		PlayState.instance.remove(target, true);
