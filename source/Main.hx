@@ -132,7 +132,7 @@ class Main extends Sprite
 		Iris.addProxyImport("flixel.util.FlxColor", crowplexus.hscript.proxy.flixel.util.ProxyFlxColor);
 		#end*/
 
-		#if LUA_ALLOWED llua.Lua.set_callbacks_function(cpp.Callable.fromStaticFunction(psychlua.CallbackHandler.call)); #end
+		#if LUA_ALLOWED llua.Lua.set_callbacks_function(cpp.Callable.fromStaticFunction(scripts.lua.CallbackHandler.call)); #end
 		Controls.instance = new Controls();
 
 		ExtraKeysHandler.instance = new ExtraKeysHandler();
@@ -266,14 +266,14 @@ class Main extends Sprite
 			}
 
 		trace("scriptClass Paths: " + paths);
-		psychlua.stages.modules.ScriptedModuleNotify.init([psychlua.stages.modules.ScriptedModule], paths, psychlua.stages.modules.ModuleHandler.includeExtension, [
+		scripts.stages.modules.ScriptedModuleNotify.init([scripts.stages.modules.ScriptedModule], paths, scripts.stages.modules.ModuleHandler.includeExtension, [
 			// Extended Class
-			"ScriptedState" => psychlua.scriptClasses.ScriptedState,
-			"ScriptedBaseStage" => psychlua.scriptClasses.ScriptedBaseStage,
-			"ScriptedGroup" => psychlua.scriptClasses.ScriptedGroup,
-			"ScriptedSprite" => psychlua.scriptClasses.ScriptedSprite,
-			"ScriptedSpriteGroup" => psychlua.scriptClasses.ScriptedSpriteGroup,
-			"ScriptedSubstate" => psychlua.scriptClasses.ScriptedSubstate,
+			"ScriptedState" => scripts.scriptClasses.ScriptedState,
+			"ScriptedBaseStage" => scripts.scriptClasses.ScriptedBaseStage,
+			"ScriptedGroup" => scripts.scriptClasses.ScriptedGroup,
+			"ScriptedSprite" => scripts.scriptClasses.ScriptedSprite,
+			"ScriptedSpriteGroup" => scripts.scriptClasses.ScriptedSpriteGroup,
+			"ScriptedSubstate" => scripts.scriptClasses.ScriptedSubstate,
 
 			// Flixel Something
 			"FlxG" => flixel.FlxG,

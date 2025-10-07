@@ -181,8 +181,8 @@ class InitState extends MusicBeatState
 
 		Main.initScriptModules();
 		#if HSCRIPT_ALLOWED
-		psychlua.stages.modules.ModuleHandler.init();
-		psychlua.stages.GlobalHandler.init();
+		scripts.stages.modules.ModuleHandler.init();
+		scripts.stages.GlobalHandler.init();
 		#end
 
 		ColorblindFilter.UpdateColors();

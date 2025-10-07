@@ -12,7 +12,6 @@ import openfl.display.Shape;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFilterFrames;
-import flixel.FlxState;
 
 import states.FreeplayState;
 

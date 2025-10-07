@@ -3,7 +3,7 @@ package states.editors;
 import backend.StageData;
 import backend.PsychCamera;
 import objects.Character;
-import psychlua.LuaUtils;
+import scripts.LuaUtils;
 import flixel.FlxObject;
 import flixel.addons.display.FlxBackdrop;
 import flixel.addons.display.FlxGridOverlay;
@@ -13,7 +13,7 @@ import openfl.display.Sprite;
 import openfl.net.FileReference;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
-import psychlua.ModchartSprite;
+import scripts.ModchartSprite;
 import flash.net.FileFilter;
 
 class StageEditorState extends MusicBeatState implements PsychUIEventHandler.PsychUIEvent

@@ -47,13 +47,13 @@ import objects.*;
 import states.stages.*;
 import states.stages.objects.*;
 #if LUA_ALLOWED
-import psychlua.*;
+import scripts.lua.*;
 #else
-import psychlua.LuaUtils;
+import scripts.lua.LuaUtils;
 #end
 #if HSCRIPT_ALLOWED
-import psychlua.hscript.HScript;
-import psychlua.hscript.HScriptPack;
+import scripts.hscript.HScript;
+import scripts.hscript.HScriptPack;
 import crowplexus.hscript.Expr.Error as IrisError;
 import crowplexus.hscript.Printer;
 #end
@@ -305,7 +305,7 @@ class PlayState extends MusicBeatState
 	#if LUA_ALLOWED public var luaArray:Array<FunkinLua> = []; #end
 
 	#if (LUA_ALLOWED || HSCRIPT_ALLOWED)
-	private var luaDebugGroup:FlxTypedGroup<psychlua.DebugLuaText>;
+	private var luaDebugGroup:FlxTypedGroup<DebugLuaText>;
 	#end
 
 	public var introSoundsSuffix:String = '';
@@ -484,8 +484,8 @@ class PlayState extends MusicBeatState
 				new PhillyBlazin(); // Weekend 1 - Blazin
 			case _: //custom class
 				if(Reflect.hasField(stageData, "specifyClass") && stageData.specifyClass != null) {
-					if(psychlua.scriptClasses.ScriptedBaseStage.__sc_scriptClassLists().contains(stageData.specifyClass)) {
-						psychlua.scriptClasses.ScriptedBaseStage.createScriptClassInstance(stageData.specifyClass);
+					if(scripts.scriptClasses.ScriptedBaseStage.__sc_scriptClassLists().contains(stageData.specifyClass)) {
+						scripts.scriptClasses.ScriptedBaseStage.createScriptClassInstance(stageData.specifyClass);
 					} else {
 						var resolve:Dynamic = Type.resolveClass(stageData.specifyClass);
 						if(resolve != null) Type.createInstance(cast resolve, []);
@@ -514,7 +514,7 @@ class PlayState extends MusicBeatState
 		}
 
 		#if (LUA_ALLOWED || HSCRIPT_ALLOWED)
-		luaDebugGroup = new FlxTypedGroup<psychlua.DebugLuaText>();
+		luaDebugGroup = new FlxTypedGroup<DebugLuaText>();
 		luaDebugGroup.cameras = [camOther];
 		add(luaDebugGroup);
 		#end
@@ -882,7 +882,7 @@ class PlayState extends MusicBeatState
 	public function addTextToDebug(text:String, color:FlxColor)
 	{
 		if (!ClientPrefs.data.developerMode) return;
-		var newText:psychlua.DebugLuaText = luaDebugGroup.recycle(psychlua.DebugLuaText);
+		var newText:DebugLuaText = luaDebugGroup.recycle(DebugLuaText);
 		newText.text = text;
 		#if android
 		newText.text = StringTools.replace(text, "/storage/emulated/0/.NovaFlare Engine/", ""); // delete stupid path
@@ -892,7 +892,7 @@ class PlayState extends MusicBeatState
 		newText.alpha = 1;
 		newText.setPosition(10, 8 - newText.height);
 
-		luaDebugGroup.forEachAlive(function(spr:psychlua.DebugLuaText)
+		luaDebugGroup.forEachAlive(function(spr:DebugLuaText)
 		{
 			spr.y += newText.height + 2;
 		});
