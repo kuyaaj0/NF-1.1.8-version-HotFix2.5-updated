@@ -2,17 +2,13 @@
   "dependencies": [
     {
       "name": "lime",
-      "type": "git",
-      "dir": null,
-      "ref": "main",
-      "url": "https://github.com/NovaFlare-Engine-haxelib/lime"
+      "type": "haxelib",
+      "version": "8.2.2"
     },
     {
       "name": "openfl",
-      "type": "git",
-      "dir": null,
-      "ref": "main",
-      "url": "https://github.com/NovaFlare-Engine-haxelib/openfl"
+      "type": "haxelib",
+      "version": "9.4.2"
     },
     {
       "name": "flixel",

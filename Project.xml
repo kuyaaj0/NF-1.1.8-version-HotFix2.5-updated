@@ -157,6 +157,9 @@
 	<haxedef name="HXCPP_ALIGN_ALLOC"/>
 	<haxedef name="HX_HAS_ATOMIC"/>
 
+	<haxedef name="lime_threads" if="cpp || hl || neko || java || cs || nodejs" />
+	<haxedef name="openfl_enable_experimental_update_queue"/>
+
 	<!-- ______________________________ Haxedefines _____________________________ -->
 
 	<!--Enable the Flixel core recording system-->

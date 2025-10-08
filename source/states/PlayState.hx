@@ -2420,7 +2420,7 @@ class PlayState extends MusicBeatState
 			while (unspawnNotes.length > 0 && unspawnNotes[0].strumTime - Conductor.songPosition < time)
 			{
 				var dunceNote:Note = unspawnNotes[0];
-				notes.insert(0, dunceNote);
+				notes.insert(0, dunceNote); //待研究
 				dunceNote.spawned = true;
 
 				callOnLuas('onSpawnNote', [

@@ -23,6 +23,11 @@ import backend.state.loadingState.*;
 import sys.thread.Thread;
 import sys.thread.FixedThreadPool;
 import sys.thread.Mutex;
+
+
+import lime.system.ThreadPool;
+import lime.system.WorkOutput;
+
 import thread.ThreadEvent;
 
 import luahscript.exprs.LuaExpr;
@@ -39,10 +44,10 @@ class LoadingState extends MusicBeatState
 
 	static var requestedBitmaps:Map<String, BitmapData> = []; //储存下加载的纹理，再最后进入playstate的时候输出总结
 
-	static var soundThread:FixedThreadPool = null; //音乐线程池
+	static var soundThread:ThreadPool = null; //音乐线程池
 	static var sounMutex:Mutex = new Mutex(); //音乐锁
 
-	static var imageThread:FixedThreadPool = null; //图片线程池
+	static var imageThread:ThreadPool = null; //图片线程池
 	static var imageMutex:Mutex = new Mutex(); //图片锁
 
 	static var prepareMutex:Mutex = new Mutex(); //准备资源锁，这是为了防止数据提前被主线程接收
@@ -94,9 +99,9 @@ class LoadingState extends MusicBeatState
 					soundsToPrepare = [];
 					musicToPrepare = [];
 					songsToPrepare = [];
-					if (imageThread != null) imageThread.shutdown(); // kill all workers safely
+					if (imageThread != null) imageThread.cancel(); // kill all workers safely
 					imageThread = null;
-					if (soundThread != null) soundThread.shutdown(); // kill all workers safely
+					if (soundThread != null) soundThread.cancel(); // kill all workers safely
 					soundThread = null;
 					break;
 				}
@@ -508,7 +513,6 @@ class LoadingState extends MusicBeatState
 
 	static function luaFilesCheck(path:String)
 	{
-		trace('LUA: load Path: ' + path);
 		var input:String = File.getContent(path);	
 		//trace('LUA: load Path: ' + path);
 
@@ -518,7 +522,7 @@ class LoadingState extends MusicBeatState
 
 		var parser = new LuaParser();
 		var e:LuaExpr = parser.parseFromString(input);
-		trace('work');
+		//trace('work');
 	
 		ScriptExprTools.lua_searchCallback(e, function(e:LuaExpr, params:Array<LuaExpr>) {
 			switch(e.expr) {
@@ -727,9 +731,9 @@ class LoadingState extends MusicBeatState
 		{
 			if (bitmap != null && Paths.cacheBitmap(key, bitmap, false) != null) {
 				FlxG.bitmap.add(bitmap, false, key);
-				trace('finished preloading image $key');
+				trace('IMAGE: finished preloading image $key');
 			} else
-				trace('failed to cache image $key');
+				trace('IMAGE: failed to cache image $key');
 		}
 		return (loaded == loadMax);
 	}
@@ -741,100 +745,129 @@ class LoadingState extends MusicBeatState
 		loadMax = imagesToPrepare.length + soundsToPrepare.length + musicToPrepare.length + songsToPrepare.length;
 		loaded = 0;
 
-		imageThread = new FixedThreadPool(ClientPrefs.data.loadImageTheards);
-		soundThread = new FixedThreadPool(ClientPrefs.data.loadMusicTheards);
+		ThreadPool.workLoad = 0.1;
+		imageThread = new ThreadPool(Std.int(ClientPrefs.data.loadImageTheards / 2), ClientPrefs.data.loadImageTheards, MULTI_THREADED);
+		soundThread = new ThreadPool(Std.int(ClientPrefs.data.loadMusicTheards / 2), ClientPrefs.data.loadMusicTheards, MULTI_THREADED);
+
+		soundThreadInited = imageThreadInited = false;
 
 		for (sound in soundsToPrepare)
-			initThread(() -> Paths.sound(sound, true), 'sound $sound');
+			initSoundThread(() -> Paths.sound(sound, true), 'sound $sound');
 		for (music in musicToPrepare)
-			initThread(() -> Paths.music(music, true), 'music $music');
+			initSoundThread(() -> Paths.music(music, true), 'music $music');
 		for (song in songsToPrepare)
-			initThread(() -> Paths.returnSound(null, song, 'songs', true), 'song $song');
+			initSoundThread(() -> Paths.returnSound(null, song, 'songs', true), 'song $song');
 
-		// for images, they get to have their own thread
+		
 		for (image in imagesToPrepare) {
-			imageThread.run(() ->
+			initImageThread(() -> 
 			{
-				try
-				{	
-					var bitmap:BitmapData = null;
-					var file:String = null;
+				var bitmap:BitmapData = null;
+				var file:String = null;
 
-					#if MODS_ALLOWED
-					file = Paths.modsImages(image);
+				#if MODS_ALLOWED
+				file = Paths.modsImages(image);
+				if (Cache.currentTrackedAssets.exists(file))
+				{
+					return {filePath: file, bitmap: null, error: null, alreadyLoaded: false};
+				}
+				else if (FileSystem.exists(file)) {
+					try { 
+						bitmap = BitmapData.fromFile(file); 
+					} catch(e) {
+						return {filePath: file, bitmap: null, error: e, alreadyLoaded: false};
+					}
+				}
+				else
+				#end
+				{
+					file = Paths.getPath('images/$image.png', IMAGE);
 					if (Cache.currentTrackedAssets.exists(file))
 					{
-						addLoadCount();
-						return;
+						return {filePath: file, bitmap: null, error: null, alreadyLoaded: false};
 					}
-					else if (FileSystem.exists(file)) {
-						try{ bitmap = BitmapData.fromFile(file); }
-					}
-					else
-					#end
-					{
-						file = Paths.getPath('images/$image.png', IMAGE);
-						if (Cache.currentTrackedAssets.exists(file))
-						{
-							addLoadCount();
-							return;
-						}
-						else if (OpenFlAssets.exists(file, IMAGE)) {
-							try{bitmap = OpenFlAssets.getBitmapData(file); }
-						}
-						else
-						{
-							trace('no such image $image exists');
-							addLoadCount();
-							return;
+					else if (OpenFlAssets.exists(file, IMAGE)) {
+						try { 
+							bitmap = OpenFlAssets.getBitmapData(file); 
+						} catch(e) {
+							return {filePath: file, bitmap: null, error: e, alreadyLoaded: false};
 						}
 					}
-
-					if (bitmap != null) {
-						imageMutex.acquire();
-						requestedBitmaps.set(file, bitmap);
-						imageMutex.release();
-					}
-					else
-						trace('oh no the image is null NOOOO ($image)');		
 				}
-				catch (e:Dynamic)
-				{
-					Sys.sleep(0.001);
-					trace('ERROR! fail on preloading image $image');
-				}
-				addLoadCount();
+				return {filePath: file, bitmap: bitmap, error: null, alreadyLoaded: false};
 			});
-		}
+		};
 	}
 
-	static function initThread(func:Void->Dynamic, traceData:String)
-	{
-		soundThread.run(() ->
-		{
-			try
-			{
-				var ret:Dynamic = func();
+	static function initSoundThread(func:Void->Dynamic, traceData:String):Void {
+		ensureSoundThreadInited();
+		soundThread.run(preloadSoundWork, {func: func, traceData: traceData});
+	}
 
-				if (ret != null)
-					trace('finished preloading $traceData');
-				else
-					trace('ERROR! fail on preloading $traceData');
-			}
-			catch (e:Dynamic)
-			{
-				Sys.sleep(0.001);
-				trace('ERROR! fail on preloading $traceData');
-			}
+	static var soundThreadInited:Bool = false;
+	static function ensureSoundThreadInited():Void {
+		if (soundThreadInited) return;
+		soundThreadInited = true;
+		soundThread.onComplete.add(function(msg:{traceData:String}) {
+			trace('MUSIC: finished preloading ' + msg.traceData);
+			addLoadCount();
+		});
+		soundThread.onError.add(function(msg:{traceData:String, error:Dynamic}) {
+			trace('MUSIC: ERROR! fail on preloading ' + msg.traceData);
 			addLoadCount();
 		});
 	}
 
-	static var countMutex:Mutex = new Mutex();
+	static function preloadSoundWork(state:{func:Void->Dynamic, traceData:String}, out:WorkOutput):Void {
+		try {
+			var ret:Dynamic = state.func();
+			if (ret != null) {
+				out.sendComplete({traceData: state.traceData});
+			} else {
+				out.sendError({traceData: state.traceData, error: "fail"});
+			}
+		} catch (e:Dynamic) {
+			out.sendError({traceData: state.traceData, error: e});
+		}
+	}
+
+	///////////////////////////////////////////////////////////////////////////////
+
+	static function initImageThread(func:Void->Dynamic):Void {
+		ensureImageThreadInited();
+		imageThread.run(preloadImageWork, {func: func});
+	}
+
+	static var imageThreadInited:Bool = false;
+	static function ensureImageThreadInited():Void {
+		if (imageThreadInited) return;
+		imageThreadInited = true;
+		imageThread.onComplete.add(function(msg:{filePath:String, bitmap:BitmapData, alreadyLoaded:Bool}) {
+			if (!msg.alreadyLoaded) requestedBitmaps.set(msg.filePath, msg.bitmap);
+			addLoadCount();
+		});
+		imageThread.onError.add(function(msg:{filePath:String, error:Dynamic}) {
+			if (msg.error != null) trace('IMAGE: load image ' + msg.filePath + ' failed: ' + Std.string(msg.error));
+			else trace('IMAGE: no such image ' + msg.filePath + ' exists');
+			addLoadCount();
+		});
+	}
+
+	static function preloadImageWork(state:{func:Void->Dynamic}, out:WorkOutput):Void {
+		try {
+			var result:Dynamic = state.func();
+			if ((Reflect.hasField(result, "bitmap") && result.bitmap != null) || (Reflect.hasField(result, "alreadyLoaded") && result.alreadyLoaded)) {
+				out.sendComplete({filePath: result.filePath, bitmap: result.bitmap, alreadyLoaded: result.alreadyLoaded});
+			} else {
+				out.sendError({filePath: result != null ? result.filePath : null, error: result != null ? result.error : "fail"});
+			}
+		} catch (e:Dynamic) {
+			out.sendError({filePath: null, error: e});
+		}
+	}
+
 	static function addLoadCount() {
-		countMutex.acquire();
 		loaded++;
-		countMutex.release();
 	}
 
 	//////////////////////////////////////////////
