@@ -260,8 +260,8 @@
 </android>
 
 <config>
-    <android gradle-version="7.4" />  <!-- Gradle 7.4 -->
-    <android gradle-plugin="7.0.4" /> <!-- AGP 7.0.4 -->
+    <android gradle-version="8.4" />  <!-- Gradle 8.4 -->
+    <android gradle-plugin="7.4.1" /> <!-- AGP 8.4.1 -->
     <!--Fuck you xcode-->
     <ios deployment="12.0" />
 </config>
