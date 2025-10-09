@@ -11,13 +11,13 @@ class ScrollManager {
     public function check(state:String) {
         scrollFix = Math.ceil(FreeplayState.instance.songPosiStart / SongRect.fixHeight) + 2;
         if (state == "up" || state == "down") {
-            moveElementToPosition();
+            moveElementToPosition(state);
         }
     }
 
     var count:Int = 0;
     var _count:Int = -9999;
-    public function moveElementToPosition() {
+    public function moveElementToPosition(state:String) {
         if (FreeplayState.instance.songsMove.target > FreeplayState.instance.songPosiStart + SongRect.fixHeight * FreeplayState.instance.inter * target.length) {
             FreeplayState.songPosiData = FreeplayState.instance.songsMove.target = FreeplayState.instance.songsMove.target - SongRect.fixHeight * FreeplayState.instance.inter * target.length;   
                 
@@ -48,8 +48,7 @@ class ScrollManager {
             if (i <= flipData) {
                 target[i].currect = i;
             } else {
-                target[i].currect = i - target.length;
-                //target[i].setCurrect();
+                target[i].setCurrect(state, i - target.length);
             }
         }
 
@@ -61,8 +60,7 @@ class ScrollManager {
             }
             if (flipData - target.length-1 - scrollFix >= 0) {
                 for (i in 0...Std.int(flipData - target.length-1 - scrollFix)) {
-                    target[i].currect = target[target.length-1].currect+1 + i;
-                    target[i].scrollFix(false);
+                    target[i].setCurrect(state, target[target.length-1].currect+1 + i);
                 }
             }
         }

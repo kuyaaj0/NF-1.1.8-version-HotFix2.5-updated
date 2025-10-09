@@ -296,7 +296,7 @@ class FreeplayState extends MusicBeatState
 
 		songsScroll = new ScrollManager(songGroup);
 		songMoveEvent();
-		songsScroll.moveElementToPosition();
+		songsScroll.moveElementToPosition('stop');
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		

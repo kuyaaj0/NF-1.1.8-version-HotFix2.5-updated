@@ -194,12 +194,20 @@ class SongRect extends FlxSpriteGroup {
 
     //////////////////////////////////////////////////////////////////////////////////////////////
 
-    public function scrollFix(isUp:Bool = true) {
-        if (isUp) {
-            
-        } else {
+    public function setCurrect(state:String, tar:Int) {
+        if (state == 'up') {
+            if (focusRect == this) {
+                
+            }
+            if (this.currect < tar) {
+                this.interY = FreeplayState.instance.songGroup[tar].interY;
+                this.diffY = FreeplayState.instance.songGroup[tar].diffY;
+            }
+        } else if (state == 'down') {
 
         }
+
+        this.currect == tar;
     }
 
     /*
