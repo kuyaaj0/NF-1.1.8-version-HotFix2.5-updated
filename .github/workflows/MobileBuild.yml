@@ -38,7 +38,7 @@ jobs:
         uses: nttld/setup-ndk@main
         id: setup-ndk
         with:
-          ndk-version: r29
+          ndk-version: r27d
 
       - name: Setup Java JDK
         uses: actions/setup-java@main
