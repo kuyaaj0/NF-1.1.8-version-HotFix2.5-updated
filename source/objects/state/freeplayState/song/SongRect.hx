@@ -194,20 +194,28 @@ class SongRect extends FlxSpriteGroup {
 
     //////////////////////////////////////////////////////////////////////////////////////////////
 
-    public function setCurrect(state:String, tar:Int) {
+    public function setCurrect(state:String, put:Int) {
         if (state == 'up') {
+            var nextRect = FreeplayState.instance.songGroup[FlxMath.wrap(this.id - 1, 0, FreeplayState.instance.songGroup.length - 1)];
             if (focusRect == this) {
-                
+
             }
-            if (this.currect < tar) {
-                this.interY = FreeplayState.instance.songGroup[tar].interY;
-                this.diffY = FreeplayState.instance.songGroup[tar].diffY;
+            if (this.currect < put) {
+                this.interY = nextRect.interY;
+                this.diffY = nextRect.diffY;
             }
         } else if (state == 'down') {
+            var lastRect = FreeplayState.instance.songGroup[FlxMath.wrap(this.id + 1, 0, FreeplayState.instance.songGroup.length - 1)];
+            if (focusRect == this) {
 
+            }
+            if (this.currect > put) {
+                this.interY = lastRect.interY;
+                this.diffY = lastRect.diffY;
+            }
         }
 
-        this.currect == tar;
+        this.currect = put;
     }
 
     /*

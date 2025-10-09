@@ -48,6 +48,7 @@ class ScrollManager {
             if (i <= flipData) {
                 target[i].currect = i;
             } else {
+                //target[i].currect = i - target.length;
                 target[i].setCurrect(state, i - target.length);
             }
         }
@@ -60,6 +61,7 @@ class ScrollManager {
             }
             if (flipData - target.length-1 - scrollFix >= 0) {
                 for (i in 0...Std.int(flipData - target.length-1 - scrollFix)) {
+                    //target[i].currect = target[target.length-1].currect+1 + i;
                     target[i].setCurrect(state, target[target.length-1].currect+1 + i);
                 }
             }
