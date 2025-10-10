@@ -310,7 +310,7 @@ class LoadingState extends MusicBeatState
 			prepare(imgs, snds, mscs);
 		}
 
-		songsToPrepare.push('$folder/Inst');
+		putPreload(songsToPrepare, '$folder/Inst');
 
 		var player1:String = song.player1;
 		var player2:String = song.player2;
@@ -324,9 +324,9 @@ class LoadingState extends MusicBeatState
 
 		if (prefixVocals != null)
 		{
-			songsToPrepare.push(prefixVocals);
-			songsToPrepare.push('$prefixVocals-Player');
-			songsToPrepare.push('$prefixVocals-Opponent');
+			putPreload(songsToPrepare, prefixVocals);
+			putPreload(songsToPrepare, '$prefixVocals-Player');
+			putPreload(songsToPrepare, '$prefixVocals-Opponent');
 		}
 
 		if (player2 != player1)
@@ -370,7 +370,7 @@ class LoadingState extends MusicBeatState
 				var split:Array<String> = img.split(',');
 				for (file in split)
 				{
-					imagesToPrepare.push(file.trim());
+					putPreload(imagesToPrepare, file.trim());
 				}
 			}
 			#if flxanimate
@@ -384,19 +384,19 @@ class LoadingState extends MusicBeatState
 					if(Paths.fileExists('images/$img/spritemap$st.png', IMAGE))
 					{
 						//trace('found Sprite PNG');
-						imagesToPrepare.push('$img/spritemap$st');
+						putPreload(imagesToPrepare, '$img/spritemap$st');
 						break;
 					}
 				}
 			}
 			#end
 
-			imagesToPrepare.push('icons/' + character.healthicon);
-			imagesToPrepare.push('icons/icon-' + character.healthicon);
+			putPreload(imagesToPrepare, 'icons/' + character.healthicon);
+			putPreload(imagesToPrepare, 'icons/icon-' + character.healthicon);
 
 			if (prefixVocals != null && character.vocals_file != null && character.vocals_file.length > 0)
 			{
-				songsToPrepare.push(prefixVocals + "-" + character.vocals_file);
+				putPreload(songsToPrepare, prefixVocals + "-" + character.vocals_file);
 			}
 			startLuaNamed('characters/' + char + '.lua');
 		}
@@ -435,19 +435,19 @@ class LoadingState extends MusicBeatState
 
 		for (rating in ratingsData)
 		{
-			imagesToPrepare.push(uiPrefix + rating.image + uiSuffix);
+			putPreload(imagesToPrepare, uiPrefix + rating.image + uiSuffix);
 		}
 
 		for (i in 0...10)
-			imagesToPrepare.push(uiPrefix + 'num' + i + uiSuffix);
+			putPreload(imagesToPrepare, uiPrefix + 'num' + i + uiSuffix);
 
-		imagesToPrepare.push(uiPrefix + 'ready' + uiSuffix);
-		imagesToPrepare.push(uiPrefix + 'set' + uiSuffix);
-		imagesToPrepare.push(uiPrefix + 'go' + uiSuffix);
-		imagesToPrepare.push('healthBar');
+		putPreload(imagesToPrepare, uiPrefix + 'ready' + uiSuffix);
+		putPreload(imagesToPrepare, uiPrefix + 'set' + uiSuffix);
+		putPreload(imagesToPrepare, uiPrefix + 'go' + uiSuffix);
+		putPreload(imagesToPrepare, 'healthBar');
 
 		if (PlayState.isStoryMode)  {
-			imagesToPrepare.push('speech_bubble');
+			putPreload(imagesToPrepare, 'speech_bubble');
 		}
 	}
 
@@ -528,32 +528,32 @@ class LoadingState extends MusicBeatState
 			switch(e.expr) {
 				case EIdent('makeLuaSprite'):
 					if (ScriptExprTools.lua_getValue(params[1]) != null || ScriptExprTools.lua_getValue(params[1]) != '')
-						imagesToPrepare.push(Std.string(ScriptExprTools.lua_getValue(params[1])));
+						putPreload(imagesToPrepare, Std.string(ScriptExprTools.lua_getValue(params[1])));
 				case EIdent('makeAnimatedLuaSprite'):
 					if (ScriptExprTools.lua_getValue(params[1]) != null || ScriptExprTools.lua_getValue(params[1]) != '')
-							imagesToPrepare.push(Std.string(ScriptExprTools.lua_getValue(params[1])));
+							putPreload(imagesToPrepare, Std.string(ScriptExprTools.lua_getValue(params[1])));
 				case EIdent('precacheImage'):
 					if (ScriptExprTools.lua_getValue(params[0]) != null || ScriptExprTools.lua_getValue(params[0]) != '')
-							imagesToPrepare.push(Std.string(ScriptExprTools.lua_getValue(params[0])));
+							putPreload(imagesToPrepare, Std.string(ScriptExprTools.lua_getValue(params[0])));
 				case EIdent('addCharacterToList'):
 					if (ScriptExprTools.lua_getValue(params[0]) != null || ScriptExprTools.lua_getValue(params[0]) != '')
-							imagesToPrepare.push(Std.string(ScriptExprTools.lua_getValue(params[0])));
+							putPreload(imagesToPrepare, Std.string(ScriptExprTools.lua_getValue(params[0])));
 
 				////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 				case EIdent('precacheSound'):
 					if (ScriptExprTools.lua_getValue(params[0]) != null || ScriptExprTools.lua_getValue(params[0]) != '')
-							soundsToPrepare.push(Std.string(ScriptExprTools.lua_getValue(params[0])));
+							putPreload(soundsToPrepare, Std.string(ScriptExprTools.lua_getValue(params[0])));
 				case EIdent('precacheMusic'):
 					if (ScriptExprTools.lua_getValue(params[0]) != null || ScriptExprTools.lua_getValue(params[0]) != '')
-							musicToPrepare.push(Std.string(ScriptExprTools.lua_getValue(params[0])));
+							putPreload(musicToPrepare, Std.string(ScriptExprTools.lua_getValue(params[0])));
 
 				case EIdent('playSound'):
 					if (ScriptExprTools.lua_getValue(params[0]) != null || ScriptExprTools.lua_getValue(params[0]) != '')
-							soundsToPrepare.push(Std.string(ScriptExprTools.lua_getValue(params[0])));
+							putPreload(soundsToPrepare, Std.string(ScriptExprTools.lua_getValue(params[0])));
 				case EIdent('playMusic'):
 					if (ScriptExprTools.lua_getValue(params[0]) != null || ScriptExprTools.lua_getValue(params[0]) != '')
-							musicToPrepare.push(Std.string(ScriptExprTools.lua_getValue(params[0])));
+							putPreload(musicToPrepare, Std.string(ScriptExprTools.lua_getValue(params[0])));
 
 				////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -584,13 +584,13 @@ class LoadingState extends MusicBeatState
 								var dialogueList:DialogueFile = DialogueBoxPsych.parseDialogue(path);
 								for (i in 0...dialogueList.dialogue.length)							
 									if (dialogueList.dialogue[i] != null) {							
-										imagesToPrepare.push('dialogue/' + Std.string(dialogueList.dialogue[i].portrait));		
-										soundsToPrepare.push(Std.string(dialogueList.dialogue[i].sound));		
+										putPreload(imagesToPrepare, 'dialogue/' + Std.string(dialogueList.dialogue[i].portrait));		
+										putPreload(soundsToPrepare, Std.string(dialogueList.dialogue[i].sound));		
 									}														
 							}
 						}
 						if (ScriptExprTools.lua_getValue(params[1]) != null || ScriptExprTools.lua_getValue(params[1]) != '') {
-							musicToPrepare.push(Std.string(ScriptExprTools.lua_getValue(params[1])));
+							putPreload(musicToPrepare, Std.string(ScriptExprTools.lua_getValue(params[1])));
 						}
 					}
 				case _:
@@ -639,16 +639,16 @@ class LoadingState extends MusicBeatState
 						switch(Tools.expr(e)) {
 							case EIdent("Paths") if(f == "image"):
 								if (ScriptExprTools.hx_getValue(params[0]) != null || ScriptExprTools.hx_getValue(params[0]) != '')
-									imagesToPrepare.push(Std.string(ScriptExprTools.hx_getValue(params[0])));
+									putPreload(imagesToPrepare, Std.string(ScriptExprTools.hx_getValue(params[0])));
 							case EIdent("Paths") if(f == "cacheBitmap"):
 								if (ScriptExprTools.hx_getValue(params[0]) != null || ScriptExprTools.hx_getValue(params[0]) != '')
-									imagesToPrepare.push(Std.string(ScriptExprTools.hx_getValue(params[0])));
+									putPreload(imagesToPrepare, Std.string(ScriptExprTools.hx_getValue(params[0])));
 							case EIdent("Paths") if(f == "sound"):
 								if (ScriptExprTools.hx_getValue(params[0]) != null || ScriptExprTools.hx_getValue(params[0]) != '')
-									soundsToPrepare.push(Std.string(ScriptExprTools.hx_getValue(params[0])));
+									putPreload(soundsToPrepare, Std.string(ScriptExprTools.hx_getValue(params[0])));
 							case EIdent("Paths") if(f == "music"):
 								if (ScriptExprTools.hx_getValue(params[0]) != null || ScriptExprTools.hx_getValue(params[0]) != '')
-									musicToPrepare.push(Std.string(ScriptExprTools.hx_getValue(params[0])));
+									putPreload(musicToPrepare, Std.string(ScriptExprTools.hx_getValue(params[0])));
 							case _:
 						}
 					});
@@ -870,6 +870,10 @@ class LoadingState extends MusicBeatState
 
 	static function addLoadCount() {
 		loaded++;
+	}
+
+	static function putPreload(tar:Dynamic, file:String) {
+		if (!tar.exists(file)) tar.push(file);
 	}
 
 	//////////////////////////////////////////////
