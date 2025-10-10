@@ -262,8 +262,8 @@
 <architecture name="arm64" exclude="armv7" if="android" />
 
 <config>
-	<!--android gradle-version="8.7" -->
-    <!--android gradle-plugin="8.6.0" -->
+	<android gradle-version="7.4" />
+    <android gradle-plugin="7.0.4" />
     <!--Fuck you xcode-->
     <ios deployment="12.0" />
 </config>
