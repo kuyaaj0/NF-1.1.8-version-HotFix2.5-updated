@@ -583,8 +583,10 @@ class LoadingState extends MusicBeatState
 							{
 								var dialogueList:DialogueFile = DialogueBoxPsych.parseDialogue(path);
 								for (i in 0...dialogueList.dialogue.length)							
-									if (dialogueList.dialogue[i] != null)								
-										imagesToPrepare.push(Std.string(dialogueList.dialogue[i].portrait));																
+									if (dialogueList.dialogue[i] != null) {							
+										imagesToPrepare.push('dialogue/' + Std.string(dialogueList.dialogue[i].portrait));		
+										soundsToPrepare.push(Std.string(dialogueList.dialogue[i].sound));		
+									}														
 							}
 						}
 						if (ScriptExprTools.lua_getValue(params[1]) != null || ScriptExprTools.lua_getValue(params[1]) != '') {
@@ -618,7 +620,7 @@ class LoadingState extends MusicBeatState
 		var input:String = '';
 		if (isFile){
 			File.getContent(file);	
-			trace('Hscript: load Path: ' + file);
+			//trace('Hscript: load Path: ' + file);
 		} else {
 			input = file;
 		}
