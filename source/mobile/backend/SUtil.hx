@@ -1,14 +1,14 @@
 package mobile.backend;
 
 #if android
-import extension.android.content.Context as AndroidContext;
-import extension.android.widget.Toast as AndroidToast;
-import extension.android.os.Environment as AndroidEnvironment;
-import extension.android.Permissions as AndroidPermissions;
-import extension.android.Settings as AndroidSettings;
-import extension.android.Tools as AndroidTools;
-import extension.android.os.Build.VERSION as AndroidVersion;
-import extension.android.os.Build.VERSION_CODES as AndroidVersionCode;
+import extension.androidtools.content.Context as AndroidContext;
+import extension.androidtools.widget.Toast as AndroidToast;
+import extension.androidtools.os.Environment as AndroidEnvironment;
+import extension.androidtools.Permissions as AndroidPermissions;
+import extension.androidtools.Settings as AndroidSettings;
+import extension.androidtools.Tools as AndroidTools;
+import extension.androidtools.os.Build.VERSION as AndroidVersion;
+import extension.androidtools.os.Build.VERSION_CODES as AndroidVersionCode;
 #end
 import lime.system.System as LimeSystem;
 #if sys
