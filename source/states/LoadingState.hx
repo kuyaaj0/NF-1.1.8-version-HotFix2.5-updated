@@ -266,9 +266,7 @@ class LoadingState extends MusicBeatState
 			if (json != null)
 				prepare((!ClientPrefs.data.lowQuality || json.images_low) ? json.images : json.images_low, json.sounds, json.music);
 		}
-		catch (e:Dynamic)
-		{
-		}
+		catch (e:Dynamic){}
 
 		if (song.stage == null || song.stage.length < 1)
 			song.stage = StageData.vanillaSongStage(folder);
@@ -873,7 +871,7 @@ class LoadingState extends MusicBeatState
 	}
 
 	static function putPreload(tar:Dynamic, file:String) {
-		if (!tar.exists(file)) tar.push(file);
+		if (!tar.contains(file)) tar.push(file);
 	}
 
 	//////////////////////////////////////////////

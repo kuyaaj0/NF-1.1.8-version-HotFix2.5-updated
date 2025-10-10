@@ -2,7 +2,7 @@ package backend.device;
 
 // make Sscript can check those data
 #if android
-import extension.androidtools.os.AppDetails;
+import android.os.AppDetails;
 
 class AppData
 {
