@@ -249,14 +249,15 @@
     </section>
 
 <android>
-    <!-- Android 13+ -->
-    <permission name="android.permission.READ_MEDIA_IMAGES" />
-    <permission name="android.permission.READ_MEDIA_VIDEO" />
-    <permission name="android.permission.READ_MEDIA_AUDIO" />
+    <!-- Android 13+ 媒体权限 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
     
-    <!-- Android 12- -->
-    <permission name="android.permission.READ_EXTERNAL_STORAGE" />
-    <permission name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- Android 12- 存储权限 + 兼容Android 10分区存储 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <application android:requestLegacyExternalStorage="true" />
 </android>
 
 <config>
