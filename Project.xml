@@ -271,8 +271,8 @@
 
 
 <config>
-	<android gradle-version="8.7" />
-    <android gradle-plugin="8.6.0" />
+	<android gradle-version="8.0" />
+    <android gradle-plugin="8.1.1" />
 	<android minimum-sdk-version="24" />
 	<android target-sdk-version= "35" />
     <!--Fuck you xcode-->
