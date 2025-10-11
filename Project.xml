@@ -248,11 +248,11 @@
     	<icon path="art/iconOG-PC.png" />
     </section>
 
-<set name="android.permission.READ_MEDIA_IMAGES" value="true" />
-<set name="android.permission.READ_MEDIA_VIDEO" value="true" />
-<set name="android.permission.READ_MEDIA_AUDIO" value="true" />
-<set name="android.permission.READ_EXTERNAL_STORAGE" value="true" />
-<set name="android.permission.WRITE_EXTERNAL_STORAGE" value="true" />
+<config:android permission="android.permission.READ_MEDIA_IMAGES" />
+<config:android permission="android.permission.READ_MEDIA_VIDEO" />
+<config:android permission="android.permission.READ_MEDIA_AUDIO" />
+<config:android permission="android.permission.READ_EXTERNAL_STORAGE" />
+<config:android permission="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 <config>
 	<android gradle-version="8.7" />
