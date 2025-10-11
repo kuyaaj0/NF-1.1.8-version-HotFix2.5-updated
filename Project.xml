@@ -263,7 +263,7 @@
 	<!--android gradle-version="7.4" -->
     <!--android gradle-plugin="7.3.1" -->
 	<!--android minimum-sdk-version="24" -->
-	<!--android target-sdk-version="33" -->
+	<android build-sdk-version= "33" />
     <!--Fuck you xcode-->
     <!--ios deployment="13.6" -->
 </config>
