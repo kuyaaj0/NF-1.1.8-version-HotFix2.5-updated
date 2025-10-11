@@ -249,26 +249,15 @@
     </section>
 
 <android>
-    <config>
-        <uses-permission android:name="android.permission.WAKE_LOCK" />
-        <uses-permission android:name="android.permission.INTERNET" />
-        <uses-permission android:name="android.permission.VIBRATE" />
-        <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-        <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
-        <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-        <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
-        <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
-        
-        <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
-       
-        <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
-       
-        <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-
-        <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    </config>
+    <!-- Android 13+ -->
+    <permission name="android.permission.READ_MEDIA_IMAGES" />
+    <permission name="android.permission.READ_MEDIA_VIDEO" />
+    <permission name="android.permission.READ_MEDIA_AUDIO" />
+    
+    <!-- Android 12- -->
+    <permission name="android.permission.READ_EXTERNAL_STORAGE" />
+    <permission name="android.permission.WRITE_EXTERNAL_STORAGE" />
 </android>
-
 
 <config>
 	<android gradle-version="8.0" />
