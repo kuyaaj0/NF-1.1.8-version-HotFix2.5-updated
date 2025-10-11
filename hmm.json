@@ -2,10 +2,15 @@
   "dependencies": [
     {
       "name": "lime",
+<<<<<<< HEAD
       "type": "git",
       "dir": null,
       "ref": "main",
       "url": "https://github.com/NovaFlare-Engine-haxelib/lime-8.2.3"
+=======
+      "type": "haxelib",
+      "version": "8.2.3"
+>>>>>>> fb8a7a882b92576aa32c5ebb5c6f751016ca29a8
     },
     {
       "name": "openfl",
