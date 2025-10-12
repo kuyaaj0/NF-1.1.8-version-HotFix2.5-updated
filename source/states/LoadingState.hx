@@ -208,6 +208,8 @@ class LoadingState extends MusicBeatState
 		//startPrepare();
 		//startThreads();
 
+		cpp.vm.Gc.enable(false);
+
 		ThreadEvent.create(function() {
 			prepareMutex.acquire();
 			startPrepare();
@@ -710,6 +712,8 @@ class LoadingState extends MusicBeatState
 		soundsToPrepare = [];
 		musicToPrepare = [];
 		songsToPrepare = [];
+
+		cpp.vm.Gc.enable(true);
 
 		if (isPlayState)
 		{

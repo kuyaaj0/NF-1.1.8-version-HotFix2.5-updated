@@ -155,10 +155,12 @@
 	<haxelib name="hxcpp-debug-server" if="debug"/>
 
 	<haxedef name="HXCPP_ALIGN_ALLOC"/>
-	<haxedef name="HX_HAS_ATOMIC"/>
+	<!--haxedef name="HX_HAS_ATOMIC"/-->
 
 	<haxedef name="lime_threads" if="cpp || hl || neko || java || cs || nodejs" />
-	<haxedef name="openfl_enable_experimental_update_queue"/>
+	<!--haxedef name="openfl_enable_experimental_update_queue"/-->
+
+	<haxedef name="HXCPP_GC_DYNAMIC_SIZE" />
 
 	<!-- ______________________________ Haxedefines _____________________________ -->
 
