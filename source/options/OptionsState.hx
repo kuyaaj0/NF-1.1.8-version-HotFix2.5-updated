@@ -9,6 +9,9 @@ import mobile.states.CopyState;
 import backend.ClientPrefs;
 import language.Language;
 import backend.StageData;
+
+import options.base.NewControlsSubState;
+
 class OptionsState extends MusicBeatState
 {
 	public static var instance:OptionsState;
@@ -374,7 +377,7 @@ class OptionsState extends MusicBeatState
 				openSubState(new NotesSubState());
 			case 3: // ControlsSubState
 				persistentUpdate = false;
-				openSubState(new ControlsSubState());
+				openSubState(new NewControlsSubState());
 			case 4: // MobileControlSelectSubState
 				persistentUpdate = false;
 				openSubState(new MobileControlSelectSubState());
