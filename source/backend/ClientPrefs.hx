@@ -558,18 +558,18 @@ class ClientPrefs
 		if (FlxG.save.data.framerate == null)
 		{
 			final refreshRate:Int = FlxG.stage.application.window.displayMode.refreshRate;
-			data.framerate = Std.int(FlxMath.bound(refreshRate, 60, 240));
+			data.framerate = Std.int(FlxMath.bound(refreshRate, 60, 1000));
 		}
 		#end
 
 		if (data.framerate > FlxG.drawFramerate)
 		{
 			FlxG.updateFramerate = data.framerate;
-			FlxG.drawFramerate = data.framerate;
+			FlxG.drawFramerate = Std.int(Math.min(FlxG.stage.application.window.displayMode.refreshRate, data.framerate));
 		}
 		else
 		{
-			FlxG.drawFramerate = data.framerate;
+			FlxG.drawFramerate = Std.int(Math.min(FlxG.stage.application.window.displayMode.refreshRate, data.framerate));
 			FlxG.updateFramerate = data.framerate;
 		}
 

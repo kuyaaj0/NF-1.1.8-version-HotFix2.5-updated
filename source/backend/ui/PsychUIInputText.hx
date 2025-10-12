@@ -5,6 +5,7 @@ import flixel.input.keyboard.FlxKey;
 import flixel.util.FlxDestroyUtil;
 import flash.events.KeyboardEvent;
 import lime.system.Clipboard;
+import lime.math.Rectangle;
 
 enum abstract AccentCode(Int) from Int from UInt to Int to UInt
 {
