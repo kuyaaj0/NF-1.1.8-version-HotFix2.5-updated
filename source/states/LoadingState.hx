@@ -659,11 +659,9 @@ class LoadingState extends MusicBeatState
 		if (waitPrepare) 
 			return;
 
-		intendedPercent = loaded / loadMax;
-
 		if (curPercent != intendedPercent)
 		{
-			if (Math.abs(curPercent - intendedPercent) < 0.01)
+			if (Math.abs(curPercent - intendedPercent) < 0.005)
 				curPercent = intendedPercent;
 			else
 				curPercent = FlxMath.lerp(intendedPercent, curPercent, Math.exp(-elapsed * 15));
@@ -680,6 +678,8 @@ class LoadingState extends MusicBeatState
 			else
 				precentText.text = precent + '%'; // 修复显示问题
 		};
+
+		intendedPercent = loaded / loadMax;
 
 		if (curPercent == 1)
 		{
