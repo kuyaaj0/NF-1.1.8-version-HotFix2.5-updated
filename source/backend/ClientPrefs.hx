@@ -136,8 +136,7 @@ import states.TitleState;
 	public var freeplayOld:Bool = false;
 	public var resultsScreen:Bool = true;
 	public var loadingScreen:Bool = false;
-	public var loadImageTheards:Int = #if mobile 4 #else 8 #end;
-	public var loadMusicTheards:Int = #if mobile 2 #else 4 #end;
+	public var loadThreads:Int = #if mobile 2 #else 4 #end;
 
 	// Watermark
 	public var showFPS:Bool = true;
