@@ -203,7 +203,7 @@ class DialogueBoxPsych extends FlxSpriteGroup
 				}
 			}
 
-			if (Controls.instance.justPressed('back')) {
+			if (Controls.instance.justPressed('back') #if android || FlxG.android.justReleased.BACK #end) {
 				endDialogue();
 			}
 

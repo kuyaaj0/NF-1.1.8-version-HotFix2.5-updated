@@ -565,11 +565,13 @@ class ClientPrefs
 		{
 			FlxG.updateFramerate = data.framerate;
 			FlxG.drawFramerate = Std.int(Math.min(FlxG.stage.application.window.displayMode.refreshRate, data.framerate));
+			lime.app.Application.current.window.frameRate = data.framerate;
 		}
 		else
 		{
 			FlxG.drawFramerate = Std.int(Math.min(FlxG.stage.application.window.displayMode.refreshRate, data.framerate));
 			FlxG.updateFramerate = data.framerate;
+			lime.app.Application.current.window.frameRate = data.framerate;
 		}
 
 		if (FlxG.save.data.gameplaySettings != null)
