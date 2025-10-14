@@ -68,7 +68,7 @@
       "type": "git",
       "dir": null,
       "ref": "main",
-      "url": "https://github.com/NovaFlare-Engine-haxelib/hxcpp-4.3.2"
+      "url": "https://github.com/NovaFlare-Engine-haxelib/hxcpp-legacy"
     },
     {
       "name": "hxvlc",
