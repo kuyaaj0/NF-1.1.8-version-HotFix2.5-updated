@@ -28,8 +28,6 @@ class DataGet
 			currentFPS = ClientPrefs.data.framerate;
 
 		/////////////////// →fps计算
-		if (FlxG.stage.window.frameRate != ClientPrefs.data.framerate)
-			FlxG.stage.window.frameRate = ClientPrefs.data.framerate;
 
 		var mem = getMem();
 		if (Math.abs(mem) < 1000)
@@ -48,7 +46,7 @@ class DataGet
 		wait = number = 0;
 	}
 
-	static var memoryTypeArray:Array<String> = ["Usage", "Reserved", "Current", "Large"];
+	static var memoryTypeArray:Array<String> = ["Usage", "Reserved", "Current", "Large", "Total"];
 
 	static public function getMem():Float
 	{
@@ -58,7 +56,7 @@ class DataGet
 				count = type;
 				break;
 			}
-		return FlxMath.roundDecimal(Gc.memInfo64(count) / 1000000, 1); // 转化为MB
+		return FlxMath.roundDecimal(Gc.memInfo64(count) / 1024 / 1024, 2); //转化为MB
 	}
 }
 

@@ -24,7 +24,7 @@ class GraphicsGroup extends OptionCata
 		var option:Option = new Option(this, 'rainbowFPS', BOOL);
 		addOption(option);
 
-		var memoryTypeArray:Array<String> = ["Usage", "Reserved", "Current", "Large"];
+		var memoryTypeArray:Array<String> = ["Usage", "Reserved", "Current", "Large", "Total"];
 
 		var option:Option = new Option(this, 'memoryType', STRING, memoryTypeArray);
 		addOption(option, true);
