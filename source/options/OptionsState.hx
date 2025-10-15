@@ -94,12 +94,12 @@ class OptionsState extends MusicBeatState
 		var bg = new Rect(0, 0, FlxG.width, FlxG.height, 0, 0, baseColor);
 		add(bg);
 
-		naviBG = new RoundRect(0, 0, UIScale.adjust(FlxG.width * 0.2), FlxG.height, 0, LEFT_CENTER,  mainColor);
+		naviBG = new RoundRect(0, 0, FlxG.width * 0.2, FlxG.height, 0, LEFT_CENTER,  mainColor);
 		add(naviBG);
 
 		for (i in 0...naviArray.length)
 		{
-			var naviSprite = new NaviGroup(FlxG.width * 0.005, UIScale.adjust(FlxG.height * 0.005) + i * UIScale.adjust(FlxG.height * 0.1), UIScale.adjust(FlxG.width * 0.19), UIScale.adjust(FlxG.height * 0.09), naviArray[i], i, false);
+			var naviSprite = new NaviGroup(FlxG.width * 0.005, FlxG.height * 0.005 + i * FlxG.height * 0.1, FlxG.width * 0.19, FlxG.height * 0.09, naviArray[i], i, false);
 			naviSprite.antialiasing = ClientPrefs.data.antialiasing;
 			add(naviSprite);
 			naviGroup.push(naviSprite);
@@ -107,10 +107,10 @@ class OptionsState extends MusicBeatState
 		naviMoveEvent();
 
 		naviMove = new MouseMove(OptionsState, 'naviPosiData', 
-								[-1 * Math.max(0, (naviGroup.length - 9)) * UIScale.adjust(FlxG.height * 0.1), UIScale.adjust(FlxG.height * 0.005)],
+								[-1 * Math.max(0, (naviGroup.length - 9)) * FlxG.height * 0.1, FlxG.height * 0.005],
 								[	
-									[UIScale.adjust(FlxG.width * 0.005), 
-									UIScale.adjust(FlxG.width * 0.19)], [0, FlxG.height]
+									[FlxG.width * 0.005, FlxG.width * 0.19], 
+									[0, FlxG.height]
 								],
 								naviMoveEvent);
 		add(naviMove);
@@ -131,14 +131,14 @@ class OptionsState extends MusicBeatState
 		for (num in cataGroup) {
 			if (num != cataGroup[cataGroup.length - 1]) {
 				moveHeight -= num.bg.realHeight;
-				moveHeight -= UIScale.adjust(FlxG.width * (0.8 / 40));
+				moveHeight -= FlxG.width * (0.8 / 40);
 			}
 		}
 		cataMove = new MouseMove(OptionsState, 'cataPosiData', 
 								[moveHeight, 100],
 								[ 
-									[UIScale.adjust(FlxG.width * 0.2), FlxG.width], 
-									[0, FlxG.height - Std.int(UIScale.adjust(FlxG.height * 0.1))]
+									[FlxG.width * 0.2, FlxG.width], 
+									[0, FlxG.height - Std.int(FlxG.height * 0.1)]
 								],
 								cataMoveEvent);
 		add(cataMove);
@@ -146,22 +146,22 @@ class OptionsState extends MusicBeatState
 			
 		/////////////////////////////////////////////////////////////
 
-		downBG = new Rect(0, FlxG.height - Std.int(UIScale.adjust(FlxG.height * 0.1)), FlxG.width, Std.int(UIScale.adjust(FlxG.height * 0.1)), 0, 0, mainColor, 0.75);
+		downBG = new Rect(0, FlxG.height - Std.int(FlxG.height * 0.1), FlxG.width, Std.int(FlxG.height * 0.1), 0, 0, mainColor, 0.75);
 		add(downBG);
 
 		tipButton = new TipButton(
-			UIScale.adjust(FlxG.width * 0.2) + UIScale.adjust(FlxG.height * 0.01), 
-			downBG.y + Std.int(UIScale.adjust(FlxG.height * 0.01)),
-			FlxG.width - UIScale.adjust(FlxG.width * 0.2) - UIScale.adjust(FlxG.height * 0.01) - Std.int(UIScale.adjust(FlxG.width * 0.15)) - Std.int(UIScale.adjust(FlxG.height * 0.01) * 2), 
-			Std.int(UIScale.adjust(FlxG.height * 0.08))
+			FlxG.width * 0.2 + FlxG.height * 0.01, 
+			downBG.y + Std.int(FlxG.height * 0.01),
+			FlxG.width - FlxG.width * 0.2 - FlxG.height * 0.01 - Std.int(FlxG.width * 0.15) - Std.int(FlxG.height * 0.01 * 2), 
+			Std.int(FlxG.height * 0.08)
 		);
 		add(tipButton);
 
 		specButton = new FuncButton(
-			FlxG.width - Std.int(UIScale.adjust(FlxG.width * 0.15)) - Std.int(UIScale.adjust(FlxG.height * 0.01)), 
-			downBG.y + Std.int(UIScale.adjust(FlxG.height * 0.01)),
-			Std.int(UIScale.adjust(FlxG.width * 0.15)), 
-			Std.int(UIScale.adjust(FlxG.height * 0.08)),
+			FlxG.width - Std.int(FlxG.width * 0.15) - Std.int(FlxG.height * 0.01), 
+			downBG.y + Std.int(FlxG.height * 0.01),
+			Std.int(FlxG.width * 0.15), 
+			Std.int(FlxG.height * 0.08),
 			specChange
 		);
 		specButton.alpha = 0.5;
@@ -169,7 +169,7 @@ class OptionsState extends MusicBeatState
 
 		//////////////////////////////////////////////////////////////////////
 
-		specBG = new Rect(UIScale.adjust(FlxG.width * 0.2), 0, FlxG.width - UIScale.adjust(FlxG.width * 0.2), Std.int(UIScale.adjust(FlxG.height * 0.1)), 0, 0, mainColor, 0.75);
+		specBG = new Rect(FlxG.width * 0.2, 0, FlxG.width - FlxG.width * 0.2, Std.int(FlxG.height * 0.1), 0, 0, mainColor, 0.75);
 		add(specBG);
 
 		searchButton = new SearchButton(specBG.x + specBG.height * 0.2, specBG.height * 0.2, specBG.width * 0.5, specBG.height * 0.6);
@@ -178,7 +178,7 @@ class OptionsState extends MusicBeatState
 		resetButton = new ResetButton(specBG.x + specBG.height * 0.2 * 2 + searchButton.width, specBG.height * 0.2, specBG.width - (specBG.height * 0.2 * 3 + searchButton.width), specBG.height * 0.6);
 		add(resetButton);
 
-		backButton = new GeneralBack(0, 720 - 72, UIScale.adjust(FlxG.width * 0.2), UIScale.adjust(FlxG.height * 0.1), Language.get('back', 'op'), EngineSet.mainColor, backMenu);
+		backButton = new GeneralBack(0, 720 - 72, FlxG.width * 0.2, FlxG.height * 0.1, Language.get('back', 'op'), EngineSet.mainColor, backMenu);
 		add(backButton);
 
 		super.create();
@@ -233,7 +233,7 @@ class OptionsState extends MusicBeatState
 
 		for (cata in 0...realSort) {
 			outputData -= cataGroup[cata].bg.realHeight;
-			outputData -= UIScale.adjust(FlxG.width * (0.8 / 40));
+			outputData -= FlxG.width * (0.8 / 40);
 		}
 		outputData = Math.max(outputData, cataMove.moveLimit[0]);
 		cataMove.lerpData = outputData;
@@ -246,8 +246,8 @@ class OptionsState extends MusicBeatState
 	public function addCata(type:String, follow:NaviGroup, mem:NaviMember, extraPath:String = '') {
 		var obj:OptionCata = null;
 
-		var outputX:Float = naviBG.width + UIScale.adjust(FlxG.width * (0.8 / 40)); //已被初始化
-		var outputWidth:Float = UIScale.adjust(FlxG.width * (0.8 - (0.8 / 40 * 2))); //已被初始化
+		var outputX:Float = naviBG.width + FlxG.width * (0.8 / 40); //已被初始化
+		var outputWidth:Float = FlxG.width * (0.8 - (0.8 / 40 * 2)); //已被初始化
 		var outputY:Float = 100; //等待被初始化
 		var outputHeight:Float = 200; //等待被初始化
 
@@ -288,7 +288,7 @@ class OptionsState extends MusicBeatState
 	public function cataMoveEvent(){
 		for (i in 0...cataGroup.length) {
 			if (i == 0) cataGroup[i].y = cataPosiData;
-			else cataGroup[i].y = cataGroup[i - 1].y + cataGroup[i - 1].bg.realHeight + UIScale.adjust(FlxG.width * (0.8 / 40));
+			else cataGroup[i].y = cataGroup[i - 1].y + cataGroup[i - 1].bg.realHeight + FlxG.width * (0.8 / 40);
 		}
 	}
 
@@ -298,7 +298,7 @@ class OptionsState extends MusicBeatState
 		for (num in cataGroup) {
 			if (num != cataGroup[cataGroup.length - 1]) {
 				moveHeight -= num.bg.waitHeight;
-				moveHeight -= UIScale.adjust(FlxG.width * (0.8 / 40));
+				moveHeight -= FlxG.width * (0.8 / 40);
 			}
 		}
 		cataMove.moveLimit[0] = moveHeight;
@@ -307,7 +307,7 @@ class OptionsState extends MusicBeatState
 	static public var naviPosiData:Float = 0;
 	public function naviMoveEvent(){
 		for (i in 0...naviGroup.length) {
-			naviGroup[i].y = naviPosiData + i * UIScale.adjust(FlxG.height * 0.1) + naviGroup[i].offsetY;
+			naviGroup[i].y = naviPosiData + i * FlxG.height * 0.1 + naviGroup[i].offsetY;
 		}
 	}
 
@@ -335,7 +335,7 @@ class OptionsState extends MusicBeatState
 			}
 		}
 		if (!isOpened) moveHeight += (navi.parent.length * 50 + 15);
-		naviMove.moveLimit[0] = -1 * Math.max(0, ((naviGroup.length - 9)) * UIScale.adjust(FlxG.height * 0.1) + moveHeight);
+		naviMove.moveLimit[0] = -1 * Math.max(0, ((naviGroup.length - 9)) * FlxG.height * 0.1 + moveHeight);
 	}
 
 	var specOpen:Bool = false;
@@ -351,7 +351,7 @@ class OptionsState extends MusicBeatState
 			newPoint = FlxG.width;
 			cataMove.moveLimit[1] = 30;
 		} else {
-			newPoint = UIScale.adjust(FlxG.width * 0.2);
+			newPoint = FlxG.width * 0.2;
 			cataMove.moveLimit[1] = 100;
 		}
 

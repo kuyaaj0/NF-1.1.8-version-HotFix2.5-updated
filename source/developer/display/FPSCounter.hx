@@ -1,4 +1,4 @@
-package objects.screen;
+package developer.display;
 
 class FPSCounter extends Sprite
 {

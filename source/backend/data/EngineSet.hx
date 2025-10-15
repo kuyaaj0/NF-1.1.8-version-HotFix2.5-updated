@@ -1,6 +1,6 @@
 package backend.data;
 
-import objects.screen.Data.DataGet;
+import developer.display.Data.DataGet;
 
 class EngineSet
 {

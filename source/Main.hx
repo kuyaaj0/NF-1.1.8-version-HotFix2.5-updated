@@ -1,12 +1,12 @@
 package;
 
-import objects.screen.Graphics;
-import objects.screen.FPS;
+import developer.display.Graphics;
+import developer.display.FPS;
+import screen.mouseEvent.MouseEffect;
 import flixel.graphics.FlxGraphic;
 import flixel.FlxGame;
 import flixel.FlxState;
 import haxe.io.Path;
-import openfl.Assets;
 import openfl.system.System;
 import openfl.Lib;
 import openfl.display.Sprite;
@@ -37,9 +37,6 @@ import lime.graphics.Image;
 	#define GAMEMODE_AUTO
 ')
 #end
-
-import sys.Http;
-import sys.thread.Thread;
 
 import haxe.ui.Toolkit;
 

@@ -1,4 +1,4 @@
-package objects.screen.mouseEvent;
+package screen.mouseEvent;
 
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
@@ -9,10 +9,7 @@ import openfl.geom.Point;
 import openfl.Lib;
 import openfl.geom.ColorTransform;
 
-import objects.screen.Data.DataGet;
-
-import sys.thread.Thread;
-import sys.thread.Mutex;
+import developer.display.Data.DataGet;
 
 class MouseEffect extends Sprite {
     // 点击特效配置
@@ -67,8 +64,6 @@ class MouseEffect extends Sprite {
     
     // 路径记录
     private var lastTrailPosition:Point = new Point();
-
-    static var mutex:Mutex = new Mutex();
 
     public function new() {
         super();

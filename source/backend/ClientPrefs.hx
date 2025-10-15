@@ -66,11 +66,11 @@ import states.TitleState;
 	// App backend s
 	public var discordRPC:Bool = true;
 	public var checkForUpdates:Bool = true;
-	public var fileLoad:String = 'NovaFlare Engine';
 	public var openedFlash:Bool = false;
 	public var screensaver:Bool = false;
 	public var githubCheck:Bool = false;
 	public var filesCheck:Bool = #if ios false #else true #end;
+	public var quotaGCIncreace:Float = 1;
 
 	// Game UI
 	// Visble s
@@ -125,7 +125,7 @@ import states.TitleState;
 	public var extraKeyReturn4:String = 'SHIFT';
 
 	// User Interface
-	public var uiScale:Float = 1; //废弃
+	public var uiScale:Float = 1;
 
 	public var CustomFade:String = 'Move';
 	public var CustomFadeSound:Float = 0.5;

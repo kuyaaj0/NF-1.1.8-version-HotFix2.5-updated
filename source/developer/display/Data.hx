@@ -1,4 +1,4 @@
-package objects.screen;
+package developer.display;
 
 class DataGet
 {
@@ -28,6 +28,10 @@ class DataGet
 			currentFPS = ClientPrefs.data.framerate;
 
 		/////////////////// →fps计算
+
+		// Flixel keeps reseting this to 60 on focus gained
+		if (FlxG.stage.window.frameRate != ClientPrefs.data.framerate && FlxG.stage.window.frameRate != FlxG.game.focusLostFramerate)
+			FlxG.stage.window.frameRate = ClientPrefs.data.framerate;
 
 		var mem = getMem();
 		if (Math.abs(mem) < 1000)
