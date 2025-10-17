@@ -30,7 +30,7 @@ class ControlsSprite extends FlxSpriteGroup
     private var background:FlxSprite;
     public var text:FlxText;
     public var noteSprite:ControlsNoteSprite;
-    public var stringRectSprite:StringRect;
+    public var moveBGArray:Array<RabSprite> = [];
 
     public var noteArray:Array<FlxText>;
     public var label:String = "";
@@ -61,9 +61,6 @@ class ControlsSprite extends FlxSpriteGroup
         background = new FlxSprite(x, y);
         background.makeGraphic(Std.int(width), Std.int(height), FlxColor.TRANSPARENT, true);
         FlxSpriteUtil.drawRoundRect(background, 0, 0, width, height, CORNER_RADIUS, CORNER_RADIUS, currentColor);
-        /*background.alpha = 1.0;
-		background.mainX = mainX;
-		background.mainY = mainY;*/
         add(background);
         
         if (label != "")
@@ -112,8 +109,25 @@ class ControlsSprite extends FlxSpriteGroup
         noteSprite.updateParent(this);
         add(noteSprite);
 
+        var resetSprite:RabSprite = new RabSprite(background.x + (background.width / 2 + wwidth), background.y + hheight, wwidth, hheight, 0x8E00D9E0, "Reset");
+        add(resetSprite);
+
+        var backSprite:RabSprite = new RabSprite(background.x + (background.width / 2 + (wwidth * 2)) + 5, background.y + hheight, wwidth, hheight, 0x8A42FF8A, "Done");
+        add(backSprite);
+
+        resetSprite.sprite.alpha = 0.8;
+        backSprite.sprite.alpha = 0.8;
+
+        resetSprite.setScale("y", 0);
+        backSprite.setScale("y", 0);
+
+        moveBGArray.push(resetSprite);
+        moveBGArray.push(backSprite);
+
         // 不知道为什么另一个class的图片偏移这么多 chh
     }
+
+    public var scaleBool:Bool = false;
 
     override public function update(elapsed:Float):Void
     {
@@ -126,16 +140,45 @@ class ControlsSprite extends FlxSpriteGroup
 
         if (reNote || label == "") return;
 
-        if (CoolUtil.mouseOverlaps(background, NewControlsSubState.instance.camControls)) 
-        {
-            if (background.alpha != 1)
-                background.alpha = 1;
-
-            //trace(background.y, background.mainY);
+        if (!NewControlsSubState.allowControlsMode) {
+            if (CoolUtil.mouseOverlaps(background, NewControlsSubState.instance.camControls)) 
+            {
+                if (background.alpha != 1)
+                    background.alpha = 1;
+            }
+            else {
+                if (background.alpha != 0.8)
+                    background.alpha = 0.8;
+            }
         }
         else {
-            if (background.alpha != 0.8)
-                background.alpha = 0.8;
+            if (scaleBool) {
+                for (i in 0...2)
+                {
+                    var moveBG:FlxSprite = moveBGArray[i].sprite;
+
+                    if (CoolUtil.mouseOverlaps(moveBG, NewControlsSubState.instance.camControls)) 
+                    {
+                        if (moveBG.alpha != 1)
+                            moveBG.alpha = 1;
+
+                        if (FlxG.mouse.justPressed)
+                        {
+                            switch (i)
+                            {
+                                case 0:
+                                    resetindieNote(NewControlsSubState.instance.buttonNpos-1);
+                                case 1:
+                                    NewControlsSubState.instance.backAllowControlsMode();
+                            }
+                        }
+                    }
+                    else {
+                        if (moveBG.alpha != 0.8)
+                            moveBG.alpha = 0.8;
+                    }
+                }
+            }
         }
     }
 
@@ -147,6 +190,13 @@ class ControlsSprite extends FlxSpriteGroup
 
     public function moveBG(i:Int, optionsButtonArray:Array<ControlsSprite>)
     {
+        var optionsButtonArray = NewControlsSubState.instance.optionsButtonArray;
+        var setOptionText = NewControlsSubState.setOptionText;
+        
+        setOptionText.text = "Idle...";
+        setOptionText.updateHitbox();
+        add(setOptionText);
+        
         bgheight = 50;
 
         if (tween != null)
@@ -157,33 +207,33 @@ class ControlsSprite extends FlxSpriteGroup
 
         if (!changeHeighting) {
             changeHeighting = true;
+            scaleBool = true;
 
             tween = FlxTween.tween(background.scale, { y: 2 }, 0.2, {
                 onUpdate: function(tween:FlxTween)
                 {
-                    background.updateHitbox();
+                    tweenUpdate();
                 },
                 onComplete: function(twn:FlxTween)
                 {
-                    background.updateHitbox();
+                    tweenUpdate();
                 }
             });
-            // background.scale.y = 1.5;
         }
         else {
             changeHeighting = false;
+            scaleBool = false;
 
             tween = FlxTween.tween(background.scale, { y: 1 }, 0.2, {
                 onUpdate: function(tween:FlxTween)
                 {
-                    background.updateHitbox();
+                    tweenUpdate();
                 },
                 onComplete: function(twn:FlxTween)
                 {
-                    background.updateHitbox();
+                    tweenUpdate();
                 }
             });
-            // background.scale.y = 1;
             bgheight = 0;
         }
 
@@ -191,14 +241,44 @@ class ControlsSprite extends FlxSpriteGroup
 
         i++;
 
-        //NewControlsSubState.instance.buttonYpos = bgheight;
         NewControlsSubState.instance.buttonNpos = i;
         trace(i, NewControlsSubState.instance.buttonNpos);
+    }
+
+    function tweenUpdate(i:Bool = false)
+    {
+        var setOptionText = NewControlsSubState.setOptionText;
+
+        setOptionText.x = background.x + 5;
+        setOptionText.y = background.y + hheight - 5;
+
+        trace(setOptionText.x, setOptionText.y);
+
+        for (i in 0...2){
+            moveBGArray[i].setScale("y", background.scale.y - 1);
+        }
+
+        setOptionText.scale.y = background.scale.y - 1;
+
+        setOptionText.updateHitbox();
+        background.updateHitbox();
     }
 
     function tweenFunction(s:Float, v:Float)
     {
         NewControlsSubState.instance.buttonYpos = v;
+    }
+
+    public function resetindieNote(i:Int)
+    {
+        var optionsButtonArray = NewControlsSubState.instance.optionsButtonArray;
+        var key = optionsButtonArray[i].noteSprite.strArray[1];
+
+		if (NewControlsSubState.onKeyboardMode == true)
+            if (ClientPrefs.defaultKeys.exists(key))
+                ClientPrefs.keyBinds.set(key, ClientPrefs.defaultKeys.get(key).copy());
+
+        updateNoteSpriteText(i, optionsButtonArray);
     }
 
     public function reNoteFunction()
@@ -207,7 +287,7 @@ class ControlsSprite extends FlxSpriteGroup
             if (text.alpha != 1)
                 text.alpha = 1;
 
-            if (FlxG.mouse.justPressed)
+            if (!NewControlsSubState.allowControlsMode && FlxG.mouse.justPressed)
             {
                 ClientPrefs.resetKeys(!NewControlsSubState.onKeyboardMode);
                 ClientPrefs.reloadVolumeKeys();
@@ -217,32 +297,37 @@ class ControlsSprite extends FlxSpriteGroup
 
                 for (i in 0...optionsButtonArray.length)
                 {
-                    for (n in 0...2) {
-                        var key:String = null;
-
-                        if (optionsButtonArray[i].wwidth != 0) { // 检测是不是有noteSprite(可以更改按键的)spriteGroup
-                            var option:String = optionsButtonArray[i].noteSprite.strArray[1];
-            
-                            if (NewControlsSubState.onKeyboardMode)
-                            {
-                                var savKey:Array<Null<FlxKey>> = ClientPrefs.keyBinds.get(option);
-                                key = InputFormatter.getKeyName(savKey[n] != null ? savKey[n] : NONE);
-                            }
-                            else
-                            {
-                                var savKey:Array<Null<FlxGamepadInputID>> = ClientPrefs.gamepadBinds.get(option);
-                                key = InputFormatter.getGamepadName(savKey[n] != null ? savKey[n] : NONE);
-                            }
-
-                            optionsButtonArray[i].noteSprite.updateText(n, key);
-                        }
-                    }
+                    updateNoteSpriteText(i, optionsButtonArray);
                 }
             }
         }
         else {
             if (text.alpha != 0.8)
                 text.alpha = 0.8;
+        }
+    }
+    
+    public function updateNoteSpriteText(i:Int, optionsButtonArray:Array<ControlsSprite>)
+    {
+        for (n in 0...2) {
+            var key:String = null;
+
+            if (optionsButtonArray[i].wwidth != 0) { // 检测是不是有noteSprite(可以更改按键的)SpriteGroup
+                var option:String = optionsButtonArray[i].noteSprite.strArray[1];
+
+                if (NewControlsSubState.onKeyboardMode)
+                {
+                    var savKey:Array<Null<FlxKey>> = ClientPrefs.keyBinds.get(option);
+                    key = InputFormatter.getKeyName(savKey[n] != null ? savKey[n] : NONE);
+                }
+                else
+                {
+                    var savKey:Array<Null<FlxGamepadInputID>> = ClientPrefs.gamepadBinds.get(option);
+                    key = InputFormatter.getGamepadName(savKey[n] != null ? savKey[n] : NONE);
+                }
+
+                optionsButtonArray[i].noteSprite.updateText(n, key);
+            }
         }
     }
 
@@ -352,22 +437,24 @@ class ControlsNoteSprite extends FlxSpriteGroup
     {
         super.update(elapsed);
 
-        for (i in 0...2) {
-            if (CoolUtil.mouseOverlaps(backgroundArray[i], NewControlsSubState.instance.camControls)) {
-                if (backgroundArray[i].alpha != 1) {
-                    backgroundArray[i].alpha = 1;
-                }
+        if (!NewControlsSubState.allowControlsMode || NewControlsSubState.allowControlsMode && parent.scaleBool) {
+            for (i in 0...2) {
+                if (CoolUtil.mouseOverlaps(backgroundArray[i], NewControlsSubState.instance.camControls)) {
+                    if (backgroundArray[i].alpha != 1) {
+                        backgroundArray[i].alpha = 1;
+                    }
 
-                if (FlxG.mouse.justPressed)
-                {
-                    var key:String = returnKey(i);
+                    if (FlxG.mouse.justPressed)
+                    {
+                        var key:String = returnKey(i);
 
-                    NewControlsSubState.instance.updateNoteMode(key, strArray, i, parent);
+                        NewControlsSubState.instance.updateNoteMode(key, strArray, i, parent);
+                    }
                 }
-            }
-            else {
-                if (backgroundArray[i].alpha != 0.8) {
-                    backgroundArray[i].alpha = 0.8;
+                else {
+                    if (backgroundArray[i].alpha != 0.8) {
+                        backgroundArray[i].alpha = 0.8;
+                    }
                 }
             }
         }
