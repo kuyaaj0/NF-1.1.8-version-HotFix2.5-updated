@@ -2247,13 +2247,8 @@ class PlayState extends MusicBeatState
 	var memEnd:Float = 0;
 	var allocDelta:Int = 0;
 
-	var frameStart:Float;
-
-
 	override public function update(elapsed:Float)
 	{
-		memStart = Gc.memInfo(0);
-		frameStart = haxe.Timer.stamp();
 
 		if (ClientPrefs.data.pauseButton)
 		{
@@ -2605,15 +2600,12 @@ class PlayState extends MusicBeatState
 
 		memEnd = Gc.memInfo(0);
 		allocDelta = Std.int(Math.max(0, memEnd - memStart));
-		var elapsedUs = Std.int((haxe.Timer.stamp() - frameStart) * 1000000); 
-		var targetUs = 1 / ClientPrefs.data.framerate;
-		var timeLeftUs = targetUs - elapsedUs; 
-		if (timeLeftUs < 0) timeLeftUs = 0; 
 
 		if (allocDelta > (256 * 1024)) {
 			backend.gc.GCManager.gc_tick(300, Std.int(256 * 0.7 * 1024 * 1024), 5);
 			trace('gc will work');
 		}
+		memStart = memEnd;
 	}
 
 	public function scoreTxtUpdate()
