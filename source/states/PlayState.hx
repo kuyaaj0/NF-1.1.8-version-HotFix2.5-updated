@@ -59,6 +59,8 @@ import crowplexus.hscript.Printer;
 #end
 import modchart.Manager;
 
+import cpp.vm.Gc;
+
 @:allow(backend.Replay)
 /**
  * This is where all the Gameplay stuff happens and is managed
@@ -831,6 +833,8 @@ class PlayState extends MusicBeatState
 
 		if (eventNotes.length < 1)
 			checkEventNote();
+
+		//cpp.vm.Gc.enable(false);
 	}
 
 	function set_songSpeed(value:Float):Float
@@ -2239,8 +2243,18 @@ class PlayState extends MusicBeatState
 	var allowDebugKeys:Bool = true;
 	var pressPaue:Int = 0;
 
+	var memStart:Float = 0;
+	var memEnd:Float = 0;
+	var allocDelta:Int = 0;
+
+	var frameStart:Float;
+
+
 	override public function update(elapsed:Float)
 	{
+		memStart = Gc.memInfo(0);
+		frameStart = haxe.Timer.stamp();
+
 		if (ClientPrefs.data.pauseButton)
 		{
 			var Pressed:Bool = false;
@@ -2588,6 +2602,18 @@ class PlayState extends MusicBeatState
 		#end
 
 		callOnScripts('onUpdatePost', [elapsed]);
+
+		memEnd = Gc.memInfo(0);
+		allocDelta = Std.int(Math.max(0, memEnd - memStart));
+		var elapsedUs = Std.int((haxe.Timer.stamp() - frameStart) * 1000000); 
+		var targetUs = 1 / ClientPrefs.data.framerate;
+		var timeLeftUs = targetUs - elapsedUs; 
+		if (timeLeftUs < 0) timeLeftUs = 0; 
+
+		if (allocDelta > (256 * 1024)) {
+			backend.gc.GCManager.gc_tick(300, Std.int(256 * 0.7 * 1024 * 1024), 5);
+			trace('gc will work');
+		}
 	}
 
 	public function scoreTxtUpdate()
