@@ -16,6 +16,8 @@ import objects.state.optionState.controlsSubState.*;
 class NewControlsSubState extends MusicBeatSubstate
 {
 	public static var allowControlsMode:Bool = false; // 启用设置按键模式
+	public static var updateNoteModeBool:Bool = false; // 开始设置按键
+
 	public static var instance:NewControlsSubState;
 
 	var options:Array<Dynamic> = [
@@ -117,10 +119,13 @@ class NewControlsSubState extends MusicBeatSubstate
     var bg:FlxSprite;
     private var background:FlxSprite;
 
+	public var buttonMouseMove:MouseMove;
+
     private static var position:Float = 100 - 45;
 	private static var lerpPosition:Float = 100 - 45;
 
     public static var optionText:FlxText;
+	public static var setOptionText:FlxText;
 
 	public static var onKeyboardMode:Bool = true;
 
@@ -164,6 +169,16 @@ class NewControlsSubState extends MusicBeatSubstate
         add(optionText);
 		optionText.screenCenter(X);
 
+		setOptionText = new FlxText(0, 0, 200, "");
+        setOptionText.setFormat(Paths.font(Language.get('fontName', 'ma') + '.ttf'), 13, FlxColor.WHITE, "left");
+		add(setOptionText);
+
+		setOptionText.scale.y = 0;
+		setOptionText.text = returnText("111");
+		setOptionText.updateHitbox();
+
+		setOptionText.cameras = [camControls];
+
         var opn = options;
 
         for (i in 0...opn.length+1)
@@ -197,6 +212,14 @@ class NewControlsSubState extends MusicBeatSubstate
 				createOptionsResetButton("Reset to Default", xpos, ypos);
 			}
         }
+
+		buttonMouseMove = new MouseMove(NewControlsSubState, 'position',
+									   [FlxG.height + 20 - 71 * optionsButtonArray.length, -70],
+									   [
+											[0, FlxG.width],
+											[0, FlxG.height]
+									   ]);
+		add(buttonMouseMove);
     }
 
 	public var curOption:Array<String> = [];
@@ -207,22 +230,18 @@ class NewControlsSubState extends MusicBeatSubstate
     {
 		if (!allowControlsMode) {
 			position += FlxG.mouse.wheel * 70;
-			//if (FlxG.mouse.pressed)
-			//{
 			position += moveData;
 			lerpPosition = position;
-			songsRectPosUpdate(true, elapsed);
-			//}
 
-			if (position > -70)
+			/*if (position > -70)
 				position = FlxMath.lerp(-70, position, Math.exp(-elapsed * 15));
-			if (position < FlxG.height + 20 - 70 * optionsButtonArray.length)
-				position = FlxMath.lerp(FlxG.height + 20 - 70 * optionsButtonArray.length, position, Math.exp(-elapsed * 15));
+			if (position < FlxG.height + 20 - 71 * optionsButtonArray.length)
+				position = FlxMath.lerp(FlxG.height + 20 - 71 * optionsButtonArray.length, position, Math.exp(-elapsed * 15));
 
 			if (Math.abs(lerpPosition - position) < 1)
 				lerpPosition = position;
 			else
-				lerpPosition = FlxMath.lerp(position, lerpPosition, Math.exp(-elapsed * 15));
+				lerpPosition = FlxMath.lerp(position, lerpPosition, Math.exp(-elapsed * 15));*/
 
 			for (i in 0...optionsButtonArray.length)
 			{
@@ -241,6 +260,8 @@ class NewControlsSubState extends MusicBeatSubstate
 
 					if (FlxG.mouse.justPressed)
 					{
+						allowControlsMode = true;
+
 						optionsButtonArray[i].moveBG(i, optionsButtonArray);
 					}
 				}
@@ -254,8 +275,19 @@ class NewControlsSubState extends MusicBeatSubstate
 			}
 		}
 		else {
-			updateBind(elapsed);
+			if (updateNoteModeBool)
+			{
+				updateBind(elapsed);
+			}
+			else {
+				if (controls.BACK)
+				{
+					backAllowControlsMode();
+				}
+			}
 		}
+
+		songsRectPosUpdate(true, elapsed);
 
         super.update(elapsed);
     }
@@ -348,6 +380,13 @@ class NewControlsSubState extends MusicBeatSubstate
 		}
 	}
 
+	public function backAllowControlsMode()
+	{
+		allowControlsMode = false;
+
+		optionsButtonArray[buttonNpos-1].moveBG(buttonNpos-1, optionsButtonArray);
+	}
+
 	function updateCSNote(text:String)
 	{
 		bindingText.text = text;
@@ -357,7 +396,9 @@ class NewControlsSubState extends MusicBeatSubstate
 
 	function closeBinding()
 	{
-		allowControlsMode = false;
+		updateNoteModeBool = false;
+		setOptionText.text = "Idle...";
+
 		bindingBlack.destroy();
 		remove(bindingBlack);
 
@@ -373,26 +414,37 @@ class NewControlsSubState extends MusicBeatSubstate
 
 	public function updateNoteMode(text:String, strArray:Array<String>, alt:Int, parent:ControlsSprite)
 	{
-		allowControlsMode = true;
+		updateNoteModeBool = true;
 		curOption = strArray;
 		curAlt = alt;
 		noteParent = parent;
+		setOptionText.text = returnText(text);
 
 		bindingBlack = new FlxSprite().makeGraphic(1, 1, /*FlxColor.BLACK*/ FlxColor.BLACK);
 		bindingBlack.scale.set(FlxG.width, FlxG.height);
 		bindingBlack.updateHitbox();
 		bindingBlack.alpha = 0;
 		FlxTween.tween(bindingBlack, {alpha: 0.6}, 0.35, {ease: FlxEase.linear});
-		add(bindingBlack);
+		//add(bindingBlack);
 		
 		bindingText = new FlxText(0, 160, 0, "");
 		bindingText.setFormat(Paths.font(Language.get('fontName', 'ma') + '.ttf'), 32, FlxColor.WHITE, "center");
 		bindingText.alpha = 1;
-		add(bindingText);
+		//add(bindingText);
 
 		bindingBlack.cameras = [camHUD];
 		bindingText.cameras = [camHUD];
 
+		bindingText.text = returnText(text);
+		bindingText.screenCenter(XY);
+
+		holdingEsc = 0;
+		ClientPrefs.toggleVolumeKeys(false);
+		FlxG.sound.play(Paths.sound('scrollMenu'));
+	}
+
+	public function returnText(text:String):String
+	{
 		var funnyText:String = '';
 
 		funnyText += 'Rebinding ${text}\n';
@@ -406,12 +458,7 @@ class NewControlsSubState extends MusicBeatSubstate
 			funnyText += "Hold ESC to Cancel\nHold Backspace to Delete";
 		}
 
-		bindingText.text = funnyText;
-		bindingText.screenCenter(XY);
-
-		holdingEsc = 0;
-		ClientPrefs.toggleVolumeKeys(false);
-		FlxG.sound.play(Paths.sound('scrollMenu'));
+		return funnyText;
 	}
 
     public function createOnOptionsText(text:String, x:Float, y:Float):Void
@@ -495,13 +542,15 @@ class NewControlsSubState extends MusicBeatSubstate
         if (!forceUpdate && lerpPosition == position)
             return; // 优化
 
-		if (FlxG.mouse.wheel != 0)
+		/*if (FlxG.mouse.wheel != 0)
 		{
 			pos = FlxMath.lerp(4, pos, Math.exp(-elapsed * 15));
 		}
 		else {
 			pos = 0;
-		}
+		}*/
+
+		pos = 1;
 
 		//pos = 2;
 
