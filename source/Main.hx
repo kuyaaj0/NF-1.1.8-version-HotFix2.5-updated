@@ -1,13 +1,11 @@
 package;
 
-import developer.display.Graphics;
 import developer.display.FPS;
+import developer.display.Graphics;
 import screen.mouseEvent.MouseEffect;
 import flixel.graphics.FlxGraphic;
 import flixel.FlxGame;
-import flixel.FlxState;
 import haxe.io.Path;
-import openfl.system.System;
 import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.events.Event;
@@ -223,8 +221,10 @@ class Main extends Sprite
 		#end
 		Data.setup();
 
+		#if !debug
 		if (ClientPrefs.data.gcFreeZone)
 			cpp.NativeGc.enterGCFreeZone();
+		#end
 		
 		// shader coords fix
 		FlxG.signals.gameResized.add(function(w, h)
@@ -303,6 +303,7 @@ class Main extends Sprite
 	static public var type:Bool = ClientPrefs.data.gcFreeZone;
 	static public function GcZoneChange()
 	{
+		#if !debug
 		if (type == true)
 		{
 			cpp.NativeGc.exitGCFreeZone();
@@ -313,5 +314,6 @@ class Main extends Sprite
 			cpp.NativeGc.enterGCFreeZone();
 			type = true;
 		}
+		#end
 	}
 }

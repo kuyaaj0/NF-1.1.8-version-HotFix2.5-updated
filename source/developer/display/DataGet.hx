@@ -5,7 +5,8 @@ class DataGet
 	static public var currentFPS:Float = 0;
 	static public var displayedFrameTime:Float;
 
-	static public var memory:Float = 0;
+	static public var memory:Float = 0; //处理成mb
+	static public var memoryDis:Float = 0; //真实显示的数据，可能会转换为MB
 	static public var memType:String = "MB";
 
 	static public var wait:Float = 0;
@@ -15,7 +16,7 @@ class DataGet
 	{
 		wait += FlxG.elapsed * 1000;
 		number++;
-		if (wait < 50)
+		if (wait < 100)
 			return;
 
 		/////////////////// →更新
@@ -23,6 +24,7 @@ class DataGet
 			displayedFrameTime = wait / number;
 		else
 			displayedFrameTime = displayedFrameTime * 0.9 + wait / number * 0.1;
+
 		currentFPS = Math.floor(1000 / displayedFrameTime + 0.5);
 		if (currentFPS > ClientPrefs.data.framerate)
 			currentFPS = ClientPrefs.data.framerate;
@@ -30,18 +32,20 @@ class DataGet
 		/////////////////// →fps计算
 
 		// Flixel keeps reseting this to 60 on focus gained
-		if (FlxG.stage.window.frameRate != ClientPrefs.data.framerate && FlxG.stage.window.frameRate != FlxG.game.focusLostFramerate)
+		if (FlxG.stage.window.frameRate != ClientPrefs.data.framerate && FlxG.stage.window.frameRate != FlxG.game.focusLostFramerate) {
 			FlxG.stage.window.frameRate = ClientPrefs.data.framerate;
+			trace('fix frame rate to ' + ClientPrefs.data.framerate + ' fps');
+		}
 
-		var mem = getMem();
-		if (Math.abs(mem) < 1000)
+		memory = getMem();
+		if (Math.abs(memory) < 1000)
 		{
-			memory = Math.abs(mem);
+			memoryDis = Math.abs(memory);
 			memType = "MB";
 		}
 		else
 		{
-			memory = Math.ceil(Math.abs(mem / 1024) * 100) / 100;
+			memoryDis = Math.ceil(Math.abs(memory / 1024) * 100) / 100;
 			memType = "GB";
 		}
 
@@ -50,17 +54,9 @@ class DataGet
 		wait = number = 0;
 	}
 
-	static var memoryTypeArray:Array<String> = ["Usage", "Reserved", "Current", "Large", "Total"];
-
 	static public function getMem():Float
 	{
-		var count:Int = 0;
-		for (type in 0...memoryTypeArray.length)
-			if (ClientPrefs.data.memoryType == memoryTypeArray[type]) {
-				count = type;
-				break;
-			}
-		return FlxMath.roundDecimal(Gc.memInfo64(count) / 1024 / 1024, 2); //转化为MB
+		return FlxMath.roundDecimal(Gc.memInfo64(4) / 1024 / 1024, 2); //转化为MB
 	}
 }
 

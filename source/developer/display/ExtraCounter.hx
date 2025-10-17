@@ -82,6 +82,6 @@ class ExtraCounter extends Sprite
 
 		var showTime:Float = Math.floor((DataGet.displayedFrameTime) * 10) / 10;
 		this.delayData.text = Display.fix(showTime) + " ";
-		this.memData.text = Display.fix(DataGet.memory, true) + " ";
+		this.memData.text = Display.fix(DataGet.memoryDis, true) + " ";
 	}
 }
