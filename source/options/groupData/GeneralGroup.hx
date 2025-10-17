@@ -92,12 +92,12 @@ class GeneralGroup extends OptionCata
 		if (ClientPrefs.data.framerate > FlxG.drawFramerate)
 		{
 			FlxG.updateFramerate = ClientPrefs.data.framerate;
-			FlxG.drawFramerate = Std.int(Math.min(FlxG.stage.application.window.displayMode.refreshRate, ClientPrefs.data.framerate));
+			FlxG.drawFramerate = ClientPrefs.data.framerate;
 			FlxG.stage.window.frameRate = FlxG.drawFramerate;
 		}
 		else
 		{
-			FlxG.drawFramerate = Std.int(Math.min(FlxG.stage.application.window.displayMode.refreshRate, ClientPrefs.data.framerate));
+			FlxG.drawFramerate = ClientPrefs.data.framerate;
 			FlxG.updateFramerate = ClientPrefs.data.framerate;
 			FlxG.stage.window.frameRate = FlxG.drawFramerate;
 		}

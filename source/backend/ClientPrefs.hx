@@ -564,14 +564,12 @@ class ClientPrefs
 		if (data.framerate > FlxG.drawFramerate)
 		{
 			FlxG.updateFramerate = data.framerate;
-			FlxG.drawFramerate = Std.int(Math.min(FlxG.stage.application.window.displayMode.refreshRate, data.framerate));
-			FlxG.stage.window.frameRate = FlxG.drawFramerate;
+			FlxG.drawFramerate = data.framerate;
 		}
 		else
 		{
-			FlxG.drawFramerate = Std.int(Math.min(FlxG.stage.application.window.displayMode.refreshRate, data.framerate));
+			FlxG.drawFramerate = data.framerate;
 			FlxG.updateFramerate = data.framerate;
-			FlxG.stage.window.frameRate = FlxG.drawFramerate;
 		}
 
 		if (FlxG.save.data.gameplaySettings != null)

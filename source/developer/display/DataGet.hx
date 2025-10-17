@@ -33,6 +33,7 @@ class DataGet
 
 		// Flixel keeps reseting this to 60 on focus gained
 		if (FlxG.stage.window.frameRate != ClientPrefs.data.framerate && FlxG.stage.window.frameRate != FlxG.game.focusLostFramerate) {
+			trace('wrong frame: ' + ClientPrefs.data.framerate + ' fps');
 			FlxG.stage.window.frameRate = ClientPrefs.data.framerate;
 			trace('fix frame rate to ' + ClientPrefs.data.framerate + ' fps');
 		}
