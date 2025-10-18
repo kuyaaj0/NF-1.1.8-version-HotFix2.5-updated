@@ -223,7 +223,7 @@ class Main extends Sprite
 
 		#if !debug
 		if (ClientPrefs.data.gcFreeZone)
-			cpp.NativeGc.enterGCFreeZone();
+			//cpp.NativeGc.enterGCFreeZone();
 		#end
 		
 		// shader coords fix
@@ -306,12 +306,12 @@ class Main extends Sprite
 		#if !debug
 		if (type == true)
 		{
-			cpp.NativeGc.exitGCFreeZone();
+			//cpp.NativeGc.exitGCFreeZone();
 			type = false;
 		}
 		else
 		{
-			cpp.NativeGc.enterGCFreeZone();
+			//cpp.NativeGc.enterGCFreeZone();
 			type = true;
 		}
 		#end
