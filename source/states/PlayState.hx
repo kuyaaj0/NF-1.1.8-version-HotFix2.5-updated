@@ -2604,8 +2604,8 @@ class PlayState extends MusicBeatState
 		if (allocDelta > (256 * 1024)) {
 			backend.gc.GCManager.gc_tick(300, Std.int(256 * 0.7 * 1024 * 1024), 1);
 			trace('gc will work');
+			memStart = Gc.memInfo(0);
 		}
-		memStart = memEnd;
 	}
 
 	public function scoreTxtUpdate()
