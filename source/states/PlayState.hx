@@ -834,6 +834,20 @@ class PlayState extends MusicBeatState
 		if (eventNotes.length < 1)
 			checkEventNote();
 
+		if (gcThread == null)
+		{
+			gcThread = Thread.create(function() {
+				while (true)
+				{
+					var msg:Dynamic = Thread.readMessage(true);
+					if (msg == "stop") break;
+					if (msg == "gc")
+					{
+						backend.gc.GCManager.gc_tick(300, Std.int(256 * 0.7 * 1024 * 1024), 1);
+					}
+				}
+			});
+		}
 	}
 
 	function set_songSpeed(value:Float):Float
@@ -2246,6 +2260,7 @@ class PlayState extends MusicBeatState
 	var memEnd:Float = 0;
 	var allocDelta:Int = 0;
 	var recTime:Float = 0;
+	private var gcThread:Thread;
 
 	override public function update(elapsed:Float)
 	{
@@ -2603,9 +2618,10 @@ class PlayState extends MusicBeatState
 		recTime += elapsed;
 
 		if (allocDelta > (256 * 1024) || recTime > 1) {
-			backend.gc.GCManager.gc_tick(300, Std.int(256 * 0.7 * 1024 * 1024), 1);
-			//if (recTime > 1) trace('tick gc work (time)');
-			//else trace('tick gc work (mem high)');
+			if (gcThread != null)
+			{
+				gcThread.sendMessage("gc");
+			}
 			recTime = 0;
 			memStart = Gc.memInfo(0);
 		}
@@ -4528,6 +4544,12 @@ class PlayState extends MusicBeatState
 
 	override function destroy()
 	{
+		// 停止并清理常驻 GC 线程
+		if (gcThread != null)
+		{
+			gcThread.sendMessage("stop");
+			gcThread = null;
+		}
 		#if LUA_ALLOWED
 		for (lua in luaArray)
 		{
