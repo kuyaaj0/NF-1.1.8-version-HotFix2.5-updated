@@ -66,7 +66,7 @@ class LoadingState extends MusicBeatState
 		Paths.setCurrentLevel(directory);
 		trace('Setting asset folder to ' + directory);
 
-		var doPrecache:Bool = false; //
+		var doPrecache:Bool = false; //建议别去动这个
 		if (ClientPrefs.data.loadingScreen)
 		{
 			if (intrusive)
@@ -195,15 +195,13 @@ class LoadingState extends MusicBeatState
 
 		cpp.vm.Gc.enable(false);
 
-		super.create();
-
-		Sys.sleep(0.01);
-
 		ThreadEvent.create(function() {
 			prepareMutex.acquire();
 			startPrepare();
 			prepareMutex.release();
 		}, startThreads);
+
+		super.create();
 	}
 
 
@@ -733,7 +731,7 @@ class LoadingState extends MusicBeatState
 
 	public static function startThreads()
 	{
-		Sys.sleep(0.01);
+		//Sys.sleep(0.01);
 
 		loadMax = imagesToPrepare.length + soundsToPrepare.length + musicToPrepare.length + songsToPrepare.length;
 		loaded = 0;
@@ -858,41 +856,6 @@ class LoadingState extends MusicBeatState
 	}
 
 	///////////////////////////////////////////////////////////////////////////////
-
-	/*
-	static function initImageThread(func:Void->Dynamic):Void {
-		ensureImageThreadInited();
-		imageThread.run(preloadImageWork, {func: func});
-	}
-
-	static var imageThreadInited:Bool = false;
-	static function ensureImageThreadInited():Void {
-		if (imageThreadInited) return;
-		imageThreadInited = true;
-		imageThread.onComplete.add(function(msg:{filePath:String, bitmap:BitmapData, alreadyLoaded:Bool}) {
-			if (!msg.alreadyLoaded) requestedBitmaps.set(msg.filePath, msg.bitmap);
-			addLoadCount();
-		});
-		imageThread.onError.add(function(msg:{filePath:String, error:Dynamic}) {
-			if (msg.error != null) trace('IMAGE: load image ' + msg.filePath + ' failed: ' + Std.string(msg.error));
-			else trace('IMAGE: no such image ' + msg.filePath + ' exists');
-			addLoadCount();
-		});
-	}
-
-	static function preloadImageWork(state:{func:Void->Dynamic}, out:WorkOutput):Void {
-		try {
-			var result:Dynamic = state.func();
-			if ((Reflect.hasField(result, "bitmap") && result.bitmap != null) || (Reflect.hasField(result, "alreadyLoaded") && result.alreadyLoaded)) {
-				out.sendComplete({filePath: result.filePath, bitmap: result.bitmap, alreadyLoaded: result.alreadyLoaded});
-			} else {
-				out.sendError({filePath: result != null ? result.filePath : null, error: result != null ? result.error : "fail"});
-			}
-		} catch (e:Dynamic) {
-			out.sendError({filePath: null, error: e});
-		}
-	}
-		*/
 
 	static function addLoadCount() {
 		loaded++;

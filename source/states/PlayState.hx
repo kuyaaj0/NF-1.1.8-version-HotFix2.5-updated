@@ -834,7 +834,6 @@ class PlayState extends MusicBeatState
 		if (eventNotes.length < 1)
 			checkEventNote();
 
-		//cpp.vm.Gc.enable(false);
 	}
 
 	function set_songSpeed(value:Float):Float
@@ -2246,6 +2245,7 @@ class PlayState extends MusicBeatState
 	var memStart:Float = 0;
 	var memEnd:Float = 0;
 	var allocDelta:Int = 0;
+	var recTime:Float = 0;
 
 	override public function update(elapsed:Float)
 	{
@@ -2600,10 +2600,13 @@ class PlayState extends MusicBeatState
 
 		memEnd = Gc.memInfo(0);
 		allocDelta = Std.int(Math.max(0, memEnd - memStart));
+		recTime += elapsed;
 
-		if (allocDelta > (256 * 1024)) {
+		if (allocDelta > (256 * 1024) || recTime > 1) {
 			backend.gc.GCManager.gc_tick(300, Std.int(256 * 0.7 * 1024 * 1024), 1);
-			trace('gc will work');
+			//if (recTime > 1) trace('tick gc work (time)');
+			//else trace('tick gc work (mem high)');
+			recTime = 0;
 			memStart = Gc.memInfo(0);
 		}
 	}
