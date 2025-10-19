@@ -222,8 +222,7 @@ class Main extends Sprite
 		Data.setup();
 
 		#if !debug
-		if (ClientPrefs.data.gcFreeZone)
-			//cpp.NativeGc.enterGCFreeZone();
+			cpp.NativeGc.enterGCFreeZone();
 		#end
 		
 		// shader coords fix
