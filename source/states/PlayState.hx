@@ -834,7 +834,7 @@ class PlayState extends MusicBeatState
 		if (eventNotes.length < 1)
 			checkEventNote();
 
-		cpp.vm.Gc.enable(false);
+		//cpp.vm.Gc.enable(false);
 	}
 
 	function set_songSpeed(value:Float):Float
@@ -4550,7 +4550,7 @@ class PlayState extends MusicBeatState
 		FlxG.game._filters = [];
 		camGame.filters = camHUD.filters = camOther.filters = [];
 
-		cpp.vm.Gc.enable(true);
+		//cpp.vm.Gc.enable(true);
 	}
 
 	var checkIfDesynced:Bool = false;
