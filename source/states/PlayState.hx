@@ -2247,6 +2247,7 @@ class PlayState extends MusicBeatState
 
 	override public function update(elapsed:Float)
 	{
+		//memStart = Gc.memInfo(0);
 
 		if (ClientPrefs.data.pauseButton)
 		{
@@ -2596,13 +2597,12 @@ class PlayState extends MusicBeatState
 
 		callOnScripts('onUpdatePost', [elapsed]);
 
-		memEnd = Gc.memInfo(0);
-		allocDelta = Std.int(Math.max(0, memEnd - memStart));
+		//memEnd = Gc.memInfo(0);
+		//allocDelta = Std.int(Math.max(0, memEnd - memStart));
 
-		if (allocDelta > (256 * 1024)) {
+		//if (allocDelta > (256 * 1024)) {
 			backend.gc.GCManager.gc_tick(300, Std.int(256 * 0.7 * 1024 * 1024), 1);
-			memStart = Gc.memInfo(0);
-		}
+		//}
 	}
 
 	public function scoreTxtUpdate()
