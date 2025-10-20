@@ -6,13 +6,13 @@
   
   <div style="max-width: 500px; margin: 0 auto;">
     <p style="margin: 12px 0;">
-      <a href="https://novaflare.top" style="font-size: 1.1em; display: block;">🌐 Our Official Website 🌐</a>
+      <a href="https://novaflare.fun" style="font-size: 1.1em; display: block;">🌐 Our Official Website 🌐</a>
     </p>
     <p style="margin: 12px 0;">
       <a href="http://xz.novaflare.top/" style="font-size: 1.1em; display: block;">🇨🇳 中国网络下载 (Chinese Mirror) 🇨🇳</a>
     </p>
     <p style="margin: 2px 0;">
-      <a href="https://online.novaflare.top/dashboard.php" style="font-size: 0.1em; display: block;">-------------------------</a>
+      <a href="https://online.novaflare.fun/dashboard.php" style="font-size: 0.1em; display: block;">-------------------------</a>
     </p>
   </div>
 </div>
