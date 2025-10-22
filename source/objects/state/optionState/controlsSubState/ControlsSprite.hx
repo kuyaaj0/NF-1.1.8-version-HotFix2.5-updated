@@ -96,7 +96,7 @@ class ControlsSprite extends FlxSpriteGroup
         background.screenCenter(X);
     }
 
-    public var wwidth = 0;
+    public var wwidth:Float = 0;
     var hheight = 0;
     
     public function createNoteArray(array:Array<String>)
@@ -109,10 +109,10 @@ class ControlsSprite extends FlxSpriteGroup
         noteSprite.updateParent(this);
         add(noteSprite);
 
-        var resetSprite:RabSprite = new RabSprite(background.x + (background.width / 2 + wwidth), background.y + hheight, wwidth, hheight, 0x8E00D9E0, "Reset");
+        var resetSprite:RabSprite = new RabSprite(background.x + (background.width / 2 + wwidth) - 1, background.y + hheight, wwidth, hheight, 0x8E00D9E0, "Reset");
         add(resetSprite);
 
-        var backSprite:RabSprite = new RabSprite(background.x + (background.width / 2 + (wwidth * 2)) + 5, background.y + hheight, wwidth, hheight, 0x8A42FF8A, "Done");
+        var backSprite:RabSprite = new RabSprite(background.x + (background.width / 2 + (wwidth * 2)) + 5 - 1, background.y + hheight, wwidth, hheight, 0x8A42FF8A, "Done");
         add(backSprite);
 
         resetSprite.sprite.alpha = 0.8;
@@ -251,8 +251,6 @@ class ControlsSprite extends FlxSpriteGroup
 
         setOptionText.x = background.x + 5;
         setOptionText.y = background.y + hheight - 5;
-
-        trace(setOptionText.x, setOptionText.y);
 
         for (i in 0...2){
             moveBGArray[i].setScale("y", background.scale.y - 1);
@@ -419,7 +417,7 @@ class ControlsNoteSprite extends FlxSpriteGroup
 
             var background:FlxSprite = new FlxSprite(x - xPos + bgWidth + 5, y);
             background.makeGraphic(Std.int(bgWidth), Std.int(height), FlxColor.TRANSPARENT, true);
-            FlxSpriteUtil.drawRoundRect(background, 0, 0, bgWidth, height, CORNER_RADIUS, CORNER_RADIUS, DEFAULT_COLOR); // 同步宽度 -- chh
+            FlxSpriteUtil.drawRoundRectComplex(background, 0, 0, bgWidth, height, CORNER_RADIUS, CORNER_RADIUS, 0, 0, DEFAULT_COLOR); // 同步宽度 -- chh
             background.alpha = 0.8;
             background.updateHitbox();
 

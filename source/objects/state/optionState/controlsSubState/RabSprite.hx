@@ -13,13 +13,15 @@ class RabSprite extends FlxSpriteGroup
 
         sprite = new FlxSprite(x, y);
         sprite.makeGraphic(Std.int(wwidth), Std.int(hheight), FlxColor.TRANSPARENT, true);
-        FlxSpriteUtil.drawRoundRect(sprite, 0, 0, wwidth, hheight, 32, 32, color);
+        FlxSpriteUtil.drawRoundRectComplex(sprite, 0, 0, wwidth, hheight, 0, 0, 16, 16, color);
+        sprite.updateHitbox();
         add(sprite);
 
         text = new FlxText(x, y, wwidth, label);
         text.autoSize = true;
         text.setFormat(Paths.font(Language.get('fontName', 'ma') + '.ttf'), 16, FlxColor.WHITE, CENTER);
         text.fieldHeight = hheight;
+        text.updateHitbox();
         add(text);
 
         centerSprite(text, sprite);
