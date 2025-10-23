@@ -2,10 +2,15 @@ package;
 
 import developer.display.FPS;
 import developer.display.Graphics;
+import developer.console.TraceInterceptor;
+
 import screen.mouseEvent.MouseEffect;
+
 import flixel.graphics.FlxGraphic;
 import flixel.FlxGame;
+
 import haxe.io.Path;
+
 import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.events.Event;
@@ -18,8 +23,6 @@ import states.backend.InitState;
 import states.backend.PassState;
 import mobile.backend.Data;
 import backend.extraKeys.ExtraKeysHandler;
-
-import developer.console.TraceInterceptor;
 
 #if desktop
 import backend.device.ALSoftConfig;
@@ -37,6 +40,7 @@ import lime.graphics.Image;
 #end
 
 import haxe.ui.Toolkit;
+import scripts.init.InitScriptData;
 
 class Main extends Sprite
 {
@@ -193,6 +197,8 @@ class Main extends Sprite
 
 		var effect = new MouseEffect();
 		addChild(effect);
+
+		InitScriptData.init();
 
 		#if linux
 		var icon = Image.fromFile("icon.png");
