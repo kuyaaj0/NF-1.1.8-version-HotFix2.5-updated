@@ -4,13 +4,9 @@ import flixel.addons.display.FlxPieDial;
 #if hxvlc
 import hxvlc.flixel.FlxVideoSprite;
 #end
-#if (hxCodec >= "3.0.0")
-import hxcodec.flixel.FlxVideo as VideoHandler;
-#elseif (hxCodec >= "2.6.1")
-import hxcodec.VideoHandler as VideoHandler;
-#elseif (hxCodec >= "2.6.0")
+import vlc.VideoHandler;
+import MP4Handler;
 import VideoHandler;
-#end
 // 仅仅导入作为hscript使用 -狐月影
 class VideoSprite extends FlxSpriteGroup
 {

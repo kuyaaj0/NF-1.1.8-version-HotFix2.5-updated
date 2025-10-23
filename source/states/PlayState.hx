@@ -2603,7 +2603,7 @@ class PlayState extends MusicBeatState
 		allocDelta = Std.int(Math.max(0, memEnd - memStart));
 
 		if (allocDelta > (256 * 1024)) {
-			backend.gc.GCManager.gc_tick(300, Std.int(256 * 0.7 * 1024 * 1024), 1);
+			//backend.gc.GCManager.gc_tick(300, Std.int(256 * 0.7 * 1024 * 1024), 1);
 		}
 	}
 

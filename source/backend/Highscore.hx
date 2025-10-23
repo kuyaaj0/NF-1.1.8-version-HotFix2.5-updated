@@ -188,8 +188,6 @@ class Highscore
 		{
 			songKeyHit = FlxG.save.data.songKeyHit;
 		}
-
-		
 	}
 	
 	public static function formatSong(song:String, diff:Int):String
