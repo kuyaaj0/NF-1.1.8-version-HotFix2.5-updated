@@ -11,7 +11,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         
-      - name: Close inactive issues
+      - name: Close inactive issues based on last response
         uses: actions/github-script@v6
         with:
           script: |
@@ -42,29 +42,59 @@ jobs:
                 continue;
               }
               
-              const { data: events } = await github.rest.issues.listEventsForTimeline({
+              const { data: timeline } = await github.rest.issues.listEventsForTimeline({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: issue.number,
               });
               
-              const issueAge = now - new Date(issue.created_at);
-              const shouldClose = issueAge > twoDaysInMs;
+              const { data: comments } = await github.rest.issues.listComments({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+              });
+              
+              const allActivities = [
+                {
+                  type: 'created',
+                  date: issue.created_at,
+                  user: issue.user.login
+                },
+                ...comments.map(comment => ({
+                  type: 'comment',
+                  date: comment.updated_at,
+                  user: comment.user.login
+                })),
+                ...timeline.map(event => ({
+                  type: event.event,
+                  date: event.created_at,
+                  user: event.actor?.login
+                })).filter(event => event.user)
+              ];
+              
+              allActivities.sort((a, b) => new Date(b.date) - new Date(a.date));
+              
+              const lastActivity = allActivities[0];
+              const lastActivityTime = new Date(lastActivity.date);
+              const timeSinceLastActivity = now - lastActivityTime;
               
               console.log(`Issue #${issue.number}:`, {
                 created: issue.created_at,
-                ageInDays: (issueAge / (24 * 60 * 60 * 1000)).toFixed(2),
-                shouldClose: shouldClose
+                lastActivity: lastActivity.date,
+                lastActivityType: lastActivity.type,
+                lastActivityUser: lastActivity.user,
+                timeSinceLastActivityInDays: (timeSinceLastActivity / (24 * 60 * 60 * 1000)).toFixed(2),
+                shouldClose: timeSinceLastActivity > twoDaysInMs
               });
               
-              if (shouldClose) {
-                console.log(`Closing issue #${issue.number} due to inactivity`);
+              if (timeSinceLastActivity > twoDaysInMs) {
+                console.log(`Closing issue #${issue.number} due to inactivity after last response`);
                 
                 await github.rest.issues.createComment({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   issue_number: issue.number,
-                  body: 'The issue hasn t been responded to for a long time and has automatically closed. You can create a new issue again if needed.'
+                  body: 'This issue hasn't had any new activity for a while after the last reply, so it’s been automatically closed. If you still need help, you can reopen it or create a new one.'
                 });
                 
                 await github.rest.issues.update({
