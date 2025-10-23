@@ -11,12 +11,12 @@ import sys.thread.Thread;
 
 class ThreadEvent {
     var event:Void->Void = null;
-    var workThread:Thread;
-    var mainThread:Thread;
+    var workThread:Thread; //运行的新建线程
+    var mainThread:Thread; //主线程
     var updateListener:Void->Void = null; //每帧监听
 
     static var IDcount:Int = 0;
-    var id:Int = 0; //线程的专属id
+    private var id:Int; //线程的专属id
 
     public static function create(job:()->Void, event:Void->Void):ThreadEvent
     {
@@ -34,7 +34,7 @@ class ThreadEvent {
             
             mainThread.sendMessage({
                 type: "complete",
-                data: {result: id}
+                data: {id: this.id}
             });
         });
 	}
@@ -47,7 +47,7 @@ class ThreadEvent {
 
     public function checkCompletion(blocking:Bool = false) {
         var msg = Thread.readMessage(blocking);
-        if (msg != null && Reflect.hasField(msg, "type") && msg.type.toLowerCase() == "complete" && msg.data.result == id) {
+        if (msg != null && Reflect.hasField(msg, "type") && msg.type.toLowerCase() == "complete" && msg.data.id == id) {
             if (event != null) {
                 event();
             }
@@ -67,11 +67,13 @@ class ThreadEvent {
     }
     
     function removeIndividualListener():Void {
-        if (updateListener != null) {
-            FlxG.signals.preUpdate.remove(updateListener);
-            updateListener = null;
-            destroy();
-        }
+        FlxTimer.wait(0.001, () -> {
+            if (updateListener != null) {
+                FlxG.signals.preUpdate.remove(updateListener);
+                updateListener = null;
+                destroy();
+            }
+        });
     }
 
     public function cancel():Void {

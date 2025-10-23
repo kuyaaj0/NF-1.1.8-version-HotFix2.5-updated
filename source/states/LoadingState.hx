@@ -616,6 +616,7 @@ class LoadingState extends MusicBeatState
 		} //防止BOM字符 <UTF-8 with BOM> <\65279>
 
 		var parser = new Parser();
+		parser.allowTypes = parser.allowMetadata = parser.allowJSON = true;
 		var e:Expr = parser.parseString(input);
 
 		ScriptExprTools.hx_searchCallback(e, function(e:Expr, params:Array<Expr>) {
