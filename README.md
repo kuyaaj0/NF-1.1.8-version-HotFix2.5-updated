@@ -8,6 +8,9 @@
     <p style="margin: 12px 0;">
       <a href="https://novaflare.fun" style="font-size: 1.1em; display: block;">🌐 Our Official Website 🌐</a>
     </p>
+    <p style="margin: 12px 0;">
+      <a href="https://novaflare.fun/docs-choose.html" style="font-size: 1.1em; display: block;">❗Our Docs❗</a>
+    </p>
     <!--
     <p style="margin: 12px 0;">
       <a href="http://xz.novaflare.top/" style="font-size: 1.1em; display: block;">🇨🇳 中国网络下载 (Chinese Mirror) 🇨🇳</a>
