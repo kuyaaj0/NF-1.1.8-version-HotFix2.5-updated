@@ -72,6 +72,7 @@ class Note extends FlxSprite
 	public var spawned:Bool = false;
 
 	public var tail:Array<Note> = []; // for sustains
+	public var killTail:Bool = false;
 	public var parent:Note;
 	public var blockHit:Bool = false; // only works for player
 

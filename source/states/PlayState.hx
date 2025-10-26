@@ -2602,9 +2602,11 @@ class PlayState extends MusicBeatState
 		memEnd = Gc.memInfo(0);
 		allocDelta = Std.int(Math.max(0, memEnd - memStart));
 
+		#if desktop
 		if (allocDelta > (256 * 1024)) {
-			//backend.gc.GCManager.gc_tick(300, Std.int(256 * 0.7 * 1024 * 1024), 1);
+			backend.gc.GCManager.gc_tick(300, Std.int(256 * 0.7 * 1024 * 1024), 1);
 		}
+		#end
 	}
 
 	public function scoreTxtUpdate()
@@ -3781,8 +3783,10 @@ class PlayState extends MusicBeatState
 				if (doubleNote.noteData == funnyNote.noteData)
 				{
 					// if the note has a 0ms distance (is on top of the current note), kill it
-					if (Math.abs(doubleNote.strumTime - funnyNote.strumTime) < 1.0)
+					if (Math.abs(doubleNote.strumTime - funnyNote.strumTime) < 1.0) {
+						doubleNote.killTail = true;
 						invalidateNote(doubleNote);
+					}	
 					else if (doubleNote.strumTime > funnyNote.strumTime
 						&& !doubleNote.hitCausesMiss
 						&& !doubleNote.ignoreNote
@@ -4492,6 +4496,19 @@ class PlayState extends MusicBeatState
 		while (iterator.hasNext())
 		{
 			var note:Note = iterator.next();
+			if (note.tail.length != 0 && note.killTail) {
+				var sustainIterator:Iterator<Note> = note.tail.iterator();
+				while (sustainIterator.hasNext())
+				{
+					var sustain:Note = sustainIterator.next();
+					sustain.active = sustain.visible = false;
+					if (!ClientPrefs.data.lowQuality || ClientPrefs.data.playOpponent ? !cpuControlled_opponent : !cpuControlled)
+						sustain.kill();
+					notes.remove(sustain, true);
+					sustain.destroy();
+					sustain = null;
+				}
+			}
 			note.active = note.visible = false;
 			if (!ClientPrefs.data.lowQuality || ClientPrefs.data.playOpponent ? !cpuControlled_opponent : !cpuControlled)
 				note.kill();
