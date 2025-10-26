@@ -42,18 +42,24 @@ jobs:
                 continue;
               }
               
-              const { data: events } = await github.rest.issues.listEventsForTimeline({
+              const { data: comments } = await github.rest.issues.listComments({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: issue.number,
               });
               
-              const issueAge = now - new Date(issue.created_at);
-              const shouldClose = issueAge > twoDaysInMs;
+              let lastActivityTime = new Date(issue.created_at);
+              if (comments.length > 0) {
+                lastActivityTime = new Date(comments[comments.length - 1].created_at);
+              }
+              
+              const timeSinceLastActivity = now - lastActivityTime;
+              const shouldClose = timeSinceLastActivity > twoDaysInMs;
               
               console.log(`Issue #${issue.number}:`, {
                 created: issue.created_at,
-                ageInDays: (issueAge / (24 * 60 * 60 * 1000)).toFixed(2),
+                lastActivity: lastActivityTime.toISOString(),
+                inactiveDays: (timeSinceLastActivity / (24 * 60 * 60 * 1000)).toFixed(2),
                 shouldClose: shouldClose
               });
               
@@ -64,7 +70,7 @@ jobs:
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   issue_number: issue.number,
-                  body: 'The issue hasn t been responded to for a long time and has automatically closed. You can create a new issue again if needed.'
+                  body: 'This issue has been automatically closed due to inactivity. If you still need help, please feel free to create a new issue.'
                 });
                 
                 await github.rest.issues.update({
