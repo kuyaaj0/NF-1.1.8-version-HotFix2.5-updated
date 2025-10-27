@@ -57,6 +57,7 @@ class CreditsState extends MusicBeatState
 				'FF6600',
 				'https://b23.tv/7OVWzAO'
 			],
+			[
 			    'MTGC',
 				'mtgc',
 				'Translater',
