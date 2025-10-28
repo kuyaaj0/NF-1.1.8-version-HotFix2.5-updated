@@ -58,6 +58,14 @@ class CreditsState extends MusicBeatState
 				'https://b23.tv/7OVWzAO'
 			],
 			[
+			    'MTGC',
+				'mtgc',
+				'Translater',
+				'BrazilianPortuguese France Indonesia Japan Jawa Korean Sunda Swedishr\n\n\n',
+				'FC0000',
+				'https://github.com/sirthegamercoder'
+			],
+			[
 				'Careful_Scarf_487',
 				'Careful_Scarf_487',
 				'Main Artist',
