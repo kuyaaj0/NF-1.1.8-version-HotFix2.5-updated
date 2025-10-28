@@ -127,15 +127,9 @@ class Main extends Sprite
 		}
 
 		Toolkit.init();
-		/*#if HSCRIPT_ALLOWED
-		Iris.addProxyImport("flixel.util.FlxColor", crowplexus.hscript.proxy.flixel.util.ProxyFlxColor);
-		#end*/
 
 		#if LUA_ALLOWED llua.Lua.set_callbacks_function(cpp.Callable.fromStaticFunction(scripts.lua.CallbackHandler.call)); #end
 		Controls.instance = new Controls();
-
-		ExtraKeysHandler.instance = new ExtraKeysHandler();
-		ClientPrefs.loadDefaultKeys();
 
 		#if mobile
 		#if android
@@ -145,6 +139,11 @@ class Main extends Sprite
 		Sys.setCwd(SUtil.getStorageDirectory());
 		#end
 		#if ACHIEVEMENTS_ALLOWED Achievements.load(); #end
+
+		///////////////////////////////////////////   --包含有读取文件的别在这个的上面运行
+
+		ExtraKeysHandler.instance = new ExtraKeysHandler();
+		ClientPrefs.loadDefaultKeys();
 
 		addChild(new FlxGame(#if (openfl >= "9.2.0") 1280, 720 #else game.width, game.height #end, game.initialState, #if (flixel < "5.0.0") game.zoom, #end
 			game.framerate, game.framerate, game.skipSplash, game.startFullscreen));

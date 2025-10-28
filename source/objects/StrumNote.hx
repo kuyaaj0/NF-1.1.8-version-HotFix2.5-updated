@@ -95,6 +95,8 @@ class StrumNote extends FlxSprite
 
 		texture = skin; // Load texture and anims
 		scrollFactor.set();
+
+		shaderInit();
 	}
 
 	public function reloadNote()
@@ -267,6 +269,16 @@ class StrumNote extends FlxSprite
 
 	public function getAnimSet(index:Int) {
 		return ExtraKeysHandler.instance.data.animations[index];
+	}
+
+	private function shaderInit() {
+		if (this.useRGBShader)
+			rgbShader.enabled = false;
+		else if (ClientPrefs.data.noteColorSwap){
+			colorSwap.hue = 0;
+			colorSwap.saturation = 0;
+			colorSwap.brightness = 0;
+		}
 	}
 }
 

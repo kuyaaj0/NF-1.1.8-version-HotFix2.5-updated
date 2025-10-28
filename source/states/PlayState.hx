@@ -1056,8 +1056,8 @@ class PlayState extends MusicBeatState
 	public function startVideo(name:String, forMidSong:Bool = false, canSkip:Bool = true, loop:Bool = false, playOnLoad:Bool = true)
 	{
 		#if VIDEOS_ALLOWED
-		inCutscene = true;
-		canPause = false;
+		inCutscene = !forMidSong;
+		canPause = forMidSong;
 
 		var foundFile:Bool = false;
 		var fileName:String = Paths.video(name);
@@ -1078,22 +1078,13 @@ class PlayState extends MusicBeatState
 			{
 				function onVideoEnd()
 				{
-					if (generatedMusic && PlayState.SONG.notes[Std.int(curStep / 16)] != null && !endingSong && !isCameraOnForcedPos)
+					if (!isDead && generatedMusic && PlayState.SONG.notes[Std.int(curStep / 16)] != null && !endingSong && !isCameraOnForcedPos)
 					{
 						moveCameraSection();
 						FlxG.camera.snapToTarget();
 					}
-					try
-					{
-						videoCutscene.pause();
-						videoCutscene.videoSprite.visible = false;
-						videoCutscene = null; // 不是哥们你这好像没起作用啊，得加点代码吧
-					}
-					new FlxTimer().start(0.25, function(tmr:FlxTimer)
-					{
-						canPause = true;
-					}); // 我日我不到啊但是还是写上吧（我总感觉psych这个是不是缺代码了） -狐月影
-
+					videoCutscene = null;
+					canPause = true;
 					inCutscene = false;
 					startAndEnd();
 				}
@@ -1219,9 +1210,9 @@ class PlayState extends MusicBeatState
 		var ret:Dynamic = callOnScripts('onStartCountdown', null, true);
 		if (ret != LuaUtils.Function_Stop)
 		{
-			if (skipCountdown || startOnTime > 0)
-				skipArrowStartTween = true;
+			if (skipCountdown || startOnTime > 0) skipArrowStartTween = true;
 
+			canPause = true;
 			generateStaticArrows(0);
 			generateStaticArrows(1);
 
@@ -1632,12 +1623,6 @@ class PlayState extends MusicBeatState
 
 		notes = new FlxTypedGroup<Note>();
 		noteGroup.add(notes);
-
-		var noteData:Array<SwagSection>;
-
-		// NEW SHIT
-		noteData = songData.notes;
-
 		try
 		{
 			var eventsChart:SwagSong = Song.getChart('events', songName);
@@ -1652,7 +1637,7 @@ class PlayState extends MusicBeatState
 
 		Note.init();
 
-		for (section in noteData)
+		for (section in songData.notes)
 		{
 			for (songNotes in section.sectionNotes)
 			{
@@ -2603,9 +2588,11 @@ class PlayState extends MusicBeatState
 		allocDelta = Std.int(Math.max(0, memEnd - memStart));
 
 		#if desktop
+		/*
 		if (allocDelta > (256 * 1024)) {
 			backend.gc.GCManager.gc_tick(300, Std.int(256 * 0.7 * 1024 * 1024), 1);
 		}
+			*/
 		#end
 	}
 
@@ -3134,7 +3121,7 @@ class PlayState extends MusicBeatState
 		callOnScripts('onEvent', [eventName, value1, value2, strumTime]);
 	}
 
-	function moveCameraSection(?sec:Null<Int>):Void
+	public function moveCameraSection(?sec:Null<Int>):Void
 	{
 		if (sec == null)
 			sec = curSection;

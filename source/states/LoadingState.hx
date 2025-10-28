@@ -209,7 +209,8 @@ class LoadingState extends MusicBeatState
 	public static var musicToPrepare:Array<String> = [];
 	public static var songsToPrepare:Array<String> = [];
 
-	public static var events:Array<Array<Dynamic>> = [];
+	public static var chartEvents:Array<Array<Dynamic>> = [];
+	public static var chartNoteTypes:Array<String> = [];
 
 	public static function prepare(images:Array<String> = null, sounds:Array<String> = null, music:Array<String> = null)
 	{
@@ -320,9 +321,20 @@ class LoadingState extends MusicBeatState
 		if (stageData != null && !stageData.hide_girlfriend && gfVersion != player2 && gfVersion != player1)
 			preloadCharacter(gfVersion);
 
-		events = [];
+		chartNoteTypes = [];
+		for (section in PlayState.SONG.notes)
+		{
+			for (songNotes in section.sectionNotes)
+			{
+				if (!chartNoteTypes.contains(songNotes[3]))
+				{
+					chartNoteTypes.push(songNotes[3]);
+				}
+			}
+		}
+		chartEvents = [];
 		for (event in PlayState.SONG.events) // Event Notes
-			events.push(event);
+			chartEvents.push(event);
 
 		preloadMisc();
 		preloadScript();
@@ -472,7 +484,13 @@ class LoadingState extends MusicBeatState
 		startLuaNamed('stages/' + PlayState.SONG.stage + '.lua');
 		startHscriptNamed('stages/' + PlayState.SONG.stage + '.hx');
 
-		for (event in events)
+		for (noteType in chartNoteTypes)
+		{
+			startLuaNamed('custom_notetypes/' + noteType + '.lua');
+			startHscriptNamed('custom_notetypes/' + noteType + '.hx');
+		}
+
+		for (event in chartEvents)
 		{
 			startLuaNamed('custom_events/' + event + '.lua');
 			startHscriptNamed('custom_events/' + event + '.hx');

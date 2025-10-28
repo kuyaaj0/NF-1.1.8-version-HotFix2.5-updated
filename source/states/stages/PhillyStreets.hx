@@ -223,15 +223,14 @@ class PhillyStreets extends BaseStage
 		{
 			#if VIDEOS_ALLOWED
 			game.startVideo(videoName);
-			/*
-				game.videoCutscene.finishCallback = game.videoCutscene.onSkip = function()
-				{
-					videoEnded = true;
-					game.videoCutscene = null;
-					videoCutscene();
-			};*/ // 不是哥们代码有问题啊
-			#else // Make a timer to prevent it from crashing due to sprites not being ready yet.
-			new FlxTimer().start(0.0, function(tmr:FlxTimer)
+			game.videoCutscene.finishCallback = game.videoCutscene.onSkip = function()
+			{
+				videoEnded = true;
+				game.videoCutscene = null;
+				videoCutscene();
+			}
+			#else
+			new FlxTimer().start(0.0, function(tmr:FlxTimer) // Make a timer to prevent it from crashing due to sprites not being ready yet.
 			{
 				videoEnded = true;
 				videoCutscene(videoName);
