@@ -122,7 +122,7 @@ class GameOverSubstate extends MusicBeatSubstate
 				neneKnife.animation.finishCallback = function(_)
 				{
 					remove(neneKnife);
-					neneKnife.destroy();
+					//neneKnife.destroy(); //兼容flixel 5.9.0
 				}
 				insert(0, neneKnife);
 				neneKnife.animation.play('anim', true);
