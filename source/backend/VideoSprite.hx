@@ -4,6 +4,7 @@ import flixel.addons.display.FlxPieDial;
 #if hxvlc
 import hxvlc.flixel.FlxVideoSprite;
 #end
+import hxcodec.flixel.FlxVideo;
 import vlc.VideoHandler;
 import MP4Handler;
 import VideoHandler;
