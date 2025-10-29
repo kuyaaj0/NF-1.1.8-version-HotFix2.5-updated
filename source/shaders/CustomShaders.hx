@@ -366,21 +366,28 @@ class GreyscaleEffect extends Effect
 
 class GreyscaleShader extends FlxShader
 {
-	@:glFragmentSource('
-	#pragma header
-	void main() {
-		vec4 color = texture2D(bitmap, openfl_TextureCoordv);
-		float gray = dot(color.rgb, vec3(0.299, 0.587, 0.114));
-		gl_FragColor = vec4(vec3(gray), color.a);
-	}
-	
-	
-	')
-	public function new()
-	{
-		super();
-	}
+    @:glFragmentSource('
+        #pragma header
+        uniform float intensity; // 0 = normal color, 1 = full grayscale
+
+        void main() {
+            vec4 color = texture2D(bitmap, openfl_TextureCoordv);
+            float gray = dot(color.rgb, vec3(0.299, 0.587, 0.114));
+            vec3 grayColor = vec3(gray);
+            
+            // Mix between normal color and grayscale by intensity
+            vec3 finalColor = mix(color.rgb, grayColor, intensity);
+            gl_FragColor = vec4(finalColor, color.a);
+        }
+    ')
+    public function new()
+    {
+        super();
+        // Default value (shader starts with no grayscale)
+        data.intensity.value = [0.0];
+    }
 }
+
 
 class BrightEffect extends Effect
 {
