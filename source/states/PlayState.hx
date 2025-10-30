@@ -1227,7 +1227,7 @@ class PlayState extends MusicBeatState
 			// === Link Modchart Lua Functions (Psych Adapter) ===
 		try
 		{
-			var adapter = modchart.backend.standalone.Adapter.instance;
+			var adapter = standalone.Adapter.instance;
 			if (adapter != null && Reflect.hasField(adapter, "setupLuaFunctions"))
 			{
 				Reflect.callMethod(adapter, Reflect.field(adapter, "setupLuaFunctions"), []);
