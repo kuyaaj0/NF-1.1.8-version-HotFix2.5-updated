@@ -1,4 +1,11 @@
 name: MobileBuild
+
+permissions:
+  actions: write
+  contents: read
+  packages: write
+  pull-requests: write
+
 on:
   push:
     branches: [ main ]
@@ -16,10 +23,6 @@ on:
         description: '输入 "all" 更新所有haxelib, 也可以输入单个或多个haxelib单独更新他们(e.g. "lime openfl flixel"),不输入即不给haxelib做任何更新'
         required: false
         default: ''
-
-permissions:
-  contents: write
-  actions: write
         
 jobs:
   installHaxelib:
@@ -42,13 +45,13 @@ jobs:
         uses: nttld/setup-ndk@main
         id: setup-ndk
         with:
-          ndk-version: r21e
+          ndk-version: r28c
 
       - name: Setup Java JDK
         uses: actions/setup-java@main
         with:
           distribution: 'zulu'
-          java-version: '11'
+          java-version: '17'
 
       - name: Setup Haxe
         uses: krdlab/setup-haxe@master
@@ -101,7 +104,7 @@ jobs:
           haxelib run lime config ANDROID_SETUP true
             
       - name: Compile
-        run: haxelib run lime build android -ONLY_ARM64
+        run: haxelib run lime build android
         
       - name: Upload Artifact
         uses: actions/upload-artifact@main
@@ -187,7 +190,7 @@ jobs:
           fi
     
       - name: Compile
-        run: haxelib run lime build ios -nosign
+        run: haxelib run lime build ios -arm64 -nosign
         
       - name: Make IPA And iOS Zip
         run: |
