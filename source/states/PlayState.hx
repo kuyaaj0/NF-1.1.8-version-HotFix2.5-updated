@@ -58,6 +58,7 @@ import crowplexus.hscript.Expr.Error as IrisError;
 import crowplexus.hscript.Printer;
 #end
 import modchart.Manager;
+import modchart.backend.standalone.Adapter;
 
 import cpp.vm.Gc;
 
@@ -1227,7 +1228,7 @@ class PlayState extends MusicBeatState
 			// === Link Modchart Lua Functions (Psych Adapter) ===
 		try
 		{
-			var adapter = standalone.Adapter.instance;
+			var adapter = Adapter.instance;
 			if (adapter != null && Reflect.hasField(adapter, "setupLuaFunctions"))
 			{
 				Reflect.callMethod(adapter, Reflect.field(adapter, "setupLuaFunctions"), []);
