@@ -34,6 +34,8 @@ import flixel.input.keyboard.FlxKey;
 import flixel.input.gamepad.FlxGamepadInputID;
 import haxe.Json;
 
+import modchart.backend.standalone.Adapter;
+
 class FunkinLua
 {
 	public var lua:State = null;
