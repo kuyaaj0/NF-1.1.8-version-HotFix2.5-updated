@@ -59,6 +59,20 @@ class FunkinLua
 
 		ModchartLua.implement(lua);
 
+		// Link the Modchart Adapter to Lua (Psych Engine adapter)
+		try {
+			#if LUA_ALLOWED
+			if (modchart.backend.standalone.Adapter.instance != null) {
+				modchart.backend.standalone.Adapter.instance.setupLuaFunctions();
+				trace('[Modchart] setupLuaFunctions() called successfully!');
+			} else {
+				trace('[Modchart] Adapter instance is null!');
+			}
+			#end
+		} catch (e) {
+			trace('[Modchart] Error calling setupLuaFunctions(): ' + e);
+		}
+
 		// trace('Lua version: ' + Lua.version());
 		// trace("LuaJIT version: " + Lua.versionJIT());
 
