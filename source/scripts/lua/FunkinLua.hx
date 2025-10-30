@@ -60,7 +60,6 @@ class FunkinLua
 		LuaL.openlibs(lua);
 
 		ModchartLua.implement(lua);
-		modchart.backend.standalone.Adapter.instance.registerLuaInstance(lua);
 
 		// 🧠 Register this Lua instance with the Modchart backend adapter
     if (modchart.backend.standalone.Adapter.instance != null)
