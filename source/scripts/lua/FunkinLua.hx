@@ -58,6 +58,7 @@ class FunkinLua
 		LuaL.openlibs(lua);
 
 		ModchartLua.implement(lua);
+		modchart.backend.standalone.Adapter.instance.registerLuaInstance(lua);
 
 		// Link the Modchart Adapter to Lua (Psych Engine adapter)
 		try {
