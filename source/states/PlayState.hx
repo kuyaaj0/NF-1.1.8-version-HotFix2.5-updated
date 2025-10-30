@@ -1226,24 +1226,19 @@ class PlayState extends MusicBeatState
 			addManager(modchart);
 			
 			// === Link Modchart Lua Functions (Psych Adapter) ===
-		try
-		{
-			Adapter.init();
+			Adapter.init(); // Always initialize first (outside try)
+
+			try {
 			var adapter = Adapter.instance;
-			if (adapter != null && Reflect.hasField(adapter, "setupLuaFunctions"))
-			{
-				Reflect.callMethod(adapter, Reflect.field(adapter, "setupLuaFunctions"), []);
-				trace("[Modchart] ✅ Lua functions linked via Psych adapter!");
+			if (adapter != null && Reflect.hasField(adapter, "setupLuaFunctions")) {
+			Reflect.callMethod(adapter, Reflect.field(adapter, "setupLuaFunctions"), []);
+			trace("[Modchart] ✅ Lua functions linked via Psych adapter!");
+			} else {
+			trace("[Modchart] ⚠️ Adapter missing setupLuaFunctions()");
 			}
-			else
-			{
-				trace("[Modchart] ⚠️ Adapter missing setupLuaFunctions()");
-			}
-		}
-		catch (e:Dynamic)
-		{
+			} catch (e:Dynamic) {
 			trace("[Modchart] ❌ Failed to link Lua modchart functions: " + e);
-		}
+			}
 
 			for (i in 0...playerStrums.length)
 			{
